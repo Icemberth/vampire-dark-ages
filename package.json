@@ -10,6 +10,7 @@
     "db:seed": "npx tsx db/seed.ts"
   },
   "dependencies": {
+    "@auth/core": "^0.34.3",
     "@auth/drizzle-adapter": "^1.11.2",
     "@neondatabase/serverless": "^1.1.0",
     "dotenv": "^17.4.2",

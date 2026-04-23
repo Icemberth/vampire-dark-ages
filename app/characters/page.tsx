@@ -46,7 +46,7 @@ export default async function CharactersPage() {
         </header>
 
         {list.length === 0 ? (
-          <p className="rounded-xl border border-zinc-800 bg-black/40 p-6 text-center text-sm text-zinc-400">
+          <p className="rounded-xl border border-zinc-800 bg-black/40 p-8 text-center text-base text-zinc-300 sm:p-10 sm:text-lg">
             No characters yet. Create one when that flow is available.
           </p>
         ) : (
@@ -54,37 +54,46 @@ export default async function CharactersPage() {
             {list.map((c) => (
               <li
                 key={c.id}
-                className="rounded-xl border border-zinc-800 bg-black/50 p-4 shadow-lg"
+                className="relative overflow-hidden rounded-xl border border-zinc-800/70 shadow-lg"
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h2 className="text-lg font-semibold text-zinc-100">
-                      {c.name}
-                    </h2>
-                    {c.clanName ? (
-                      <p className="mt-0.5 text-sm text-[rgb(200,36,52)]/90">
-                        {c.clanName}
-                      </p>
-                    ) : null}
-                    {c.concept ? (
-                      <p className="mt-2 line-clamp-2 text-sm text-zinc-400">
-                        {c.concept}
-                      </p>
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{
+                    backgroundImage: "url(/icons/vtm-marble-red.jpg)",
+                  }}
+                />
+                <div className="relative z-10 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h2 className="text-lg font-semibold text-zinc-100 drop-shadow-sm">
+                        {c.name}
+                      </h2>
+                      {c.clanName ? (
+                        <p className="mt-0.5 text-sm text-[rgb(200,36,52)] drop-shadow-sm">
+                          {c.clanName}
+                        </p>
+                      ) : null}
+                      {c.concept ? (
+                        <p className="mt-2 line-clamp-2 text-sm text-zinc-300">
+                          {c.concept}
+                        </p>
+                      ) : null}
+                    </div>
+                    {c.generation != null ? (
+                      <span className="shrink-0 text-xs text-zinc-400">
+                        Gen {c.generation}
+                      </span>
                     ) : null}
                   </div>
-                  {c.generation != null ? (
-                    <span className="shrink-0 text-xs text-zinc-500">
-                      Gen {c.generation}
-                    </span>
-                  ) : null}
+                  {(c.nature || c.demeanor) && (
+                    <p className="mt-3 text-xs text-zinc-400">
+                      {c.nature && <span>Nature: {c.nature}</span>}
+                      {c.nature && c.demeanor ? " · " : null}
+                      {c.demeanor && <span>Demeanor: {c.demeanor}</span>}
+                    </p>
+                  )}
                 </div>
-                {(c.nature || c.demeanor) && (
-                  <p className="mt-3 text-xs text-zinc-500">
-                    {c.nature && <span>Nature: {c.nature}</span>}
-                    {c.nature && c.demeanor ? " · " : null}
-                    {c.demeanor && <span>Demeanor: {c.demeanor}</span>}
-                  </p>
-                )}
               </li>
             ))}
           </ul>
