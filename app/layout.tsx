@@ -1,5 +1,10 @@
-import type { Metadata, Viewport } from "next";
-import { Almendra, Crimson_Text, Geist_Mono, MedievalSharp } from "next/font/google";
+import type { Viewport } from "next";
+import {
+  Almendra,
+  Crimson_Text,
+  Geist_Mono,
+  MedievalSharp,
+} from "next/font/google";
 import "./globals.css";
 
 const medievalSharp = MedievalSharp({
@@ -25,10 +30,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "V20 Dark Ages Compendium",
+export const metadata = {
+  title: "Nocturnus | The V20 Dark Ages Codex",
   description:
-    "A digital database for Vampire: The Masquerade 20th Anniversary Edition",
+    "A digital compendium for the Twentieth Anniversary Edition of Vampire: The Dark Ages.",
 };
 
 export const viewport: Viewport = {

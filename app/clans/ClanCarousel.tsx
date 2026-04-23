@@ -3,7 +3,7 @@
 import * as React from "react";
 
 type Clan = {
-  id: number;
+  id: string;
   name: string;
   subName: string | null;
   nickname: string | null;
@@ -132,6 +132,8 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
     [iconSrcByKey],
   );
 
+  const bloodRgb = "rgb(200 36 52)";
+
   const goPrev = React.useCallback(
     () => setIndex((i) => clampIndex(i - 1)),
     [clampIndex],
@@ -227,7 +229,7 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
     >
       <div className="flex h-full flex-col px-4 py-6 sm:px-6 sm:py-8 md:px-10">
         <header className="mb-5 text-center sm:mb-7">
-          <h1 className="text-3xl font-bold mb-2 text-red-700 uppercase tracking-widest sm:text-4xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
+          <h1 className="text-3xl font-bold mb-2 text-[rgb(200,36,52)] uppercase tracking-widest sm:text-4xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
             V20 Dark Ages Compendium
           </h1>
           <p className="text-zinc-300 italic drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
@@ -253,7 +255,7 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                   type="button"
                   onClick={goPrev}
                   disabled={safeIndex <= 0}
-                  className="cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed rounded-md border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-sm text-zinc-200 hover:border-red-900/60 hover:bg-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-900/60"
+                  className="cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed rounded-md border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-sm text-zinc-200 hover:border-[rgb(200,36,52)]/60 hover:bg-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(200,36,52)]/60"
                   aria-label="Previous clan"
                 >
                   Prev
@@ -262,7 +264,7 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                   type="button"
                   onClick={goNext}
                   disabled={safeIndex >= clans.length - 1}
-                  className="cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed rounded-md border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-sm text-zinc-200 hover:border-red-900/60 hover:bg-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-900/60"
+                  className="cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed rounded-md border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-sm text-zinc-200 hover:border-[rgb(200,36,52)]/60 hover:bg-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(200,36,52)]/60"
                   aria-label="Next clan"
                 >
                   Next
@@ -328,11 +330,11 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                     <div
                       className={[
                         "relative overflow-hidden rounded-2xl border bg-zinc-950",
-                        isActive ? "border-red-900/70" : "border-zinc-800/80",
+                        isActive ? "border-[rgb(200,36,52)]/70" : "border-zinc-800/80",
                       ].join(" ")}
                       style={{
                         boxShadow: isActive
-                          ? "0 28px 80px rgba(127,29,29,0.25), 0 14px 34px rgba(0,0,0,0.55)"
+                          ? "0 28px 80px rgba(200,36,52,0.25), 0 14px 34px rgba(0,0,0,0.55)"
                           : "0 18px 50px rgba(0,0,0,0.55)",
                         backfaceVisibility: "hidden",
                       }}
@@ -341,7 +343,7 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                       <div
                         className="pointer-events-none absolute -right-10 top-1/2 h-[140%] w-[78%] -translate-y-1/2 opacity-35 sm:opacity-40"
                         style={{
-                          backgroundColor: "rgb(153 27 27)", // red-800 "blood" tone
+                          backgroundColor: bloodRgb,
                           WebkitMaskImage: `url(${iconSrc})`,
                           maskImage: `url(${iconSrc})`,
                           WebkitMaskRepeat: "no-repeat",
@@ -365,7 +367,7 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                                   {clan.name}
                                 </h2>
                                 {clan.subName ? (
-                                  <span className="shrink-0 text-red-500 text-sm font-semibold">
+                                    <span className="shrink-0 text-[rgb(200,36,52)] text-sm font-semibold">
                                     ({clan.subName})
                                   </span>
                                 ) : null}
@@ -379,7 +381,7 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                           </div>
 
                           {clan.isBloodline ? (
-                            <span className="text-[10px] bg-red-900/30 text-red-400 px-2 py-1 rounded uppercase font-bold tracking-tighter">
+                            <span className="text-[10px] bg-[rgb(200,36,52)]/20 text-[rgb(200,36,52)] px-2 py-1 rounded uppercase font-bold tracking-tighter">
                               Bloodline
                             </span>
                           ) : null}
@@ -416,7 +418,7 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                           </div>
 
                           <div className="pt-4 border-t border-zinc-800/80">
-                            <h3 className="text-xs uppercase font-bold tracking-wide text-red-800 mb-1">
+                            <h3 className="text-xs uppercase font-bold tracking-wide text-[rgb(200,36,52)] mb-1">
                               Weakness
                             </h3>
                             <p className="text-xs text-zinc-300/80 italic leading-relaxed">
@@ -447,10 +449,10 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                       "group relative grid place-items-center rounded-full border transition",
                       "flex-none shrink-0 aspect-square h-6 w-6 sm:h-8 sm:w-8 lg:h-11 lg:w-11",
                       i === safeIndex
-                        ? "border-red-700/80 bg-zinc-950"
-                        : "border-zinc-800 bg-zinc-950 hover:border-red-900/60",
+                        ? "border-[rgb(200,36,52)]/80 bg-zinc-950"
+                        : "border-zinc-800 bg-zinc-950 hover:border-[rgb(200,36,52)]/60",
                       "cursor-pointer",
-                      "focus:outline-none focus-visible:ring-2 focus-visible:ring-red-900/60",
+                      "focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(200,36,52)]/60",
                     ].join(" ")}
                     aria-label={`Go to ${c.name}`}
                     title={c.name}
@@ -465,8 +467,7 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                           : "opacity-65 group-hover:opacity-80",
                       ].join(" ")}
                       style={{
-                        backgroundColor:
-                          i === safeIndex ? "rgb(185 28 28)" : "rgb(153 27 27)",
+                        backgroundColor: bloodRgb,
                         WebkitMaskImage: `url(${getResolvedClanIconSrc(c.name)})`,
                         maskImage: `url(${getResolvedClanIconSrc(c.name)})`,
                         WebkitMaskRepeat: "no-repeat",
