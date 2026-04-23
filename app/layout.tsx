@@ -1,10 +1,23 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Almendra, Crimson_Text, Geist_Mono, MedievalSharp } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const medievalSharp = MedievalSharp({
+  variable: "--font-heading",
   subsets: ["latin"],
+  weight: "400",
+});
+
+const crimsonText = Crimson_Text({
+  variable: "--font-body",
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+});
+
+const almendra = Almendra({
+  variable: "--font-subheading",
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -18,17 +31,23 @@ export const metadata: Metadata = {
     "A digital database for Vampire: The Masquerade 20th Anniversary Edition",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={`${geistMono.variable} h-full antialiased`}>
+      <body
+        className={`${crimsonText.className} ${medievalSharp.variable} ${crimsonText.variable} ${almendra.variable} min-h-full flex flex-col`}
+      >
+        {children}
+      </body>
     </html>
   );
 }
