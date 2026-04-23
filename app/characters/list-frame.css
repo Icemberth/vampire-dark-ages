@@ -1,0 +1,54 @@
+/* Imported from `app/characters/layout.tsx` so styles load on /characters (globals alone did not apply reliably). */
+
+.characters-list-frame {
+  position: relative;
+  border: 1px solid rgb(200, 36, 52);
+  min-height: max(
+    22rem,
+    calc(
+      100svh - env(safe-area-inset-top, 0px) -
+        env(safe-area-inset-bottom, 0px) -
+        clamp(14.5rem, calc(7.5rem + 22vmin), 22rem)
+    )
+  );
+}
+
+@media (min-width: 640px) {
+  .characters-list-frame {
+    min-height: max(
+      26rem,
+      calc(
+        100svh - env(safe-area-inset-top, 0px) -
+          env(safe-area-inset-bottom, 0px) -
+          clamp(16rem, calc(8.5rem + 20vmin), 23rem)
+      )
+    );
+  }
+}
+
+@media (min-width: 1024px) {
+  .characters-list-frame {
+    min-height: max(
+      28rem,
+      calc(
+        100svh - env(safe-area-inset-top, 0px) -
+          env(safe-area-inset-bottom, 0px) -
+          clamp(17rem, calc(9rem + 18vmin), 24rem)
+      )
+    );
+  }
+}
+
+.characters-list-frame-body {
+  position: relative;
+  z-index: 1;
+}
+
+/* Corner wrappers (after body in DOM so they paint above the list). */
+.characters-list-frame-corner {
+  pointer-events: none;
+  position: absolute;
+  z-index: 3;
+  height: clamp(3.25rem, 10vmin, 5.75rem);
+  width: clamp(3.25rem, 10vmin, 5.75rem);
+}
