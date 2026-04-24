@@ -17,12 +17,20 @@ export function GoogleSignInButton() {
           setIsLoading(false);
         }
       }}
-      className="mt-5 flex w-full items-center justify-center gap-3 rounded-xl border border-[rgb(200,36,52)]/45 bg-black/20 px-4 py-3 text-sm font-semibold text-zinc-100 hover:border-[rgb(200,36,52)]/70 hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(200,36,52)]/60"
+      className="mt-5 inline-flex w-full items-center justify-center gap-3 rounded-xl border border-black/25 px-5 py-3.5 text-base font-semibold uppercase tracking-wide text-white [font-family:var(--font-heading),serif] drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)] shadow-md transition hover:brightness-110 active:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/40 disabled:opacity-60"
       aria-label="Continue with Google"
       disabled={isLoading}
+      style={{
+        backgroundColor: "#c4171d",
+        backgroundImage: "url(/icons/vtm-button-distress.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundBlendMode: "multiply",
+      }}
     >
       <span
-        className="grid h-6 w-6 place-items-center rounded-full border border-zinc-700 bg-zinc-950/40"
+        className="grid h-7 w-7 place-items-center rounded-full border border-black/25 bg-black/20"
         aria-hidden="true"
       >
         <svg

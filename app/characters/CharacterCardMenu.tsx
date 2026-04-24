@@ -97,7 +97,15 @@ export function CharacterCardMenu({ characterId }: CharacterCardMenuProps) {
             onClick={(e) => e.stopPropagation()}
           >
             <div
-              className="border-b border-zinc-800/90 bg-linear-to-b from-zinc-900/80 to-zinc-950/40 px-5 py-4"
+              className="border-b border-black/35 px-5 py-4"
+              style={{
+                backgroundColor: "#6f0d12",
+                backgroundImage: "url(/icons/vtm-button-distress.png)",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundBlendMode: "multiply",
+              }}
             >
               <h2
                 id={titleId}
@@ -106,7 +114,10 @@ export function CharacterCardMenu({ characterId }: CharacterCardMenuProps) {
                 Delete this character?
               </h2>
             </div>
-            <p id={descId} className="px-5 py-4 text-sm leading-relaxed text-zinc-400">
+            <p
+              id={descId}
+              className="px-5 py-4 text-sm leading-relaxed text-zinc-300/80"
+            >
               This permanently removes the character from your chronicle. You
               can close this if you changed your mind.
             </p>
@@ -116,7 +127,7 @@ export function CharacterCardMenu({ characterId }: CharacterCardMenuProps) {
             <div className="flex flex-col-reverse gap-2 border-t border-zinc-800/80 bg-black/20 px-5 py-4 sm:flex-row sm:justify-end sm:gap-3">
               <button
                 type="button"
-                className="rounded-lg border border-zinc-600 bg-zinc-900/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-zinc-500 hover:bg-zinc-800/60 disabled:opacity-50"
+                className="cursor-pointer rounded-lg border border-zinc-600 bg-zinc-900/60 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-zinc-500 hover:bg-zinc-800/60 disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={pending}
                 onClick={() => {
                   setConfirmOpen(false);
@@ -172,13 +183,30 @@ export function CharacterCardMenu({ characterId }: CharacterCardMenuProps) {
       {open ? (
         <ul
           role="menu"
-          className="absolute right-0 top-full mt-0.5 min-w-36 rounded-md border border-zinc-700/90 bg-zinc-950/98 py-1 text-sm shadow-lg backdrop-blur-sm"
+          className="absolute right-0 top-full mt-2 min-w-56 overflow-hidden rounded-xl border border-zinc-700/90 bg-zinc-950/96 text-sm shadow-[0_24px_70px_rgba(0,0,0,0.72)] backdrop-blur-sm"
         >
+          <li role="none">
+            <div
+              className="border-b border-black/35 px-4 py-3"
+              style={{
+                backgroundColor: "#6f0d12",
+                backgroundImage: "url(/icons/vtm-button-distress.png)",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundBlendMode: "multiply",
+              }}
+            >
+              <p className="text-sm text-zinc-100/95 [font-family:var(--font-heading),serif]">
+                Character options
+              </p>
+            </div>
+          </li>
           <li role="none">
             <button
               type="button"
               role="menuitem"
-              className="w-full px-3 py-2 text-left text-red-300 transition hover:bg-red-950/50 hover:text-red-200"
+              className="m-2 w-[calc(100%-1rem)] cursor-pointer rounded-lg px-3 py-2.5 text-left text-red-200 transition hover:bg-red-950/35 hover:text-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30 disabled:cursor-not-allowed disabled:opacity-50"
               disabled={pending}
               onClick={openDeleteModal}
             >

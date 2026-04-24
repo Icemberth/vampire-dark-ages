@@ -3,14 +3,8 @@
 .characters-list-frame {
   position: relative;
   border: 1px solid rgb(200, 36, 52);
-  min-height: max(
-    22rem,
-    calc(
-      100svh - env(safe-area-inset-top, 0px) -
-        env(safe-area-inset-bottom, 0px) -
-        clamp(14.5rem, calc(7.5rem + 22vmin), 22rem)
-    )
-  );
+  /* On mobile, avoid forcing a tall minimum that can create extra scroll. */
+  min-height: auto;
 }
 
 @media (min-width: 640px) {

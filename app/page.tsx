@@ -1,6 +1,14 @@
 import { GoogleSignInButton } from "./GoogleSignInButton";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/auth";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+  if (session?.user?.id) {
+    redirect("/characters");
+  }
+
   return (
     <div className="relative h-svh overflow-hidden text-zinc-100">
       {/* Beating-heart background */}

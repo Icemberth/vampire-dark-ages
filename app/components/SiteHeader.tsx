@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
+import { UserMenu } from "@/app/components/UserMenu";
 
 const RAIL_MAX = "clamp(75rem, min(92vw, calc(100% - 2.5rem)), 159rem)";
 
@@ -53,25 +54,10 @@ export async function SiteHeader() {
           </nav>
         </div>
         {userInitial ? (
-          <Link
-            href="/characters"
-            className="relative grid h-14 w-14 shrink-0 place-items-center overflow-visible text-base font-bold leading-none text-white no-underline drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] sm:h-18 sm:w-18 sm:text-lg"
-            title={session?.user?.name ?? session?.user?.email ?? "Account"}
-            aria-label={`Signed in as ${session?.user?.name ?? session?.user?.email ?? "user"} — go to characters`}
-          >
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-[-18%] rounded-full sm:inset-[-14%]"
-              style={{
-                backgroundColor: "rgba(0,0,0,0.35)",
-                backgroundImage: "url(/icons/vtm-blood-stats.png)",
-                backgroundSize: "contain",
-                backgroundPosition: "50% 44%",
-                backgroundRepeat: "no-repeat",
-              }}
-            />
-            <span className="relative z-1">{userInitial}</span>
-          </Link>
+          <UserMenu
+            userInitial={userInitial}
+            displayName={session?.user?.name ?? session?.user?.email ?? "Account"}
+          />
         ) : (
           <span
             className="inline-block h-14 w-14 shrink-0 sm:h-18 sm:w-18"
