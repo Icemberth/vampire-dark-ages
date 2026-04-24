@@ -41,8 +41,7 @@ export function VampireShell({
         <main className="flex min-h-0 w-full flex-1 flex-col overflow-y-auto bg-transparent">
           {constrainContentWidth ? (
             <div
-              className="mx-auto flex min-h-0 w-full flex-1 flex-col bg-transparent px-4 sm:px-6 lg:px-8"
-              style={{ maxWidth: "var(--characters-content-max)" }}
+              className="mx-auto flex min-h-0 w-full flex-1 flex-col bg-transparent px-4 sm:px-6 lg:px-8 sm:[max-width:var(--characters-content-max)]"
             >
               {children}
             </div>
