@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { signIn } from "next-auth/react";
 
 export function GoogleSignInButton() {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -12,6 +11,7 @@ export function GoogleSignInButton() {
       onClick={async () => {
         setIsLoading(true);
         try {
+          const { signIn } = await import("next-auth/react");
           await signIn("google", { callbackUrl: "/characters" });
         } finally {
           setIsLoading(false);
