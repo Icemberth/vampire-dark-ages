@@ -1,7 +1,7 @@
 import { defineConfig } from "drizzle-kit";
 import * as dotenv from "dotenv";
+import { getDatabaseUrl } from "./db/connectionString";
 
-// This explicitly loads your .env.local file
 dotenv.config({
   path: ".env.local",
 });
@@ -11,7 +11,6 @@ export default defineConfig({
   out: "./drizzle",
   dialect: "postgresql",
   dbCredentials: {
-    // This will now successfully find the variable in .env.local
-    url: process.env.POSTGRES_URL!,
+    url: getDatabaseUrl(),
   },
 });

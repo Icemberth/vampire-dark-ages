@@ -1,10 +1,11 @@
 import * as dotenv from "dotenv";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
+import { getDatabaseUrl } from "./connectionString";
 import { clans, disciplines, clanDisciplines } from "./schema";
 
 dotenv.config({ path: ".env.local" });
-const sql = neon(process.env.POSTGRES_URL!);
+const sql = neon(getDatabaseUrl());
 const db = drizzle(sql);
 
 async function main() {

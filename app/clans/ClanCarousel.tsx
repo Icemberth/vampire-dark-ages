@@ -227,8 +227,8 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="flex h-full flex-col px-4 py-6 sm:px-6 sm:py-8 md:px-10">
-        <header className="mb-5 text-center sm:mb-7">
+      <div className="flex h-full flex-col px-4 py-4 sm:px-6 sm:py-6 md:px-10">
+        <header className="mb-3 text-center sm:mb-5">
           <h1 className="text-3xl font-bold mb-2 text-[rgb(200,36,52)] uppercase tracking-widest sm:text-4xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
             V20 Dark Ages Compendium
           </h1>
@@ -239,7 +239,7 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
 
         <div className="relative flex-1 min-h-0 overflow-hidden">
           <div className="relative flex h-full flex-col">
-            <div className="flex items-center justify-between gap-3 mb-4">
+            <div className="flex items-center justify-between gap-3 mb-3">
               <div className="text-xs text-zinc-500">
                 {clans.length ? (
                   <span>
@@ -275,7 +275,7 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
             <div
               ref={viewportRef}
               className={[
-                "relative flex-1 min-h-[420px] select-none touch-none",
+                "relative flex-1 min-h-0 max-h-[min(46svh,420px)] sm:max-h-[min(50svh,460px)] select-none touch-none",
                 isDragging ? "cursor-grabbing" : "cursor-grab",
               ].join(" ")}
               style={{ perspective: "1200px" }}
@@ -330,7 +330,9 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                     <div
                       className={[
                         "relative overflow-hidden rounded-2xl border bg-zinc-950",
-                        isActive ? "border-[rgb(200,36,52)]/70" : "border-zinc-800/80",
+                        isActive
+                          ? "border-[rgb(200,36,52)]/70"
+                          : "border-zinc-800/80",
                       ].join(" ")}
                       style={{
                         boxShadow: isActive
@@ -367,7 +369,7 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                                   {clan.name}
                                 </h2>
                                 {clan.subName ? (
-                                    <span className="shrink-0 text-[rgb(200,36,52)] text-sm font-semibold">
+                                  <span className="shrink-0 text-[rgb(200,36,52)] text-sm font-semibold">
                                     ({clan.subName})
                                   </span>
                                 ) : null}

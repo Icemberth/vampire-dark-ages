@@ -2,6 +2,7 @@ import Image from "next/image";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { authOptions } from "@/auth";
+import { CharacterCardMenu } from "@/app/characters/CharacterCardMenu";
 import { getCharactersForUser } from "@/db/queries";
 
 function normalizeClanIconKey(input: string) {
@@ -35,13 +36,29 @@ export default async function CharactersPage() {
 
   return (
     <div className="flex min-h-0 w-full flex-1 flex-col py-8 sm:py-10">
-      <header className="mb-8 shrink-0 text-center">
-        <h1 className="text-3xl font-bold tracking-wide text-[rgb(200,36,52)] sm:text-4xl">
-          Your characters
-        </h1>
-        <p className="mt-2 text-sm text-zinc-400">
-          Signed in as {session.user.name ?? session.user.email}
-        </p>
+      <header className="mb-8 flex shrink-0 flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+        <div className="min-w-0 text-left">
+          <h1 className="text-3xl font-bold tracking-wide text-[rgb(200,36,52)] sm:text-4xl">
+            Your characters
+          </h1>
+          <p className="mt-2 text-sm text-zinc-400">
+            1/1 Character Slots
+          </p>
+        </div>
+        <Link
+          href="/characters/character-builder/new"
+          className="inline-flex w-full shrink-0 items-center justify-center rounded-lg border border-black/25 px-5 py-3.5 text-base font-normal uppercase tracking-wide text-white [font-family:var(--font-heading),serif] shadow-md transition hover:brightness-110 active:brightness-95 sm:w-auto"
+          style={{
+            backgroundColor: "#c4171d",
+            backgroundImage: "url(/icons/vtm-button-distress.png)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundBlendMode: "multiply",
+          }}
+        >
+          Create Character
+        </Link>
       </header>
 
       <div className="characters-list-frame box-border flex min-h-0 flex-1 flex-col overflow-visible rounded-xl bg-black/30 px-4 pb-6 pt-5 sm:px-6 sm:pb-8 sm:pt-6">
@@ -117,9 +134,16 @@ export default async function CharactersPage() {
                         <h2 className="text-lg font-semibold text-zinc-100 drop-shadow-sm">
                           {c.name}
                         </h2>
-                        {c.clanName ? (
-                          <p className="mt-0.5 text-sm text-[rgb(200,36,52)] drop-shadow-sm">
-                            {c.clanName}
+                        {c.clanName != null || c.generation != null ? (
+                          <p className="mt-0.5 flex flex-wrap items-baseline gap-x-2 text-sm text-[rgb(200,36,52)] drop-shadow-sm">
+                            {c.clanName ? (
+                              <span>{c.clanName}</span>
+                            ) : null}
+                            {c.generation != null ? (
+                              <span className="text-xs text-zinc-400">
+                                Gen {c.generation}
+                              </span>
+                            ) : null}
                           </p>
                         ) : null}
                         {c.concept ? (
@@ -128,11 +152,7 @@ export default async function CharactersPage() {
                           </p>
                         ) : null}
                       </div>
-                      {c.generation != null ? (
-                        <span className="shrink-0 text-xs text-zinc-400">
-                          Gen {c.generation}
-                        </span>
-                      ) : null}
+                      <CharacterCardMenu characterId={c.id} />
                     </div>
                     {(c.nature || c.demeanor) && (
                       <p className="mt-3 text-xs text-zinc-400">
