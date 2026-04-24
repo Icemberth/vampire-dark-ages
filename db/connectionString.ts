@@ -23,6 +23,11 @@ function readFromProcessEnv(): string {
  * working from the same files.
  */
 function loadEnvFiles() {
+  // `dotenv` uses Node I/O (e.g. `process.stdout.isTTY`). The browser and some runtimes
+  // have no TTY; never call `loadEnv` there—only read env that Next/Node already set.
+  if (typeof process === "undefined" || !process.stdout) {
+    return;
+  }
   const cwd = process.cwd();
   loadEnv({ path: resolve(cwd, ".env") });
   loadEnv({ path: resolve(cwd, ".env.local"), override: true });

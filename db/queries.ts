@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { DRAFT_CHARACTER_NAME, type CharacterRow } from "@/lib/character";
 import { db } from "./index";
 import { characters, clans, clanDisciplines, disciplines } from "./schema";
 import { and, eq } from "drizzle-orm";
@@ -68,10 +69,8 @@ export async function getCharactersForUser(userId: string) {
     .where(eq(characters.userId, userId));
 }
 
-/** Placeholder name for rows created at the start of the character builder wizard. */
-export const DRAFT_CHARACTER_NAME = "Unnamed character";
-
-export type CharacterRow = typeof characters.$inferSelect;
+export type { CharacterRow };
+export { DRAFT_CHARACTER_NAME };
 
 /**
  * Inserts a new character row and returns its id. Used when entering the builder so the

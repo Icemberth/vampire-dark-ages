@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   DRAFT_CHARACTER_NAME,
   type CharacterRow,
-} from "@/db/queries";
+} from "@/lib/character";
 import {
   completeCharacterWizard,
   saveCharacterWizard,

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import { getAllClans, getCharacterByIdForUser } from "@/db/queries";
-import { CharacterWizard } from "@/app/characters/character-builder/CharacterWizard";
+import { CharacterWizard } from "../CharacterWizard";
 
 function isUuid(s: string) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
