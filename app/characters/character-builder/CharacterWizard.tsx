@@ -93,27 +93,68 @@ export function CharacterWizard({ character, clans }: CharacterWizardProps) {
         New character
       </h1>
       <nav className="vda-wizard-step-bar" aria-label="Character wizard steps">
-        <ol className="vda-wizard-step-bar-list">
-          {STEPS.map((s, i) => {
-            const active = i === step;
-            return (
-              <li key={s.label} className="min-w-0 text-center">
-                <button
-                  type="button"
-                  className={active ? "vda-wizard-step-bar-active" : ""}
-                  aria-current={active ? "step" : undefined}
-                  disabled={i > step}
-                  onClick={() => {
-                    if (i < step) setStep(i);
-                  }}
-                  title={s.description}
-                >
-                  {s.label}
-                </button>
-              </li>
-            );
-          })}
-        </ol>
+        <div className="vda-wizard-step-bar-layout">
+          <Link href="/characters" className="vda-wizard-cta vda-wizard-cta--cancel">
+            Cancel
+          </Link>
+          <ol className="vda-wizard-step-bar-list">
+            {STEPS.map((s, i) => {
+              const active = i === step;
+              return (
+                <li key={s.label} className="min-w-0 text-center">
+                  <button
+                    type="button"
+                    className={[
+                      "vda-wizard-step-bar-tab",
+                      active ? "vda-wizard-step-bar-active" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    aria-current={active ? "step" : undefined}
+                    disabled={i > step}
+                    onClick={() => {
+                      if (i < step) setStep(i);
+                    }}
+                    title={s.description}
+                  >
+                    {s.label}
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+          <div className="vda-wizard-step-bar-actions">
+            {step > 0 ? (
+              <button
+                type="button"
+                onClick={goBack}
+                disabled={pending}
+                className="vda-wizard-cta"
+              >
+                Back
+              </button>
+            ) : null}
+            {step < 1 ? (
+              <button
+                type="button"
+                onClick={goNext}
+                disabled={pending}
+                className="vda-wizard-cta"
+              >
+                {pending ? "Saving…" : "Next"}
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={finish}
+                disabled={pending}
+                className="vda-wizard-cta vda-wizard-cta--wrap"
+              >
+                {pending ? "Finishing…" : "Save & return to list"}
+              </button>
+            )}
+          </div>
+        </div>
       </nav>
 
       {error ? (
@@ -303,46 +344,6 @@ export function CharacterWizard({ character, clans }: CharacterWizardProps) {
           </p>
         </div>
       ) : null}
-
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-        <Link
-          href="/characters"
-          className="text-sm text-zinc-500 hover:text-zinc-300"
-        >
-          Cancel
-        </Link>
-        <div className="flex flex-wrap gap-2 sm:gap-3">
-          {step > 0 ? (
-            <button
-              type="button"
-              onClick={goBack}
-              disabled={pending}
-              className="rounded-lg border border-zinc-600 bg-zinc-900/50 px-4 py-2 text-sm text-zinc-200 transition enabled:hover:border-zinc-500 enabled:hover:bg-zinc-800/50 disabled:opacity-50"
-            >
-              Back
-            </button>
-          ) : null}
-          {step < 1 ? (
-            <button
-              type="button"
-              onClick={goNext}
-              disabled={pending}
-              className="rounded-lg border border-[#c82434]/50 bg-[#c82434]/15 px-4 py-2 text-sm font-medium text-zinc-100 transition enabled:hover:border-[#c82434]/80 enabled:hover:bg-[#c82434]/25 disabled:opacity-50"
-            >
-              {pending ? "Saving…" : "Next"}
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={finish}
-              disabled={pending}
-              className="rounded-lg border border-[#c82434]/50 bg-[#c82434]/15 px-4 py-2 text-sm font-medium text-zinc-100 transition enabled:hover:border-[#c82434]/80 enabled:hover:bg-[#c82434]/25 disabled:opacity-50"
-            >
-              {pending ? "Finishing…" : "Save & return to list"}
-            </button>
-          )}
-        </div>
-      </div>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import {
   useTransition,
 } from "react";
 import { createPortal } from "react-dom";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { deleteCharacterAction } from "@/app/characters/actions";
 
@@ -33,6 +34,20 @@ export function CharacterCardMenu({ characterId }: CharacterCardMenuProps) {
     };
     document.addEventListener("mousedown", onDown);
     return () => document.removeEventListener("mousedown", onDown);
+  }, [open]);
+
+  /* Sibling <li> cards share z-index; a later card paints on top, hiding this menu. Lift the list item while open. */
+  useEffect(() => {
+    const li = wrapRef.current?.closest("li");
+    if (!li) return;
+    if (open) {
+      li.style.setProperty("z-index", "50");
+    } else {
+      li.style.removeProperty("z-index");
+    }
+    return () => {
+      li.style.removeProperty("z-index");
+    };
   }, [open]);
 
   useEffect(() => {
@@ -201,6 +216,16 @@ export function CharacterCardMenu({ characterId }: CharacterCardMenuProps) {
                 Character options
               </p>
             </div>
+          </li>
+          <li role="none">
+            <Link
+              href={`/characters/character-builder/${characterId}`}
+              role="menuitem"
+              className="m-2 block w-[calc(100%-1rem)] cursor-pointer rounded-lg px-3 py-2.5 text-left text-zinc-200 transition hover:bg-zinc-800/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c82434]/40"
+              onClick={() => setOpen(false)}
+            >
+              Edit
+            </Link>
           </li>
           <li role="none">
             <button

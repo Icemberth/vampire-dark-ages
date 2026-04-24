@@ -65,6 +65,11 @@ export function ClanCarousel({
     [clans.length],
   );
   const safeIndex = clans.length ? Math.min(index, clans.length - 1) : 0;
+  // Stable string for the current clan *list*; parent re-renders may pass a new
+  // clans[] reference each time — use this instead of clans in effect deps.
+  const clansKey = clans.length
+    ? clans.map((c) => c.id).join("|")
+    : "";
 
   React.useEffect(() => {
     if (mode !== "embed" || !clans.length) return;
@@ -76,17 +81,21 @@ export function ClanCarousel({
     queueMicrotask(() => {
       setIndex((prev) => (prev === i ? prev : i));
     });
-  }, [mode, clans, selectedClanId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- clansKey replaces clans ref in deps
+  }, [mode, clansKey, selectedClanId]);
 
+  // Only push the visible clan to the parent when the user has swiped/used
+  // controls (see `markClanUser`). Otherwise we would fire on first paint
+  // with a stale `safeIndex` and fight the effect that syncs `index` to
+  // `selectedClanId` (maximum update depth when editing a character).
   React.useEffect(() => {
     if (mode !== "embed" || !onClanIdChange || !clans[safeIndex]) return;
-    if (!userPickedClanRef.current) {
-      if (selectedClanId == null || selectedClanId === "") {
-        return;
-      }
-    }
-    onClanIdChange(clans[safeIndex].id);
-  }, [mode, onClanIdChange, clans, safeIndex, selectedClanId]);
+    if (!userPickedClanRef.current) return;
+    const id = clans[safeIndex].id;
+    if (id === selectedClanId) return;
+    onClanIdChange(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- clansKey replaces clans ref in deps
+  }, [mode, onClanIdChange, clansKey, safeIndex, selectedClanId]);
 
   const markClanUser = React.useCallback(() => {
     userPickedClanRef.current = true;

@@ -7,7 +7,81 @@
   --vda-character-frame-border: var(--vda-blood);
 }
 
-/* Marble step bar: one row, serif caps; active = white, inactive = muted (reference: sheet tab bar) */
+/* Same CTA as “Create character” on `app/characters/page.tsx` (vtm-button-distress + #c4171d) */
+.vda-wizard-cta {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  max-width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  padding: 0.5rem 0.8rem;
+  font-family: var(--font-heading), ui-serif, Georgia, serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  background-color: #c4171d;
+  background-image: url("/icons/vtm-button-distress.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: multiply;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: filter 0.15s ease, opacity 0.15s ease;
+}
+
+@media (min-width: 640px) {
+  .vda-wizard-cta {
+    font-size: 0.8rem;
+    padding: 0.55rem 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .vda-wizard-cta {
+    font-size: 0.9rem;
+    padding: 0.55rem 1.1rem;
+  }
+}
+
+.vda-wizard-cta:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.vda-wizard-cta:active:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+.vda-wizard-cta:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: none;
+}
+
+/* Cancel: translucent crimson (opaque texture reads through) */
+.vda-wizard-cta--cancel {
+  background-color: #c4171d59;
+}
+
+/* Long label (e.g. “Save & return to list”): allow two lines in the step bar */
+.vda-wizard-cta--wrap {
+  white-space: normal;
+  line-height: 1.15;
+  max-width: 11rem;
+  padding-block: 0.4rem;
+}
+
+/* Marble step bar: Cancel | steps | Next/Back+Save; tab buttons use .vda-wizard-step-bar-tab */
 .vda-wizard-step-bar {
   position: relative;
   margin-top: 1.5rem;
@@ -18,21 +92,42 @@
   background-size: cover;
   background-position: center;
   box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.48);
-  padding: 0.55rem 0.5rem;
+  padding: 0.5rem 0.45rem;
+}
+
+.vda-wizard-step-bar-layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.4rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.vda-wizard-step-bar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.25rem 0.35rem;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .vda-wizard-step-bar-list {
   display: flex;
+  flex: 1 1 10rem;
+  min-width: 0;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-evenly;
-  gap: 0.5rem 0.75rem;
+  gap: 0.4rem 0.65rem;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.vda-wizard-step-bar button {
+.vda-wizard-step-bar .vda-wizard-step-bar-tab {
   font-family: var(--font-heading), ui-serif, Georgia, serif;
   font-size: clamp(0.6rem, 0.6rem + 0.4vw, 0.75rem);
   font-weight: 500;
@@ -49,21 +144,21 @@
   transition: color 0.15s ease, font-weight 0.15s ease;
 }
 
-/* Future step: not clickable, same muted look as other inactive labels */
-.vda-wizard-step-bar button:disabled {
+.vda-wizard-step-bar .vda-wizard-step-bar-tab:disabled {
   cursor: not-allowed;
   opacity: 1;
 }
 
-.vda-wizard-step-bar button:not(:disabled) {
+.vda-wizard-step-bar .vda-wizard-step-bar-tab:not(:disabled) {
   cursor: pointer;
 }
 
-.vda-wizard-step-bar button:not(:disabled):hover {
+.vda-wizard-step-bar .vda-wizard-step-bar-tab:not(:disabled):hover {
   color: rgba(255, 255, 255, 0.82);
 }
 
-.vda-wizard-step-bar .vda-wizard-step-bar-active {
+.vda-wizard-step-bar
+  .vda-wizard-step-bar-tab.vda-wizard-step-bar-active {
   color: #fff;
   font-weight: 600;
   cursor: default;
