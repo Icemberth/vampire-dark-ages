@@ -67,9 +67,7 @@ export function ClanCarousel({
   const safeIndex = clans.length ? Math.min(index, clans.length - 1) : 0;
   // Stable string for the current clan *list*; parent re-renders may pass a new
   // clans[] reference each time — use this instead of clans in effect deps.
-  const clansKey = clans.length
-    ? clans.map((c) => c.id).join("|")
-    : "";
+  const clansKey = clans.length ? clans.map((c) => c.id).join("|") : "";
 
   React.useEffect(() => {
     if (mode !== "embed" || !clans.length) return;
@@ -369,8 +367,14 @@ export function ClanCarousel({
               {clans.map((clan, i) => {
                 const offset = i - safeIndex;
                 const x = (offset - progress) * stepX;
-                const rotateYRaw = (offset - progress) * -28;
-                const rotateY = Math.max(-55, Math.min(55, rotateYRaw));
+                // Embed: gentler 3D so cards are not wider than the clip region on narrow columns.
+                const yRotatePerStep = isEmbed ? 20 : 28;
+                const yRotateClamp = isEmbed ? 40 : 55;
+                const rotateYRaw = (offset - progress) * -yRotatePerStep;
+                const rotateY = Math.max(
+                  -yRotateClamp,
+                  Math.min(yRotateClamp, rotateYRaw),
+                );
                 const z = -Math.abs(offset - progress) * 120;
                 const scale =
                   1 - Math.min(0.18, Math.abs(offset - progress) * 0.08);
@@ -382,7 +386,14 @@ export function ClanCarousel({
                 return (
                   <div
                     key={clan.id}
-                    className="absolute left-1/2 top-1/2 w-[min(92vw,420px)]"
+                    className={[
+                      "absolute left-1/2 top-1/2",
+                      isEmbed
+                        ? // Parent has padding: vw is wider than the column — use 100% of
+                          // the viewport region + cap size so 3D rotation does not clip.
+                          "w-[min(100%,20rem)] min-w-0 sm:w-[min(100%,20rem)] md:w-[min(100%,26.25rem)]"
+                        : "w-[min(92vw,420px)]",
+                    ].join(" ")}
                     style={{
                       transform: `translate(-50%, -50%) translate3d(${x}px, 0px, ${z}px) rotateY(${rotateY}deg) scale(${scale})`,
                       opacity,
@@ -409,7 +420,11 @@ export function ClanCarousel({
                     >
                       {/* right-side emblem (tinted) */}
                       <div
-                        className="pointer-events-none absolute -right-10 top-1/2 h-[140%] w-[78%] -translate-y-1/2 opacity-35 sm:opacity-40"
+                        className={
+                          isEmbed
+                            ? "pointer-events-none absolute -right-4 top-1/2 h-[115%] w-[62%] -translate-y-1/2 opacity-32 sm:-right-7 sm:h-[128%] sm:w-[70%] sm:opacity-36"
+                            : "pointer-events-none absolute -right-10 top-1/2 h-[140%] w-[78%] -translate-y-1/2 opacity-35 sm:opacity-40"
+                        }
                         style={{
                           backgroundColor: bloodRgb,
                           WebkitMaskImage: `url(${iconSrc})`,
@@ -426,12 +441,24 @@ export function ClanCarousel({
                       {/* subtle vignette to keep text readable */}
                       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_left,rgba(0,0,0,0.65),transparent_55%)]" />
 
-                      <div className="relative z-10 p-5 sm:p-6">
-                        <div className="flex items-start justify-between gap-4 mb-4">
+                      <div
+                        className={[
+                          "relative z-10",
+                          isEmbed ? "p-3.5 sm:p-5 md:p-6" : "p-5 sm:p-6",
+                        ].join(" ")}
+                      >
+                        <div className="mb-4 flex min-w-0 flex-wrap items-start justify-between gap-2 sm:gap-4">
                           <div className="min-w-0">
                             <div className="min-w-0">
-                              <div className="flex items-baseline gap-2">
-                                <h2 className="truncate text-xl font-bold text-zinc-100 sm:text-2xl">
+                              <div className="flex min-w-0 flex-wrap items-baseline gap-2">
+                                <h2
+                                  className={[
+                                    "min-w-0 max-w-full font-bold text-zinc-100",
+                                    isEmbed
+                                      ? "truncate text-lg sm:text-2xl"
+                                      : "truncate text-xl sm:text-2xl",
+                                  ].join(" ")}
+                                >
                                   {clan.name}
                                 </h2>
                                 {clan.subName ? (
@@ -449,7 +476,7 @@ export function ClanCarousel({
                           </div>
 
                           {clan.isBloodline ? (
-                            <span className="text-[10px] bg-[#c82434]/20 text-[#c82434] px-2 py-1 rounded uppercase font-bold tracking-tighter">
+                            <span className="shrink-0 self-start text-[10px] font-bold uppercase tracking-tighter rounded bg-[#c82434]/20 px-2 py-1 text-[#c82434]">
                               Bloodline
                             </span>
                           ) : null}
@@ -465,12 +492,12 @@ export function ClanCarousel({
                           </p>
                         )}
 
-                        <div className="grid gap-4">
-                          <div>
+                        <div className="grid min-w-0 gap-4">
+                          <div className="min-w-0">
                             <h3 className="text-xs uppercase font-bold tracking-wide text-zinc-500 mb-2">
                               Disciplines
                             </h3>
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex min-w-0 flex-wrap gap-1.5 sm:gap-2">
                               {(clan.disciplines?.length
                                 ? clan.disciplines
                                 : ["—"]

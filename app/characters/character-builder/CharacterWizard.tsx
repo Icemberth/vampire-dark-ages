@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -36,6 +36,25 @@ export function CharacterWizard({ character, clans }: CharacterWizardProps) {
   const [generation, setGeneration] = useState(
     String(character.generation ?? 12),
   );
+  const [clanSearch, setClanSearch] = useState("");
+
+  const clanSearchMatches = useMemo(() => {
+    const q = clanSearch.trim().toLowerCase();
+    if (!q) return [];
+    return clans
+      .filter((c) =>
+        [c.name, c.subName, c.nickname]
+          .filter((x): x is string => Boolean(x))
+          .some((x) => x.toLowerCase().includes(q)),
+      )
+      .slice(0, 12);
+  }, [clans, clanSearch]);
+
+  const applyClanFromSearch = (id: string) => {
+    setClanId(id);
+    const c = clans.find((x) => x.id === id);
+    setClanSearch(c ? c.name : "");
+  };
 
   const goNext = () => {
     if (step !== 0) return;
@@ -166,7 +185,7 @@ export function CharacterWizard({ character, clans }: CharacterWizardProps) {
       {step === 0 ? (
         <div className="vda-wizard-concept-panel box-border mt-6 flex min-w-0 flex-col">
           <div className="vda-wizard-concept-panel-body flex min-w-0 flex-1 flex-col gap-6">
-            <h2 className="text-sm font-semibold text-zinc-100 [font-family:var(--font-heading),serif]">
+            <h2 className="vda-wizard-section-title">
               Character concept
             </h2>
             <div className="flex flex-col gap-3">
@@ -233,12 +252,71 @@ export function CharacterWizard({ character, clans }: CharacterWizardProps) {
 
             <div className="flex min-h-[min(72svh,40rem)] w-full min-w-0 flex-col border-t border-white/15 pt-5 sm:min-h-[min(75svh,44rem)]">
               {clans.length > 0 ? (
-                <ClanCarousel
-                  clans={clans}
-                  mode="embed"
-                  selectedClanId={clanId || null}
-                  onClanIdChange={setClanId}
-                />
+                <>
+                  <div className="relative z-20 mb-3 w-full max-w-md">
+                    <label
+                      className="vda-wizard-label"
+                      htmlFor="char-wizard-clan-search"
+                    >
+                      Find a clan
+                    </label>
+                    <input
+                      id="char-wizard-clan-search"
+                      type="search"
+                      value={clanSearch}
+                      onChange={(e) => setClanSearch(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key !== "Enter") return;
+                        e.preventDefault();
+                        const m = clanSearchMatches;
+                        if (m.length === 1) applyClanFromSearch(m[0].id);
+                        else if (m.length > 1) applyClanFromSearch(m[0].id);
+                      }}
+                      className="vda-wizard-input vda-wizard-clan-search"
+                      placeholder="Search by name, bloodline, or nickname…"
+                      autoComplete="off"
+                    />
+                    {clanSearch.trim() && clanSearchMatches.length > 0 ? (
+                      <ul
+                        id="char-wizard-clan-search-list"
+                        role="listbox"
+                        className="absolute left-0 right-0 top-full z-30 mt-1 max-h-56 overflow-auto rounded border border-zinc-700 bg-black/95 py-1 shadow-lg"
+                      >
+                        {clanSearchMatches.map((c) => (
+                          <li key={c.id} role="presentation">
+                            <button
+                              type="button"
+                              role="option"
+                              aria-selected={c.id === clanId}
+                              className="flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left text-sm text-zinc-200 transition hover:bg-zinc-900/90"
+                              onMouseDown={(ev) => ev.preventDefault()}
+                              onClick={() => applyClanFromSearch(c.id)}
+                            >
+                              <span className="font-medium text-zinc-100">
+                                {c.name}
+                              </span>
+                              {c.subName ? (
+                                <span className="text-xs text-zinc-500">
+                                  {c.subName}
+                                </span>
+                              ) : null}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : clanSearch.trim() && clanSearchMatches.length === 0 ? (
+                      <p className="mt-1.5 text-xs text-zinc-500">
+                        No clan matches that search.
+                      </p>
+                    ) : null}
+                  </div>
+                  <ClanCarousel
+                    clans={clans}
+                    mode="embed"
+                    selectedClanId={clanId || null}
+                    onClanIdChange={setClanId}
+                  />
+                </>
               ) : (
                 <p className="text-sm text-zinc-400">
                   No clans in the codex yet.
@@ -311,7 +389,7 @@ export function CharacterWizard({ character, clans }: CharacterWizardProps) {
 
       {step === 1 ? (
         <div className="mt-6 flex flex-col gap-4 rounded-xl border border-zinc-800/80 bg-black/30 p-4 sm:p-6">
-          <h2 className="text-sm font-semibold text-zinc-200 [font-family:var(--font-heading),serif]">
+          <h2 className="vda-wizard-section-title">
             Generation
           </h2>
           <div className="vda-wizard-field max-w-sm">

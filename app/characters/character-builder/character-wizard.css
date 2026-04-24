@@ -28,7 +28,9 @@
   text-decoration: none;
   text-align: center;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.2),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
   background-color: #c4171d;
   background-image: url("/icons/vtm-button-distress.png");
   background-size: cover;
@@ -37,7 +39,9 @@
   background-blend-mode: multiply;
   cursor: pointer;
   white-space: nowrap;
-  transition: filter 0.15s ease, opacity 0.15s ease;
+  transition:
+    filter 0.15s ease,
+    opacity 0.15s ease;
 }
 
 @media (min-width: 640px) {
@@ -141,7 +145,9 @@
   border: none;
   cursor: default;
   padding: 0.2rem 0.35rem;
-  transition: color 0.15s ease, font-weight 0.15s ease;
+  transition:
+    color 0.15s ease,
+    font-weight 0.15s ease;
 }
 
 .vda-wizard-step-bar .vda-wizard-step-bar-tab:disabled {
@@ -157,8 +163,7 @@
   color: rgba(255, 255, 255, 0.82);
 }
 
-.vda-wizard-step-bar
-  .vda-wizard-step-bar-tab.vda-wizard-step-bar-active {
+.vda-wizard-step-bar .vda-wizard-step-bar-tab.vda-wizard-step-bar-active {
   color: #fff;
   font-weight: 600;
   cursor: default;
@@ -213,12 +218,24 @@
 .vda-wizard-label {
   display: block;
   font-family: var(--font-sans, system-ui, sans-serif);
-  font-size: 0.6875rem;
+  font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--vda-field-accent);
   margin-bottom: 0.4rem;
+}
+
+/* Step section titles: same language as field labels, slightly larger */
+.vda-wizard-section-title {
+  display: block;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--vda-field-accent);
+  margin: 0;
 }
 
 .vda-wizard-input,
@@ -250,6 +267,24 @@
 .vda-wizard-textarea {
   min-height: 5rem;
   resize: vertical;
+}
+
+/* Red clear (“×”) on clan search: WebKit / Blink */
+.vda-wizard-clan-search::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  display: block;
+  width: 0.85rem;
+  height: 0.85rem;
+  margin: 0 0 0 0.2rem;
+  cursor: pointer;
+  background: no-repeat center / contain
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath stroke='%23c4171d' stroke-width='1.6' stroke-linecap='round' d='M3 3l6 6M9 3L3 9'/%3E%3C/svg%3E");
+  opacity: 0.95;
+}
+
+.vda-wizard-clan-search::-webkit-search-cancel-button:hover {
+  opacity: 1;
+  filter: brightness(1.15);
 }
 
 /* number spinners: keep the bar subtle on black */
