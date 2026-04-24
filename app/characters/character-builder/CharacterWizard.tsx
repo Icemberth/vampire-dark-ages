@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,62 @@ const STEPS = [
   { label: "Concept", description: "Name, concept, nature, demeanor, clan" },
   { label: "Blood", description: "Generation" },
 ] as const;
+
+function InfoFieldButton({ label }: { label: string }) {
+  return (
+    <button
+      type="button"
+      className="vda-wizard-label-info"
+      aria-label={label}
+    >
+      <Image
+        src="/icons/info.png"
+        alt=""
+        width={24}
+        height={24}
+        unoptimized
+        className="h-6 w-6 object-contain"
+      />
+    </button>
+  );
+}
+
+function FormLabelWithInfo({
+  htmlFor,
+  children,
+  infoLabel,
+}: {
+  htmlFor: string;
+  children: ReactNode;
+  /** Accessibility label for the info control */
+  infoLabel: string;
+}) {
+  return (
+    <div className="vda-wizard-label-row">
+      <label className="vda-wizard-label" htmlFor={htmlFor}>
+        {children}
+      </label>
+      <InfoFieldButton label={infoLabel} />
+    </div>
+  );
+}
+
+function FormSectionTitleWithInfo({
+  children,
+  infoLabel,
+}: {
+  children: ReactNode;
+  infoLabel: string;
+}) {
+  return (
+    <div className="vda-wizard-section-title-row">
+      <h2 className="vda-wizard-section-title">
+        {children}
+      </h2>
+      <InfoFieldButton label={infoLabel} />
+    </div>
+  );
+}
 
 type CharacterWizardProps = {
   character: CharacterRow;
@@ -185,14 +241,17 @@ export function CharacterWizard({ character, clans }: CharacterWizardProps) {
       {step === 0 ? (
         <div className="vda-wizard-concept-panel box-border mt-6 flex min-w-0 flex-col">
           <div className="vda-wizard-concept-panel-body flex min-w-0 flex-1 flex-col gap-6">
-            <h2 className="vda-wizard-section-title">
+            <FormSectionTitleWithInfo infoLabel="About character concept">
               Character concept
-            </h2>
+            </FormSectionTitleWithInfo>
             <div className="flex flex-col gap-3">
               <div className="vda-wizard-field">
-                <label className="vda-wizard-label" htmlFor="char-wizard-name">
+                <FormLabelWithInfo
+                  htmlFor="char-wizard-name"
+                  infoLabel="About character name"
+                >
                   Character name
-                </label>
+                </FormLabelWithInfo>
                 <input
                   id="char-wizard-name"
                   value={name}
@@ -203,12 +262,12 @@ export function CharacterWizard({ character, clans }: CharacterWizardProps) {
                 />
               </div>
               <div className="vda-wizard-field">
-                <label
-                  className="vda-wizard-label"
+                <FormLabelWithInfo
                   htmlFor="char-wizard-concept"
+                  infoLabel="About concept"
                 >
                   Concept
-                </label>
+                </FormLabelWithInfo>
                 <textarea
                   id="char-wizard-concept"
                   value={concept}
@@ -219,12 +278,12 @@ export function CharacterWizard({ character, clans }: CharacterWizardProps) {
                 />
               </div>
               <div className="vda-wizard-field">
-                <label
-                  className="vda-wizard-label"
+                <FormLabelWithInfo
                   htmlFor="char-wizard-nature"
+                  infoLabel="About nature"
                 >
                   Nature
-                </label>
+                </FormLabelWithInfo>
                 <input
                   id="char-wizard-nature"
                   value={nature}
@@ -234,12 +293,12 @@ export function CharacterWizard({ character, clans }: CharacterWizardProps) {
                 />
               </div>
               <div className="vda-wizard-field">
-                <label
-                  className="vda-wizard-label"
+                <FormLabelWithInfo
                   htmlFor="char-wizard-demeanor"
+                  infoLabel="About demeanor"
                 >
                   Demeanor
-                </label>
+                </FormLabelWithInfo>
                 <input
                   id="char-wizard-demeanor"
                   value={demeanor}
@@ -254,12 +313,12 @@ export function CharacterWizard({ character, clans }: CharacterWizardProps) {
               {clans.length > 0 ? (
                 <>
                   <div className="relative z-20 mb-3 w-full max-w-md">
-                    <label
-                      className="vda-wizard-label"
+                    <FormLabelWithInfo
                       htmlFor="char-wizard-clan-search"
+                      infoLabel="About finding a clan"
                     >
                       Find a clan
-                    </label>
+                    </FormLabelWithInfo>
                     <input
                       id="char-wizard-clan-search"
                       type="search"
@@ -389,16 +448,16 @@ export function CharacterWizard({ character, clans }: CharacterWizardProps) {
 
       {step === 1 ? (
         <div className="mt-6 flex flex-col gap-4 rounded-xl border border-zinc-800/80 bg-black/30 p-4 sm:p-6">
-          <h2 className="vda-wizard-section-title">
+          <FormSectionTitleWithInfo infoLabel="About generation (blood)">
             Generation
-          </h2>
+          </FormSectionTitleWithInfo>
           <div className="vda-wizard-field max-w-sm">
-            <label
-              className="vda-wizard-label"
+            <FormLabelWithInfo
               htmlFor="char-wizard-generation"
+              infoLabel="About generation"
             >
               Generation
-            </label>
+            </FormLabelWithInfo>
             <input
               id="char-wizard-generation"
               type="number"

@@ -19,20 +19,15 @@ export type ClanCarouselProps = {
   clans: Clan[];
   /** Default `page` is full-bleed (clans route). `embed` is for the character builder. */
   mode?: ClanCarouselMode;
-  /** When in `embed` mode, syncs carousel position. Use `""` for “not chosen yet”. */
+  /** When in `embed` mode, syncs selection. Use `""` for “not chosen yet”. */
   selectedClanId?: string | null;
-  /**
-   * When in `embed` mode, called when a clan is chosen (swipe / select).
-   * Not called on initial “browse at index 0” while `selectedClanId` is still empty
-   * until the user interacts with the carousel.
-   */
+  /** When in `embed` mode, called when a clan is chosen (swipe, dots, or keys). */
   onClanIdChange?: (id: string) => void;
 };
 
 function normalizeIconKey(input: string) {
   return (
     input
-      // Case-insensitive matching
       .toLowerCase()
       .replace(/&/g, "and")
       .replace(/[^a-z0-9]+/g, "")
@@ -42,11 +37,159 @@ function normalizeIconKey(input: string) {
 
 const DEFAULT_CLAN_ICON_SRC = "/icons/clans/darkAges.svg";
 
-// Key aliases to match filename conventions / common alternate names.
 const ICON_KEY_ALIAS: Record<string, string> = {
-  // "Children of Set" is commonly used for Setites
   childrenofset: "settites",
 };
+
+function clamp(n: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, n));
+}
+
+function scrollIndexForEl(scroller: HTMLDivElement, slideCount: number) {
+  const w = scroller.clientWidth;
+  if (w <= 0) return 0;
+  return clamp(
+    Math.round(scroller.scrollLeft / w),
+    0,
+    Math.max(0, slideCount - 1),
+  );
+}
+
+function scrollClanScrollerTo(
+  scroller: HTMLDivElement | null,
+  index: number,
+  slideCount: number,
+) {
+  if (!scroller) return;
+  const w = scroller.clientWidth;
+  if (w <= 0) return;
+  scroller.scrollTo({ left: clamp(index, 0, slideCount - 1) * w });
+}
+
+type EmblemSize = "embed" | "page";
+
+function ClanCardContent({
+  clan,
+  isActive,
+  isEmbed,
+  emblemSize,
+  getResolvedClanIconSrc,
+  bloodRgb = "var(--vda-blood)",
+}: {
+  clan: Clan;
+  isActive: boolean;
+  isEmbed: boolean;
+  emblemSize: EmblemSize;
+  getResolvedClanIconSrc: (name: string) => string;
+  bloodRgb?: string;
+}) {
+  const iconSrc = getResolvedClanIconSrc(clan.name);
+  return (
+    <div
+      className={[
+        "relative overflow-hidden rounded-2xl border bg-zinc-950",
+        isActive ? "border-[#c82434]/70" : "border-zinc-800/80",
+      ].join(" ")}
+      style={{
+        boxShadow: isActive
+          ? "0 28px 80px color-mix(in srgb, var(--vda-blood) 25%, transparent), 0 14px 34px rgba(0,0,0,0.55)"
+          : "0 18px 50px rgba(0,0,0,0.55)",
+      }}
+    >
+      <div
+        className={
+          emblemSize === "embed"
+            ? "pointer-events-none absolute -right-4 top-1/2 h-[115%] w-[62%] -translate-y-1/2 opacity-32 sm:-right-7 sm:h-[128%] sm:w-[70%] sm:opacity-36"
+            : "pointer-events-none absolute -right-10 top-1/2 h-[140%] w-[78%] -translate-y-1/2 opacity-35 sm:opacity-40"
+        }
+        style={{
+          backgroundColor: bloodRgb,
+          WebkitMaskImage: `url(${iconSrc})`,
+          maskImage: `url(${iconSrc})`,
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
+          WebkitMaskPosition: "right center",
+          maskPosition: "right center",
+          WebkitMaskSize: "contain",
+          maskSize: "contain",
+        }}
+      />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_left,rgba(0,0,0,0.65),transparent_55%)]" />
+      <div
+        className={[
+          "relative z-10",
+          isEmbed ? "p-3.5 sm:p-5 md:p-6" : "p-5 sm:p-6",
+        ].join(" ")}
+      >
+        <div className="mb-4 flex min-w-0 flex-wrap items-start justify-between gap-2 sm:gap-4">
+          <div className="min-w-0">
+            <div className="min-w-0">
+              <div className="flex min-w-0 flex-wrap items-baseline gap-2">
+                <h2
+                  className={[
+                    "min-w-0 max-w-full font-bold text-zinc-100",
+                    isEmbed
+                      ? "truncate text-lg sm:text-2xl"
+                      : "truncate text-xl sm:text-2xl",
+                  ].join(" ")}
+                >
+                  {clan.name}
+                </h2>
+                {clan.subName ? (
+                  <span className="shrink-0 text-sm font-semibold text-[#c82434]">
+                    ({clan.subName})
+                  </span>
+                ) : null}
+              </div>
+              {clan.nickname ? (
+                <p className="truncate text-sm text-zinc-500 italic">
+                  “{clan.nickname}”
+                </p>
+              ) : null}
+            </div>
+          </div>
+          {clan.isBloodline ? (
+            <span className="shrink-0 self-start rounded bg-[#c82434]/20 px-2 py-1 text-[10px] font-bold uppercase tracking-tighter text-[#c82434]">
+              Bloodline
+            </span>
+          ) : null}
+        </div>
+        {clan.description ? (
+          <p className="mb-5 line-clamp-4 text-sm leading-relaxed text-zinc-300/90">
+            {clan.description}
+          </p>
+        ) : (
+          <p className="mb-5 text-sm italic text-zinc-500">No description available.</p>
+        )}
+        <div className="grid min-w-0 gap-4">
+          <div className="min-w-0">
+            <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-zinc-500">
+              Disciplines
+            </h3>
+            <div className="flex min-w-0 flex-wrap gap-1.5 sm:gap-2">
+              {(clan.disciplines?.length ? clan.disciplines : ["—"]).map((d) => (
+                <span
+                  key={`${clan.id}:${d}`}
+                  className="rounded border border-zinc-800 bg-zinc-900/70 px-2 py-1 text-xs text-zinc-200"
+                >
+                  {d}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="border-t border-zinc-800/80 pt-4">
+            <h3 className="mb-1 text-xs font-bold uppercase tracking-wide text-[#c82434]">
+              Weakness
+            </h3>
+            <p className="text-xs italic leading-relaxed text-zinc-300/80">
+              {clan.weakness || "—"}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function ClanCarousel({
   clans,
@@ -56,6 +199,16 @@ export function ClanCarousel({
 }: ClanCarouselProps) {
   const [index, setIndex] = React.useState(0);
   const userPickedClanRef = React.useRef(false);
+  const clansRef = React.useRef(clans);
+  const scrollerRef = React.useRef<HTMLDivElement | null>(null);
+  const programmaticScrollRef = React.useRef(false);
+  const indexRef = React.useRef(0);
+  const scrollRafRef = React.useRef<number | null>(null);
+  const iconTestStartedRef = React.useRef<Set<string>>(new Set());
+  const lastIconClansKeyRef = React.useRef<string>("");
+  const [iconSrcByKey, setIconSrcByKey] = React.useState<
+    Record<string, string>
+  >({});
 
   const clampIndex = React.useCallback(
     (n: number) => {
@@ -64,28 +217,60 @@ export function ClanCarousel({
     },
     [clans.length],
   );
-  const safeIndex = clans.length ? Math.min(index, clans.length - 1) : 0;
-  // Stable string for the current clan *list*; parent re-renders may pass a new
-  // clans[] reference each time — use this instead of clans in effect deps.
-  const clansKey = clans.length ? clans.map((c) => c.id).join("|") : "";
 
-  React.useEffect(() => {
-    if (mode !== "embed" || !clans.length) return;
-    if (selectedClanId == null || selectedClanId === "") {
-      return;
-    }
-    const i = clans.findIndex((c) => c.id === selectedClanId);
+  const safeIndex = clans.length ? Math.min(index, clans.length - 1) : 0;
+  const clansKey = clans.length ? clans.map((c) => c.id).join("|") : "";
+  const isEmbed = mode === "embed";
+  const bloodRgb = "var(--vda-blood)";
+
+  React.useLayoutEffect(() => {
+    clansRef.current = clans;
+  }, [clans]);
+
+  React.useLayoutEffect(() => {
+    indexRef.current = index;
+  }, [index]);
+
+  // Align `index` and scroll with `selectedClanId` in embed (e.g. edit character).
+  React.useLayoutEffect(() => {
+    const list = clansRef.current;
+    if (mode !== "embed" || !list.length) return;
+    if (selectedClanId == null || selectedClanId === "") return;
+    const i = list.findIndex((c) => c.id === selectedClanId);
     if (i < 0) return;
-    queueMicrotask(() => {
+
+    const apply = (el: HTMLDivElement) => {
+      const w = el.clientWidth;
+      if (w <= 0) return false;
+      programmaticScrollRef.current = true;
       setIndex((prev) => (prev === i ? prev : i));
+      if (Math.abs(el.scrollLeft - i * w) > 0.5) {
+        el.scrollTo({ left: i * w, behavior: "auto" });
+      }
+      queueMicrotask(() => {
+        programmaticScrollRef.current = false;
+      });
+      return true;
+    };
+
+    const el = scrollerRef.current;
+    if (!el) return;
+    if (apply(el)) return;
+
+    let cancelled = false;
+    const raf = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (cancelled) return;
+        const el2 = scrollerRef.current;
+        if (el2) apply(el2);
+      });
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- clansKey replaces clans ref in deps
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+    };
   }, [mode, clansKey, selectedClanId]);
 
-  // Only push the visible clan to the parent when the user has swiped/used
-  // controls (see `markClanUser`). Otherwise we would fire on first paint
-  // with a stale `safeIndex` and fight the effect that syncs `index` to
-  // `selectedClanId` (maximum update depth when editing a character).
   React.useEffect(() => {
     if (mode !== "embed" || !onClanIdChange || !clans[safeIndex]) return;
     if (!userPickedClanRef.current) return;
@@ -99,86 +284,77 @@ export function ClanCarousel({
     userPickedClanRef.current = true;
   }, []);
 
-  const isDraggingRef = React.useRef(false);
-  const dragStartXRef = React.useRef(0);
-  const dragDeltaXRef = React.useRef(0);
-  const rafRef = React.useRef<number | null>(null);
-  const viewportRef = React.useRef<HTMLDivElement | null>(null);
-
-  const [dragX, setDragX] = React.useState(0);
-  const [viewportWidth, setViewportWidth] = React.useState<number>(0);
-  const [isDragging, setIsDragging] = React.useState(false);
-  const [iconSrcByKey, setIconSrcByKey] = React.useState<
-    Record<string, string>
-  >({});
-
-  const setDragXThrottled = React.useCallback((next: number) => {
-    dragDeltaXRef.current = next;
-    if (rafRef.current != null) return;
-    rafRef.current = window.requestAnimationFrame(() => {
-      rafRef.current = null;
-      setDragX(dragDeltaXRef.current);
+  const onScrollerScroll = React.useCallback(() => {
+    if (programmaticScrollRef.current) return;
+    if (scrollRafRef.current != null) return;
+    scrollRafRef.current = window.requestAnimationFrame(() => {
+      scrollRafRef.current = null;
+      const el = scrollerRef.current;
+      if (!el) return;
+      const i = scrollIndexForEl(el, clans.length);
+      setIndex((prev) => {
+        if (i === prev) return prev;
+        if (!userPickedClanRef.current) {
+          markClanUser();
+        }
+        return i;
+      });
     });
-  }, []);
+  }, [clans.length, markClanUser]);
+
+  React.useEffect(
+    () => () => {
+      if (scrollRafRef.current != null) {
+        window.cancelAnimationFrame(scrollRafRef.current);
+      }
+    },
+    [],
+  );
 
   React.useEffect(() => {
-    return () => {
-      if (rafRef.current != null) window.cancelAnimationFrame(rafRef.current);
-    };
-  }, []);
-
-  React.useEffect(() => {
-    const el = viewportRef.current;
+    const el = scrollerRef.current;
     if (!el) return;
-
     const ro = new ResizeObserver(() => {
-      setViewportWidth(el.clientWidth || 0);
+      const i = indexRef.current;
+      programmaticScrollRef.current = true;
+      scrollClanScrollerTo(el, i, clans.length);
+      window.setTimeout(() => {
+        programmaticScrollRef.current = false;
+      }, 100);
     });
     ro.observe(el);
-    setViewportWidth(el.clientWidth || 0);
-
     return () => ro.disconnect();
-  }, []);
+  }, [clans.length, clansKey]);
 
   React.useEffect(() => {
-    // Resolve icons by convention: /icons/clans/<normalized>.svg
-    // If the file 404s/misses, fall back to darkAges.svg.
+    if (clansKey !== lastIconClansKeyRef.current) {
+      iconTestStartedRef.current.clear();
+      lastIconClansKeyRef.current = clansKey;
+    }
+    const list = clansRef.current;
+    if (!list.length) return;
     const keys = Array.from(
-      new Set(clans.map((c) => normalizeIconKey(c.name)).filter(Boolean)),
+      new Set(list.map((c) => normalizeIconKey(c.name)).filter(Boolean)),
     );
-    if (!keys.length) return;
-
-    let cancelled = false;
-
-    keys.forEach((key) => {
-      // If already resolved, don't re-check.
-      if (iconSrcByKey[key]) return;
-
+    for (const key of keys) {
+      if (iconTestStartedRef.current.has(key)) continue;
+      iconTestStartedRef.current.add(key);
       const candidateName = ICON_KEY_ALIAS[key] ?? key;
       const candidateSrc = `/icons/clans/${candidateName}.svg`;
-
       const img = new Image();
       img.onload = () => {
-        if (cancelled) return;
-        setIconSrcByKey((prev) => ({
-          ...prev,
-          [key]: candidateSrc,
-        }));
+        setIconSrcByKey((prev) =>
+          prev[key] ? prev : { ...prev, [key]: candidateSrc },
+        );
       };
       img.onerror = () => {
-        if (cancelled) return;
-        setIconSrcByKey((prev) => ({
-          ...prev,
-          [key]: DEFAULT_CLAN_ICON_SRC,
-        }));
+        setIconSrcByKey((prev) =>
+          prev[key] ? prev : { ...prev, [key]: DEFAULT_CLAN_ICON_SRC },
+        );
       };
       img.src = candidateSrc;
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [clans, iconSrcByKey]);
+    }
+  }, [clansKey]);
 
   const getResolvedClanIconSrc = React.useCallback(
     (clanName: string) => {
@@ -188,100 +364,41 @@ export function ClanCarousel({
     [iconSrcByKey],
   );
 
-  const bloodRgb = "var(--vda-blood)";
-
-  const goPrev = React.useCallback(() => {
-    markClanUser();
-    setIndex((i) => clampIndex(i - 1));
-  }, [clampIndex, markClanUser]);
-  const goNext = React.useCallback(() => {
-    markClanUser();
-    setIndex((i) => clampIndex(i + 1));
-  }, [clampIndex, markClanUser]);
+  const goToSlide = React.useCallback(
+    (i: number, markUser: boolean) => {
+      if (markUser) {
+        markClanUser();
+      }
+      const el = scrollerRef.current;
+      if (!el) {
+        setIndex(clampIndex(i));
+        return;
+      }
+      const target = clampIndex(i);
+      const w = el.clientWidth;
+      if (w <= 0) {
+        setIndex(target);
+        return;
+      }
+      programmaticScrollRef.current = true;
+      el.scrollTo({ left: target * w, behavior: "auto" });
+      setIndex(target);
+      queueMicrotask(() => {
+        programmaticScrollRef.current = false;
+      });
+    },
+    [clampIndex, markClanUser],
+  );
 
   const onKeyDown = React.useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === "ArrowLeft") goPrev();
-      if (e.key === "ArrowRight") goNext();
-      if (e.key === "Home") {
-        markClanUser();
-        setIndex(0);
-      }
-      if (e.key === "End") {
-        markClanUser();
-        setIndex(Math.max(0, clans.length - 1));
-      }
+      if (e.key === "ArrowLeft") goToSlide(safeIndex - 1, true);
+      if (e.key === "ArrowRight") goToSlide(safeIndex + 1, true);
+      if (e.key === "Home") goToSlide(0, true);
+      if (e.key === "End") goToSlide(clans.length - 1, true);
     },
-    [clans.length, goNext, goPrev, markClanUser],
+    [clans.length, goToSlide, safeIndex],
   );
-
-  const onPointerDown = React.useCallback((e: React.PointerEvent) => {
-    if (e.button !== 0) return;
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-    isDraggingRef.current = true;
-    setIsDragging(true);
-    dragStartXRef.current = e.clientX;
-    setDragX(0);
-  }, []);
-
-  const onPointerMove = React.useCallback(
-    (e: React.PointerEvent) => {
-      if (!isDraggingRef.current) return;
-      const delta = e.clientX - dragStartXRef.current;
-      setDragXThrottled(delta);
-    },
-    [setDragXThrottled],
-  );
-
-  const onTouchStart = React.useCallback((e: React.TouchEvent) => {
-    const t = e.touches[0];
-    if (!t) return;
-    isDraggingRef.current = true;
-    setIsDragging(true);
-    dragStartXRef.current = t.clientX;
-    setDragX(0);
-  }, []);
-
-  const onTouchMove = React.useCallback(
-    (e: React.TouchEvent) => {
-      if (!isDraggingRef.current) return;
-      const t = e.touches[0];
-      if (!t) return;
-      const delta = t.clientX - dragStartXRef.current;
-      setDragXThrottled(delta);
-    },
-    [setDragXThrottled],
-  );
-
-  const stepXMax = viewportWidth >= 1024 ? 280 : 240;
-  const stepX = Math.max(140, Math.min(stepXMax, viewportWidth * 0.55 || 220));
-
-  const endDrag = React.useCallback(() => {
-    if (!isDraggingRef.current) return;
-    isDraggingRef.current = false;
-    setIsDragging(false);
-
-    const threshold = Math.max(48, Math.min(96, viewportWidth * 0.18 || 70));
-    const delta = dragDeltaXRef.current;
-    dragDeltaXRef.current = 0;
-    setDragX(0);
-
-    if (Math.abs(delta) < threshold) return;
-
-    // Allow multi-card jumps based on swipe distance.
-    const effectiveStep = Math.max(120, Math.min(360, stepX || 220));
-    const steps = Math.max(1, Math.round(Math.abs(delta) / effectiveStep));
-    if (mode === "embed") {
-      markClanUser();
-    }
-    if (delta > 0) setIndex((i) => clampIndex(i - steps));
-    else setIndex((i) => clampIndex(i + steps));
-  }, [clampIndex, markClanUser, mode, stepX, viewportWidth]);
-
-  // Make left-swipe advance toward "next" during drag.
-  const progress = -dragX / Math.max(240, stepX * 1.25);
-
-  const isEmbed = mode === "embed";
 
   return (
     <div
@@ -317,7 +434,8 @@ export function ClanCarousel({
                 Clan
               </h2>
               <p className="mt-0.5 text-xs text-zinc-500">
-                Swipe to choose. Your selection applies to this character.
+                Swipe or use the icons below. Your selection applies to this
+                character.
               </p>
             </div>
           ) : (
@@ -326,7 +444,7 @@ export function ClanCarousel({
                 V20 Dark Ages Compendium
               </h1>
               <p className="text-zinc-300 italic drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
-                Select your lineage. Swipe to browse.
+                Select your lineage. Swipe, or use the icons below, to browse.
               </p>
             </div>
           )}
@@ -341,245 +459,109 @@ export function ClanCarousel({
         >
           <div className="relative flex h-full min-h-0 flex-col">
             <div
-              ref={viewportRef}
               className={[
-                "relative flex-1 min-h-0 select-none touch-none",
-                isEmbed
-                  ? "min-h-60 sm:min-h-72 max-h-[min(70svh,34rem)]"
-                  : "max-h-[min(46svh,420px)] sm:max-h-[min(50svh,460px)]",
-                isDragging ? "cursor-grabbing" : "cursor-grab",
+                "flex min-h-0 flex-1 flex-col",
+                isEmbed ? "" : "max-h-full",
               ].join(" ")}
-              style={{ perspective: "1200px" }}
-              role="region"
-              aria-label="Clan carousel"
-              tabIndex={0}
-              onKeyDown={onKeyDown}
-              onPointerDown={onPointerDown}
-              onPointerMove={onPointerMove}
-              onPointerUp={endDrag}
-              onPointerCancel={endDrag}
-              onPointerLeave={endDrag}
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={endDrag}
-              onTouchCancel={endDrag}
             >
-              {clans.map((clan, i) => {
-                const offset = i - safeIndex;
-                const x = (offset - progress) * stepX;
-                // Embed: gentler 3D so cards are not wider than the clip region on narrow columns.
-                const yRotatePerStep = isEmbed ? 20 : 28;
-                const yRotateClamp = isEmbed ? 40 : 55;
-                const rotateYRaw = (offset - progress) * -yRotatePerStep;
-                const rotateY = Math.max(
-                  -yRotateClamp,
-                  Math.min(yRotateClamp, rotateYRaw),
-                );
-                const z = -Math.abs(offset - progress) * 120;
-                const scale =
-                  1 - Math.min(0.18, Math.abs(offset - progress) * 0.08);
-                const opacity =
-                  1 - Math.min(0.8, Math.abs(offset - progress) * 0.22);
-                const isActive = i === safeIndex;
-                const iconSrc = getResolvedClanIconSrc(clan.name);
-
-                return (
-                  <div
-                    key={clan.id}
-                    className={[
-                      "absolute left-1/2 top-1/2",
-                      isEmbed
-                        ? // Parent has padding: vw is wider than the column — use 100% of
-                          // the viewport region + cap size so 3D rotation does not clip.
-                          "w-[min(100%,20rem)] min-w-0 sm:w-[min(100%,20rem)] md:w-[min(100%,26.25rem)]"
-                        : "w-[min(92vw,420px)]",
-                    ].join(" ")}
-                    style={{
-                      transform: `translate(-50%, -50%) translate3d(${x}px, 0px, ${z}px) rotateY(${rotateY}deg) scale(${scale})`,
-                      opacity,
-                      transition: isDragging
-                        ? "none"
-                        : "transform 420ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 420ms ease",
-                      zIndex: 1000 - Math.abs(offset),
-                      transformOrigin: "center center",
-                      backfaceVisibility: "hidden",
-                    }}
-                    aria-hidden={!isActive}
-                  >
+              <div
+                ref={scrollerRef}
+                onScroll={onScrollerScroll}
+                onKeyDown={onKeyDown}
+                className={[
+                  "w-full min-h-0 flex-1",
+                  isEmbed
+                    ? "min-h-60 sm:min-h-72 max-h-[min(70svh,34rem)]"
+                    : "max-h-[min(46svh,420px)] sm:max-h-[min(50svh,460px)]",
+                  "overflow-x-auto overflow-y-hidden overscroll-x-contain",
+                  "snap-x snap-mandatory flex flex-nowrap",
+                  "touch-pan-x cursor-grab active:cursor-grabbing",
+                  "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+                ].join(" ")}
+                role="region"
+                tabIndex={0}
+                aria-label="Clan cards"
+              >
+                {clans.map((clan, i) => {
+                  const isActive = i === safeIndex;
+                  return (
                     <div
-                      className={[
-                        "relative overflow-hidden rounded-2xl border bg-zinc-950",
-                        isActive ? "border-[#c82434]/70" : "border-zinc-800/80",
-                      ].join(" ")}
-                      style={{
-                        boxShadow: isActive
-                          ? "0 28px 80px color-mix(in srgb, var(--vda-blood) 25%, transparent), 0 14px 34px rgba(0,0,0,0.55)"
-                          : "0 18px 50px rgba(0,0,0,0.55)",
-                        backfaceVisibility: "hidden",
-                      }}
+                      key={clan.id}
+                      className="box-border flex h-full w-full min-w-0 max-w-full shrink-0 grow-0 basis-full snap-center snap-always items-center justify-center p-0"
+                      aria-hidden={!isActive}
                     >
-                      {/* right-side emblem (tinted) */}
                       <div
-                        className={
+                        className={[
                           isEmbed
-                            ? "pointer-events-none absolute -right-4 top-1/2 h-[115%] w-[62%] -translate-y-1/2 opacity-32 sm:-right-7 sm:h-[128%] sm:w-[70%] sm:opacity-36"
-                            : "pointer-events-none absolute -right-10 top-1/2 h-[140%] w-[78%] -translate-y-1/2 opacity-35 sm:opacity-40"
-                        }
+                            ? "w-[min(100%,20rem)] min-w-0 sm:w-[min(100%,20rem)] md:w-[min(100%,26.25rem)]"
+                            : "w-[min(92vw,420px)]",
+                          "shrink-0",
+                        ].join(" ")}
+                      >
+                        <ClanCardContent
+                          clan={clan}
+                          isActive={isActive}
+                          isEmbed={isEmbed}
+                          emblemSize={isEmbed ? "embed" : "page"}
+                          getResolvedClanIconSrc={getResolvedClanIconSrc}
+                          bloodRgb={bloodRgb}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              {clans.length > 1 ? (
+                <div
+                  className="mt-4 flex w-full min-w-0 max-w-full flex-wrap items-center justify-center gap-x-1 gap-y-2 sm:gap-x-1.5 sm:gap-y-2.5"
+                  role="tablist"
+                  aria-label="Clans"
+                >
+                  {clans.map((c, i) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => goToSlide(i, true)}
+                      className={[
+                        "group relative grid shrink-0 place-items-center rounded-full border transition",
+                        "aspect-square h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10",
+                        i === safeIndex
+                          ? "border-[#c82434]/80 bg-zinc-950"
+                          : "border-zinc-800 bg-zinc-950 hover:border-[#c82434]/60",
+                        "cursor-pointer",
+                        "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c82434]/60",
+                      ].join(" ")}
+                      aria-label={`Go to ${c.name}`}
+                      title={c.name}
+                      role="tab"
+                      aria-selected={i === safeIndex}
+                    >
+                      <span
+                        className={[
+                          "block aspect-square h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8",
+                          i === safeIndex
+                            ? "opacity-90"
+                            : "opacity-65 group-hover:opacity-80",
+                        ].join(" ")}
                         style={{
                           backgroundColor: bloodRgb,
-                          WebkitMaskImage: `url(${iconSrc})`,
-                          maskImage: `url(${iconSrc})`,
+                          WebkitMaskImage: `url(${getResolvedClanIconSrc(
+                            c.name,
+                          )})`,
+                          maskImage: `url(${getResolvedClanIconSrc(c.name)})`,
                           WebkitMaskRepeat: "no-repeat",
                           maskRepeat: "no-repeat",
-                          WebkitMaskPosition: "right center",
-                          maskPosition: "right center",
+                          WebkitMaskPosition: "center",
+                          maskPosition: "center",
                           WebkitMaskSize: "contain",
                           maskSize: "contain",
                         }}
                       />
-
-                      {/* subtle vignette to keep text readable */}
-                      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_left,rgba(0,0,0,0.65),transparent_55%)]" />
-
-                      <div
-                        className={[
-                          "relative z-10",
-                          isEmbed ? "p-3.5 sm:p-5 md:p-6" : "p-5 sm:p-6",
-                        ].join(" ")}
-                      >
-                        <div className="mb-4 flex min-w-0 flex-wrap items-start justify-between gap-2 sm:gap-4">
-                          <div className="min-w-0">
-                            <div className="min-w-0">
-                              <div className="flex min-w-0 flex-wrap items-baseline gap-2">
-                                <h2
-                                  className={[
-                                    "min-w-0 max-w-full font-bold text-zinc-100",
-                                    isEmbed
-                                      ? "truncate text-lg sm:text-2xl"
-                                      : "truncate text-xl sm:text-2xl",
-                                  ].join(" ")}
-                                >
-                                  {clan.name}
-                                </h2>
-                                {clan.subName ? (
-                                  <span className="shrink-0 text-[#c82434] text-sm font-semibold">
-                                    ({clan.subName})
-                                  </span>
-                                ) : null}
-                              </div>
-                              {clan.nickname ? (
-                                <p className="truncate text-sm text-zinc-500 italic">
-                                  “{clan.nickname}”
-                                </p>
-                              ) : null}
-                            </div>
-                          </div>
-
-                          {clan.isBloodline ? (
-                            <span className="shrink-0 self-start text-[10px] font-bold uppercase tracking-tighter rounded bg-[#c82434]/20 px-2 py-1 text-[#c82434]">
-                              Bloodline
-                            </span>
-                          ) : null}
-                        </div>
-
-                        {clan.description ? (
-                          <p className="text-zinc-300/90 text-sm leading-relaxed mb-5 line-clamp-4">
-                            {clan.description}
-                          </p>
-                        ) : (
-                          <p className="text-zinc-500 text-sm mb-5 italic">
-                            No description available.
-                          </p>
-                        )}
-
-                        <div className="grid min-w-0 gap-4">
-                          <div className="min-w-0">
-                            <h3 className="text-xs uppercase font-bold tracking-wide text-zinc-500 mb-2">
-                              Disciplines
-                            </h3>
-                            <div className="flex min-w-0 flex-wrap gap-1.5 sm:gap-2">
-                              {(clan.disciplines?.length
-                                ? clan.disciplines
-                                : ["—"]
-                              ).map((d) => (
-                                <span
-                                  key={`${clan.id}:${d}`}
-                                  className="text-xs bg-zinc-900/70 border border-zinc-800 px-2 py-1 rounded text-zinc-200"
-                                >
-                                  {d}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="pt-4 border-t border-zinc-800/80">
-                            <h3 className="text-xs uppercase font-bold tracking-wide text-[#c82434] mb-1">
-                              Weakness
-                            </h3>
-                            <p className="text-xs text-zinc-300/80 italic leading-relaxed">
-                              {clan.weakness || "—"}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
             </div>
-
-            {/* Dots: wrap so every clan is visible; no clip / horizontal pan */}
-            {clans.length > 1 ? (
-              <div
-                className="mt-4 flex w-full min-w-0 max-w-full flex-wrap items-center justify-center gap-x-1 gap-y-2 sm:gap-x-1.5 sm:gap-y-2.5"
-                role="tablist"
-                aria-label="Clans"
-              >
-                {clans.map((c, i) => (
-                  <button
-                    key={c.id}
-                    type="button"
-                    onClick={() => {
-                      markClanUser();
-                      setIndex(i);
-                    }}
-                    className={[
-                      "group relative grid shrink-0 place-items-center rounded-full border transition",
-                      "aspect-square h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10",
-                      i === safeIndex
-                        ? "border-[#c82434]/80 bg-zinc-950"
-                        : "border-zinc-800 bg-zinc-950 hover:border-[#c82434]/60",
-                      "cursor-pointer",
-                      "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c82434]/60",
-                    ].join(" ")}
-                    aria-label={`Go to ${c.name}`}
-                    title={c.name}
-                    role="tab"
-                    aria-selected={i === safeIndex}
-                  >
-                    <span
-                      className={[
-                        "block aspect-square h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8",
-                        i === safeIndex
-                          ? "opacity-90"
-                          : "opacity-65 group-hover:opacity-80",
-                      ].join(" ")}
-                      style={{
-                        backgroundColor: bloodRgb,
-                        WebkitMaskImage: `url(${getResolvedClanIconSrc(c.name)})`,
-                        maskImage: `url(${getResolvedClanIconSrc(c.name)})`,
-                        WebkitMaskRepeat: "no-repeat",
-                        maskRepeat: "no-repeat",
-                        WebkitMaskPosition: "center",
-                        maskPosition: "center",
-                        WebkitMaskSize: "contain",
-                        maskSize: "contain",
-                      }}
-                    />
-                  </button>
-                ))}
-              </div>
-            ) : null}
           </div>
         </div>
       </div>
