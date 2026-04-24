@@ -2,7 +2,7 @@
 
 .characters-list-frame {
   position: relative;
-  border: 1px solid rgb(200, 36, 52);
+  border: 1px solid var(--vda-blood);
   /* On mobile, avoid forcing a tall minimum that can create extra scroll. */
   min-height: auto;
 }

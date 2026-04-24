@@ -22,7 +22,7 @@ export default async function CharactersPage() {
         <p className="text-zinc-300">Sign in to see your characters.</p>
         <Link
           href="/"
-          className="mt-4 text-sm font-semibold text-[rgb(200,36,52)] hover:underline"
+          className="mt-4 text-sm font-semibold text-[#c82434] hover:underline"
         >
           Back to home
         </Link>
@@ -36,7 +36,7 @@ export default async function CharactersPage() {
     <div className="flex min-h-0 w-full flex-1 flex-col py-8 sm:py-10">
       <header className="mb-8 flex shrink-0 flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
         <div className="min-w-0 text-left">
-          <h1 className="text-3xl font-bold tracking-wide text-[rgb(200,36,52)] sm:text-4xl">
+          <h1 className="text-3xl font-bold tracking-wide text-[#c82434] sm:text-4xl">
             Your characters
           </h1>
           <p className="mt-2 text-sm text-zinc-400">1/1 Character Slots</p>
@@ -81,7 +81,7 @@ export default async function CharactersPage() {
                     >
                       <div
                         aria-hidden
-                        className="absolute inset-0 overflow-hidden rounded-xl bg-cover bg-center"
+                        className="absolute inset-0 origin-center overflow-hidden rounded-xl bg-cover bg-center will-change-transform group-hover:animate-[vda-heartbeat_1.9s_ease-in-out_infinite] motion-reduce:group-hover:animate-none"
                         style={{
                           backgroundImage: "url(/icons/vtm-marble-red.jpg)",
                         }}
@@ -101,7 +101,7 @@ export default async function CharactersPage() {
                         aria-hidden
                         className="pointer-events-none absolute inset-0 z-2 rounded-xl opacity-0 transition-all duration-300 group-hover:opacity-100"
                         style={{
-                          boxShadow: "inset 0 0 0 1px rgba(200,36,52,0.22)",
+                          boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--vda-blood) 22%, transparent)",
                         }}
                       />
                       <div className="relative z-10 p-4">
@@ -111,12 +111,25 @@ export default async function CharactersPage() {
                             className="relative mt-0.5 h-12 w-12 shrink-0 drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
                           >
                             <div
-                              className="absolute inset-[18%] z-0 rounded-full bg-black/20"
+                              className="absolute inset-[12%] z-0 rounded-full bg-black/20 opacity-100 transition-all duration-200 group-hover:opacity-0 motion-reduce:transition-none"
                               style={{
-                                backgroundImage: clanIconBg,
+                                backgroundImage: "url(/icons/avatar.png)",
                                 backgroundRepeat: "no-repeat",
-                                backgroundPosition: "center",
-                                backgroundSize: "contain",
+                                backgroundPosition: "top",
+                                backgroundSize: "169% 190%",
+                                top: "-10px",
+                              }}
+                            />
+                            <div
+                              className="absolute inset-[12%] z-0 rounded-full bg-black/20 opacity-0 transition-all duration-200 group-hover:translate-y-[-2px] group-hover:scale-[1.06] group-hover:opacity-100 motion-reduce:transition-none motion-reduce:group-hover:translate-y-0 motion-reduce:group-hover:scale-100"
+                              style={{
+                                backgroundImage:
+                                  "url(/icons/avataroutofframe.png)",
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top",
+                                backgroundSize: "169% 190%",
+                                top: "-10px",
+                                zIndex: 999,
                               }}
                             />
                             <Image
@@ -133,7 +146,7 @@ export default async function CharactersPage() {
                               {c.name}
                             </h2>
                             {c.clanName != null || c.generation != null ? (
-                              <p className="mt-0.5 flex flex-wrap items-baseline gap-x-2 text-sm text-[rgb(200,36,52)] drop-shadow-sm">
+                              <p className="mt-0.5 flex flex-wrap items-baseline gap-x-2 text-sm text-[#c82434] drop-shadow-sm">
                                 {c.clanName ? <span>{c.clanName}</span> : null}
                                 {c.generation != null ? (
                                   <span className="text-xs text-zinc-400">

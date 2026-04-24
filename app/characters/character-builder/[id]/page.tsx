@@ -27,16 +27,15 @@ export default async function CharacterBuilderIdPage({
   if (!character) {
     notFound();
   }
-  const clans = await getAllClans();
-  const clanOptions = clans
-    .map((c) => ({ id: c.id, name: c.name }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const clans = [...(await getAllClans())].sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
 
   return (
     <div className="flex min-h-0 w-full flex-1 flex-col py-6 sm:py-8">
       <CharacterWizard
         character={character}
-        clans={clanOptions}
+        clans={clans}
       />
     </div>
   );

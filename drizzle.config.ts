@@ -7,7 +7,8 @@ dotenv.config({
 });
 
 export default defineConfig({
-  schema: "./db/schema.ts",
+  // This tells Drizzle to scan every file in the schema folder
+  schema: "./db/schema/*",
   out: "./drizzle",
   dialect: "postgresql",
   dbCredentials: {

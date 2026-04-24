@@ -1,0 +1,169 @@
+/* VtM-style form fields: one marble “Character concept” panel; black inputs (same border as `characters-list-frame` / character sheet) */
+
+.vda-wizard {
+  /* Match `--vda-blood` in `app/globals.css` (same as #c82434) */
+  --vda-field-accent: #c82434;
+  --vda-field-input-border: #c82434;
+  --vda-character-frame-border: var(--vda-blood);
+}
+
+/* Marble step bar: one row, serif caps; active = white, inactive = muted (reference: sheet tab bar) */
+.vda-wizard-step-bar {
+  position: relative;
+  margin-top: 1.5rem;
+  border: 1px solid var(--vda-character-frame-border);
+  border-radius: 0.5rem;
+  background-color: #0a0506;
+  background-image: url("/icons/vtm-marble-red.jpg");
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.48);
+  padding: 0.55rem 0.5rem;
+}
+
+.vda-wizard-step-bar-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 0.5rem 0.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.vda-wizard-step-bar button {
+  font-family: var(--font-heading), ui-serif, Georgia, serif;
+  font-size: clamp(0.6rem, 0.6rem + 0.4vw, 0.75rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
+  background: transparent;
+  border: none;
+  cursor: default;
+  padding: 0.2rem 0.35rem;
+  transition: color 0.15s ease, font-weight 0.15s ease;
+}
+
+/* Future step: not clickable, same muted look as other inactive labels */
+.vda-wizard-step-bar button:disabled {
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.vda-wizard-step-bar button:not(:disabled) {
+  cursor: pointer;
+}
+
+.vda-wizard-step-bar button:not(:disabled):hover {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.vda-wizard-step-bar .vda-wizard-step-bar-active {
+  color: #fff;
+  font-weight: 600;
+  cursor: default;
+  opacity: 1;
+}
+
+/* Single container for step “Character concept” — marble + same border + vtm corners as `characters-list-frame` */
+.vda-wizard-concept-panel {
+  position: relative;
+  /* visible so vtm corner images (offset -11px) are not clipped */
+  overflow: visible;
+  border: 1px solid var(--vda-character-frame-border);
+  border-radius: 0.75rem; /* match rounded-xl */
+  background-color: #0a0506;
+  background-image: url("/icons/vtm-marble-red.jpg");
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.5);
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.vda-wizard-concept-panel-body {
+  position: relative;
+  z-index: 1;
+}
+
+/* Same sizing as `list-frame.css` .characters-list-frame-corner */
+.vda-wizard-concept-panel-corner {
+  pointer-events: none;
+  position: absolute;
+  z-index: 3;
+  height: clamp(3.25rem, 10vmin, 5.75rem);
+  width: clamp(3.25rem, 10vmin, 5.75rem);
+}
+
+@media (min-width: 640px) {
+  .vda-wizard-concept-panel {
+    padding: 1.25rem 1.5rem 1.5rem;
+  }
+}
+
+.vda-wizard-concept-panel h2 {
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+}
+
+/* Group label + control only (no per-field marble) */
+.vda-wizard-field {
+  position: relative;
+  padding: 0;
+}
+
+.vda-wizard-label {
+  display: block;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--vda-field-accent);
+  margin-bottom: 0.4rem;
+}
+
+.vda-wizard-input,
+.vda-wizard-textarea {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--vda-field-input-border);
+  border-radius: 0;
+  background: #000;
+  color: #fff;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  padding: 0.5rem 15px;
+  outline: none;
+  transition: box-shadow 0.15s ease;
+}
+
+.vda-wizard-input::placeholder,
+.vda-wizard-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.vda-wizard-input:focus,
+.vda-wizard-textarea:focus {
+  box-shadow: 0 0 0 1px var(--vda-field-input-border);
+}
+
+.vda-wizard-textarea {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+/* number spinners: keep the bar subtle on black */
+.vda-wizard-input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.vda-wizard-input[type="number"]::-webkit-outer-spin-button,
+.vda-wizard-input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

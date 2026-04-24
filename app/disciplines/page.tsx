@@ -15,7 +15,7 @@ export default function DisciplinesPage() {
       <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/70 via-black/80 to-black/90" />
 
       <main className="relative z-10 mx-auto flex min-h-dvh max-w-3xl flex-col px-4 py-12 sm:px-6 sm:py-16">
-        <h1 className="text-3xl font-bold tracking-wide text-[rgb(200,36,52)] sm:text-4xl">
+        <h1 className="text-3xl font-bold tracking-wide text-[#c82434] sm:text-4xl">
           Disciplines
         </h1>
         <p className="mt-4 text-sm text-zinc-400 sm:text-base">
@@ -25,7 +25,7 @@ export default function DisciplinesPage() {
         <p className="mt-8 flex flex-wrap gap-4 text-sm">
           <Link
             href="/clans"
-            className="font-medium text-[rgb(200,36,52)] hover:underline"
+            className="font-medium text-[#c82434] hover:underline"
           >
             Clans
           </Link>

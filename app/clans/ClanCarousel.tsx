@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-type Clan = {
+export type Clan = {
   id: string;
   name: string;
   subName: string | null;
@@ -11,6 +11,22 @@ type Clan = {
   weakness: string | null;
   description: string | null;
   disciplines: string[];
+};
+
+type ClanCarouselMode = "page" | "embed";
+
+export type ClanCarouselProps = {
+  clans: Clan[];
+  /** Default `page` is full-bleed (clans route). `embed` is for the character builder. */
+  mode?: ClanCarouselMode;
+  /** When in `embed` mode, syncs carousel position. Use `""` for “not chosen yet”. */
+  selectedClanId?: string | null;
+  /**
+   * When in `embed` mode, called when a clan is chosen (swipe / select).
+   * Not called on initial “browse at index 0” while `selectedClanId` is still empty
+   * until the user interacts with the carousel.
+   */
+  onClanIdChange?: (id: string) => void;
 };
 
 function normalizeIconKey(input: string) {
@@ -32,8 +48,15 @@ const ICON_KEY_ALIAS: Record<string, string> = {
   childrenofset: "settites",
 };
 
-export function ClanCarousel({ clans }: { clans: Clan[] }) {
+export function ClanCarousel({
+  clans,
+  mode = "page",
+  selectedClanId = null,
+  onClanIdChange,
+}: ClanCarouselProps) {
   const [index, setIndex] = React.useState(0);
+  const userPickedClanRef = React.useRef(false);
+
   const clampIndex = React.useCallback(
     (n: number) => {
       if (!clans.length) return 0;
@@ -42,6 +65,32 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
     [clans.length],
   );
   const safeIndex = clans.length ? Math.min(index, clans.length - 1) : 0;
+
+  React.useEffect(() => {
+    if (mode !== "embed" || !clans.length) return;
+    if (selectedClanId == null || selectedClanId === "") {
+      return;
+    }
+    const i = clans.findIndex((c) => c.id === selectedClanId);
+    if (i < 0) return;
+    queueMicrotask(() => {
+      setIndex((prev) => (prev === i ? prev : i));
+    });
+  }, [mode, clans, selectedClanId]);
+
+  React.useEffect(() => {
+    if (mode !== "embed" || !onClanIdChange || !clans[safeIndex]) return;
+    if (!userPickedClanRef.current) {
+      if (selectedClanId == null || selectedClanId === "") {
+        return;
+      }
+    }
+    onClanIdChange(clans[safeIndex].id);
+  }, [mode, onClanIdChange, clans, safeIndex, selectedClanId]);
+
+  const markClanUser = React.useCallback(() => {
+    userPickedClanRef.current = true;
+  }, []);
 
   const isDraggingRef = React.useRef(false);
   const dragStartXRef = React.useRef(0);
@@ -132,25 +181,31 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
     [iconSrcByKey],
   );
 
-  const bloodRgb = "rgb(200 36 52)";
+  const bloodRgb = "var(--vda-blood)";
 
-  const goPrev = React.useCallback(
-    () => setIndex((i) => clampIndex(i - 1)),
-    [clampIndex],
-  );
-  const goNext = React.useCallback(
-    () => setIndex((i) => clampIndex(i + 1)),
-    [clampIndex],
-  );
+  const goPrev = React.useCallback(() => {
+    markClanUser();
+    setIndex((i) => clampIndex(i - 1));
+  }, [clampIndex, markClanUser]);
+  const goNext = React.useCallback(() => {
+    markClanUser();
+    setIndex((i) => clampIndex(i + 1));
+  }, [clampIndex, markClanUser]);
 
   const onKeyDown = React.useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === "ArrowLeft") goPrev();
       if (e.key === "ArrowRight") goNext();
-      if (e.key === "Home") setIndex(0);
-      if (e.key === "End") setIndex(Math.max(0, clans.length - 1));
+      if (e.key === "Home") {
+        markClanUser();
+        setIndex(0);
+      }
+      if (e.key === "End") {
+        markClanUser();
+        setIndex(Math.max(0, clans.length - 1));
+      }
     },
-    [clans.length, goNext, goPrev],
+    [clans.length, goNext, goPrev, markClanUser],
   );
 
   const onPointerDown = React.useCallback((e: React.PointerEvent) => {
@@ -209,73 +264,82 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
     // Allow multi-card jumps based on swipe distance.
     const effectiveStep = Math.max(120, Math.min(360, stepX || 220));
     const steps = Math.max(1, Math.round(Math.abs(delta) / effectiveStep));
-
+    if (mode === "embed") {
+      markClanUser();
+    }
     if (delta > 0) setIndex((i) => clampIndex(i - steps));
     else setIndex((i) => clampIndex(i + steps));
-  }, [clampIndex, stepX, viewportWidth]);
+  }, [clampIndex, markClanUser, mode, stepX, viewportWidth]);
 
   // Make left-swipe advance toward "next" during drag.
   const progress = -dragX / Math.max(240, stepX * 1.25);
 
+  const isEmbed = mode === "embed";
+
   return (
     <div
-      className="h-svh text-zinc-100 overflow-x-hidden"
-      style={{
-        backgroundImage: "url(/icons/vda-background-img.jpg)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
+      className={
+        isEmbed
+          ? "h-full w-full min-h-0 flex-1 text-zinc-100 overflow-x-hidden"
+          : "h-svh text-zinc-100 overflow-x-hidden"
+      }
+      style={
+        isEmbed
+          ? undefined
+          : {
+              backgroundImage: "url(/icons/vda-background-img.jpg)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }
+      }
     >
-      <div className="flex h-full flex-col px-4 py-4 sm:px-6 sm:py-6 md:px-10">
-        <header className="mb-3 text-center sm:mb-5">
-          <h1 className="text-3xl font-bold mb-2 text-[rgb(200,36,52)] uppercase tracking-widest sm:text-4xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
-            V20 Dark Ages Compendium
-          </h1>
-          <p className="text-zinc-300 italic drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
-            Select your lineage. Swipe to browse.
-          </p>
+      <div
+        className={
+          isEmbed
+            ? "flex h-full min-h-0 w-full max-w-full flex-col px-0 py-0"
+            : "flex h-full flex-col px-4 py-4 sm:px-6 sm:py-6 md:px-10"
+        }
+      >
+        <header
+          className={isEmbed ? "mb-2 sm:mb-3" : "mb-3 text-center sm:mb-5"}
+        >
+          {isEmbed ? (
+            <div>
+              <h2 className="text-sm font-semibold tracking-wide text-[#c82434] [font-family:var(--font-heading),serif]">
+                Clan
+              </h2>
+              <p className="mt-0.5 text-xs text-zinc-500">
+                Swipe to choose. Your selection applies to this character.
+              </p>
+            </div>
+          ) : (
+            <div>
+              <h1 className="text-3xl font-bold mb-2 text-[#c82434] uppercase tracking-widest sm:text-4xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
+                V20 Dark Ages Compendium
+              </h1>
+              <p className="text-zinc-300 italic drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
+                Select your lineage. Swipe to browse.
+              </p>
+            </div>
+          )}
         </header>
 
-        <div className="relative flex-1 min-h-0 overflow-hidden">
-          <div className="relative flex h-full flex-col">
-            <div className="flex items-center justify-between gap-3 mb-3">
-              <div className="text-xs text-zinc-500">
-                {clans.length ? (
-                  <span>
-                    {safeIndex + 1} / {clans.length}
-                  </span>
-                ) : (
-                  <span>0 / 0</span>
-                )}
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={goPrev}
-                  disabled={safeIndex <= 0}
-                  className="cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed rounded-md border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-sm text-zinc-200 hover:border-[rgb(200,36,52)]/60 hover:bg-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(200,36,52)]/60"
-                  aria-label="Previous clan"
-                >
-                  Prev
-                </button>
-                <button
-                  type="button"
-                  onClick={goNext}
-                  disabled={safeIndex >= clans.length - 1}
-                  className="cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed rounded-md border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-sm text-zinc-200 hover:border-[rgb(200,36,52)]/60 hover:bg-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(200,36,52)]/60"
-                  aria-label="Next clan"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-
+        <div
+          className={
+            isEmbed
+              ? "relative min-h-0 flex-1 overflow-x-hidden overflow-y-visible"
+              : "relative min-h-0 flex-1 overflow-hidden"
+          }
+        >
+          <div className="relative flex h-full min-h-0 flex-col">
             <div
               ref={viewportRef}
               className={[
-                "relative flex-1 min-h-0 max-h-[min(46svh,420px)] sm:max-h-[min(50svh,460px)] select-none touch-none",
+                "relative flex-1 min-h-0 select-none touch-none",
+                isEmbed
+                  ? "min-h-60 sm:min-h-72 max-h-[min(70svh,34rem)]"
+                  : "max-h-[min(46svh,420px)] sm:max-h-[min(50svh,460px)]",
                 isDragging ? "cursor-grabbing" : "cursor-grab",
               ].join(" ")}
               style={{ perspective: "1200px" }}
@@ -293,11 +357,6 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
               onTouchEnd={endDrag}
               onTouchCancel={endDrag}
             >
-              {/* Drag hint */}
-              <div className="pointer-events-none absolute left-1/2 top-3 -translate-x-1/2 text-[11px] tracking-wide text-zinc-500">
-                Drag / swipe • ← →
-              </div>
-
               {clans.map((clan, i) => {
                 const offset = i - safeIndex;
                 const x = (offset - progress) * stepX;
@@ -330,13 +389,11 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                     <div
                       className={[
                         "relative overflow-hidden rounded-2xl border bg-zinc-950",
-                        isActive
-                          ? "border-[rgb(200,36,52)]/70"
-                          : "border-zinc-800/80",
+                        isActive ? "border-[#c82434]/70" : "border-zinc-800/80",
                       ].join(" ")}
                       style={{
                         boxShadow: isActive
-                          ? "0 28px 80px rgba(200,36,52,0.25), 0 14px 34px rgba(0,0,0,0.55)"
+                          ? "0 28px 80px color-mix(in srgb, var(--vda-blood) 25%, transparent), 0 14px 34px rgba(0,0,0,0.55)"
                           : "0 18px 50px rgba(0,0,0,0.55)",
                         backfaceVisibility: "hidden",
                       }}
@@ -369,7 +426,7 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                                   {clan.name}
                                 </h2>
                                 {clan.subName ? (
-                                  <span className="shrink-0 text-[rgb(200,36,52)] text-sm font-semibold">
+                                  <span className="shrink-0 text-[#c82434] text-sm font-semibold">
                                     ({clan.subName})
                                   </span>
                                 ) : null}
@@ -383,7 +440,7 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                           </div>
 
                           {clan.isBloodline ? (
-                            <span className="text-[10px] bg-[rgb(200,36,52)]/20 text-[rgb(200,36,52)] px-2 py-1 rounded uppercase font-bold tracking-tighter">
+                            <span className="text-[10px] bg-[#c82434]/20 text-[#c82434] px-2 py-1 rounded uppercase font-bold tracking-tighter">
                               Bloodline
                             </span>
                           ) : null}
@@ -420,7 +477,7 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                           </div>
 
                           <div className="pt-4 border-t border-zinc-800/80">
-                            <h3 className="text-xs uppercase font-bold tracking-wide text-[rgb(200,36,52)] mb-1">
+                            <h3 className="text-xs uppercase font-bold tracking-wide text-[#c82434] mb-1">
                               Weakness
                             </h3>
                             <p className="text-xs text-zinc-300/80 italic leading-relaxed">
@@ -435,10 +492,10 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
               })}
             </div>
 
-            {/* Dots */}
+            {/* Dots: wrap so every clan is visible; no clip / horizontal pan */}
             {clans.length > 1 ? (
               <div
-                className="mt-4 grid grid-cols-8 place-content-center justify-items-center gap-1 sm:flex sm:items-center sm:justify-center sm:gap-2"
+                className="mt-4 flex w-full min-w-0 max-w-full flex-wrap items-center justify-center gap-x-1 gap-y-2 sm:gap-x-1.5 sm:gap-y-2.5"
                 role="tablist"
                 aria-label="Clans"
               >
@@ -446,15 +503,18 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                   <button
                     key={c.id}
                     type="button"
-                    onClick={() => setIndex(i)}
+                    onClick={() => {
+                      markClanUser();
+                      setIndex(i);
+                    }}
                     className={[
-                      "group relative grid place-items-center rounded-full border transition",
-                      "flex-none shrink-0 aspect-square h-6 w-6 sm:h-8 sm:w-8 lg:h-11 lg:w-11",
+                      "group relative grid shrink-0 place-items-center rounded-full border transition",
+                      "aspect-square h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10",
                       i === safeIndex
-                        ? "border-[rgb(200,36,52)]/80 bg-zinc-950"
-                        : "border-zinc-800 bg-zinc-950 hover:border-[rgb(200,36,52)]/60",
+                        ? "border-[#c82434]/80 bg-zinc-950"
+                        : "border-zinc-800 bg-zinc-950 hover:border-[#c82434]/60",
                       "cursor-pointer",
-                      "focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(200,36,52)]/60",
+                      "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c82434]/60",
                     ].join(" ")}
                     aria-label={`Go to ${c.name}`}
                     title={c.name}
@@ -463,7 +523,7 @@ export function ClanCarousel({ clans }: { clans: Clan[] }) {
                   >
                     <span
                       className={[
-                        "block aspect-square h-4 w-4 sm:h-5 sm:w-5 lg:h-7 lg:w-7",
+                        "block aspect-square h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8",
                         i === safeIndex
                           ? "opacity-90"
                           : "opacity-65 group-hover:opacity-80",

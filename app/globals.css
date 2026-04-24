@@ -3,6 +3,14 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* App “blood” accent; used by frames, clans, headings, buttons */
+  --vda-blood: #c82434;
+  --vda-blood-15: color-mix(in srgb, var(--vda-blood) 15%, transparent);
+  --vda-blood-18: color-mix(in srgb, var(--vda-blood) 18%, transparent);
+  --vda-blood-22: color-mix(in srgb, var(--vda-blood) 22%, transparent);
+  --vda-blood-35: color-mix(in srgb, var(--vda-blood) 35%, transparent);
+  --vda-blood-50: color-mix(in srgb, var(--vda-blood) 50%, transparent);
+  --vda-blood-55: color-mix(in srgb, var(--vda-blood) 55%, transparent);
 }
 
 @theme inline {
@@ -36,4 +44,23 @@ body h4,
 body h5,
 body h6 {
   font-family: var(--font-subheading), serif;
+}
+
+@keyframes vda-heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  18% {
+    transform: scale(1.05);
+  }
+  28% {
+    transform: scale(0.99);
+  }
+  42% {
+    transform: scale(1.08);
+  }
+  56% {
+    transform: scale(1);
+  }
 }

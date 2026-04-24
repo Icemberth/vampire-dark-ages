@@ -73,7 +73,7 @@ export function UserMenu({ userInitial, displayName }: UserMenuProps) {
             backgroundRepeat: "no-repeat",
           }}
         />
-        <span className="relative z-1">{userInitial}</span>
+        <span className="relative z-1 pt-2">{userInitial}</span>
       </button>
 
       {open ? (
@@ -97,7 +97,8 @@ export function UserMenu({ userInitial, displayName }: UserMenuProps) {
               Account
             </p>
             <p className="mt-1 truncate text-xs text-zinc-100/75">
-              Signed in as <span className="text-zinc-100/90">{displayName}</span>
+              Signed in as{" "}
+              <span className="text-zinc-100/90">{displayName}</span>
             </p>
           </div>
 
@@ -105,7 +106,7 @@ export function UserMenu({ userInitial, displayName }: UserMenuProps) {
             <Link
               href="/characters"
               role="menuitem"
-              className="mx-2 block rounded-lg px-3 py-2.5 text-sm text-zinc-200 transition hover:bg-white/5 hover:text-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(200,36,52)]/50"
+              className="mx-2 block rounded-lg px-3 py-2.5 text-sm text-zinc-200 transition hover:bg-white/5 hover:text-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c82434]/50"
               onClick={() => setOpen(false)}
             >
               Characters
@@ -113,7 +114,7 @@ export function UserMenu({ userInitial, displayName }: UserMenuProps) {
             <button
               type="button"
               role="menuitem"
-              className="mx-2 block w-[calc(100%-1rem)] rounded-lg px-3 py-2.5 text-left text-sm text-zinc-200 transition hover:bg-white/5 hover:text-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(200,36,52)]/50 disabled:opacity-50"
+              className="mx-2 block w-[calc(100%-1rem)] rounded-lg px-3 py-2.5 text-left text-sm text-zinc-200 transition hover:bg-white/5 hover:text-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c82434]/50 disabled:opacity-50"
               onClick={() => {
                 setOpen(false);
                 router.push("/clans");
@@ -140,4 +141,3 @@ export function UserMenu({ userInitial, displayName }: UserMenuProps) {
     </div>
   );
 }
-
