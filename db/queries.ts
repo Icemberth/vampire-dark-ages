@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { DRAFT_CHARACTER_NAME, type CharacterRow } from "@/lib/character";
 import { db } from "./index";
-import { characters, clans, clanDisciplines, disciplines } from "./schema";
+import { characters, clans, clanDisciplines } from "./schema";
 import { and, eq } from "drizzle-orm";
 
 type ClanSelectRow = {
@@ -29,11 +29,10 @@ export async function getAllClans() {
       isBloodline: clans.isBloodline,
       weakness: clans.weakness,
       description: clans.description,
-      disciplineName: disciplines.name,
+      disciplineName: clanDisciplines.disciplineName,
     })
     .from(clans)
-    .leftJoin(clanDisciplines, eq(clans.id, clanDisciplines.clanId))
-    .leftJoin(disciplines, eq(clanDisciplines.disciplineId, disciplines.id));
+    .leftJoin(clanDisciplines, eq(clans.id, clanDisciplines.clanId));
 
   // Grouping disciplines by clan so we don't have duplicate clan cards
   return data.reduce<ClanWithDisciplines[]>((acc, current) => {
@@ -78,11 +77,15 @@ export { DRAFT_CHARACTER_NAME };
  */
 export async function createDraftCharacter(userId: string): Promise<string> {
   const id = randomUUID();
+  const now = new Date();
   await db.insert(characters).values({
     id,
     userId,
     name: DRAFT_CHARACTER_NAME,
     generation: 12,
+    locale: "en",
+    createdAt: now,
+    updatedAt: now,
   });
   return id;
 }

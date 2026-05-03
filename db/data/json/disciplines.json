@@ -1,0 +1,592 @@
+[
+  {
+    "name": "abombwe",
+    "locale": "en",
+    "displayName": "Abombwe",
+    "description": "The ability to channel the Beast to achieve supernatural feats or communicate with the spirits of the wild.",
+    "dotDescriptions": {
+      "effect": "Allows the user to control the Beast within and harness its primal power."
+    }
+  },
+  {
+    "name": "abombwe",
+    "locale": "es",
+    "displayName": "Abombwe",
+    "description": "La capacidad de canalizar a la Bestia para lograr hazañas sobrenaturales o comunicarse con los espíritus de la naturaleza.",
+    "dotDescriptions": {
+      "efecto": "Permite al usuario controlar a la Bestia interior y aprovechar su poder primigenio."
+    }
+  },
+  {
+    "name": "animalism",
+    "locale": "en",
+    "displayName": "Animalism",
+    "description": "Mastery over the animal world and the Beast that resides within all thinking beings.",
+    "dotDescriptions": {
+      "1": "Feral Whispers",
+      "2": "Beckoning",
+      "3": "Quell the Beast",
+      "4": "Subsume the Spirit",
+      "5": "Drawing Out the Beast"
+    }
+  },
+  {
+    "name": "animalism",
+    "locale": "es",
+    "displayName": "Animalismo",
+    "description": "Maestría sobre el mundo animal y la Bestia que reside dentro de todos los seres pensantes.",
+    "dotDescriptions": {
+      "1": "Susurros Salvajes",
+      "2": "La Llamada",
+      "3": "Calmar a la Bestia",
+      "4": "Subsumir el Espíritu",
+      "5": "Expulsar a la Bestia"
+    }
+  },
+  {
+    "name": "auspex",
+    "locale": "en",
+    "displayName": "Auspex",
+    "description": "Heightened senses and the ability to perceive auras and thoughts.",
+    "dotDescriptions": {
+      "1": "Heightened Senses",
+      "2": "Aura Perception",
+      "3": "The Spirit's Touch",
+      "4": "Telepathy",
+      "5": "Psychic Projection"
+    }
+  },
+  {
+    "name": "auspex",
+    "locale": "es",
+    "displayName": "Auspex",
+    "description": "Sentidos agudizados y la capacidad de percibir auras y pensamientos.",
+    "dotDescriptions": {
+      "1": "Sentidos Agudizados",
+      "2": "Percepción del Aura",
+      "3": "El Toque del Espíritu",
+      "4": "Telepatía",
+      "5": "Proyección Psíquica"
+    }
+  },
+  {
+    "name": "bardo",
+    "locale": "en",
+    "displayName": "Bardo",
+    "description": "The spiritual Discipline of the Children of Osiris, used to maintain Humanity.",
+    "dotDescriptions": {
+      "effect": "Used to shield the soul from the Beast and attain enlightenment."
+    }
+  },
+  {
+    "name": "bardo",
+    "locale": "es",
+    "displayName": "Bardo",
+    "description": "La Disciplina espiritual de los Hijos de Osiris, utilizada para mantener la Humanidad.",
+    "dotDescriptions": {
+      "efecto": "Utilizada para proteger el alma de la Bestia y alcanzar la iluminación."
+    }
+  },
+  {
+    "name": "celerity",
+    "locale": "en",
+    "displayName": "Celerity",
+    "description": "Supernatural speed and reflexes.",
+    "dotDescriptions": {
+      "passive": "Adds extra actions in combat and boosts movement-related tasks."
+    }
+  },
+  {
+    "name": "celerity",
+    "locale": "es",
+    "displayName": "Celeridad",
+    "description": "Velocidad y reflejos sobrenaturales.",
+    "dotDescriptions": {
+      "pasiva": "Añade acciones extra en combate y potencia las tareas de movimiento."
+    }
+  },
+  {
+    "name": "daimoinon",
+    "locale": "en",
+    "displayName": "Daimoinon",
+    "description": "The infernal Discipline of the Baali, used to summon darkness and probe for weaknesses.",
+    "dotDescriptions": {
+      "1": "Sense the Sin",
+      "2": "Fear of the Void Below",
+      "3": "Conflagration"
+    }
+  },
+  {
+    "name": "daimoinon",
+    "locale": "es",
+    "displayName": "Daimoinon",
+    "description": "La Disciplina infernal de los Baali, usada para invocar oscuridad y sondear debilidades.",
+    "dotDescriptions": {
+      "1": "Sentir el Pecado",
+      "2": "Miedo al Vacío Inferior",
+      "3": "Conflagración"
+    }
+  },
+  {
+    "name": "dominate",
+    "locale": "en",
+    "displayName": "Dominate",
+    "description": "The power to command the minds of others through eye contact.",
+    "dotDescriptions": {
+      "1": "Command",
+      "2": "Mesmerize",
+      "3": "The Forgetful Mind",
+      "4": "Conditioning",
+      "5": "Possession"
+    }
+  },
+  {
+    "name": "dominate",
+    "locale": "es",
+    "displayName": "Dominación",
+    "description": "El poder de comandar las mentes de otros a través del contacto visual.",
+    "dotDescriptions": {
+      "1": "Mando",
+      "2": "Mesmerismo",
+      "3": "La Mente Olvidadiza",
+      "4": "Condicionamiento",
+      "5": "Posesión"
+    }
+  },
+  {
+    "name": "fortitude",
+    "locale": "en",
+    "displayName": "Fortitude",
+    "description": "Supernatural endurance that allows vampires to resist damage that would kill a mortal.",
+    "dotDescriptions": {
+      "passive": "Provides automatic successes to soak all forms of physical damage."
+    }
+  },
+  {
+    "name": "fortitude",
+    "locale": "es",
+    "displayName": "Fortaleza",
+    "description": "Resistencia sobrenatural que permite a los vampiros resistir daños que matarían a un mortal.",
+    "dotDescriptions": {
+      "pasiva": "Proporciona éxitos automáticos para absorber todas las formas de daño físico."
+    }
+  },
+  {
+    "name": "mortis",
+    "locale": "en",
+    "displayName": "Mortis",
+    "description": "The necromantic power of the Cappadocians over the energies of death.",
+    "dotDescriptions": {
+      "1": "Masque of Death",
+      "2": "Blight",
+      "3": "Awaken the Homuncular Servant"
+    }
+  },
+  {
+    "name": "mortis",
+    "locale": "es",
+    "displayName": "Mortis",
+    "description": "El poder nigromántico de los Capadocios sobre las energías de la muerte.",
+    "dotDescriptions": {
+      "1": "Máscara de la Muerte",
+      "2": "Plaga",
+      "3": "Despertar al Sirviente Homuncular"
+    }
+  },
+  {
+    "name": "mytherceria",
+    "locale": "en",
+    "displayName": "Mytherceria",
+    "description": "The strange, fae-born Discipline of the Kiasyd.",
+    "dotDescriptions": {
+      "1": "Folderol",
+      "2": "Fae Sight",
+      "3": "Aura Absorption"
+    }
+  },
+  {
+    "name": "mytherceria",
+    "locale": "es",
+    "displayName": "Mytherceria",
+    "description": "La extraña Disciplina de origen feérico de los Kiasyd.",
+    "dotDescriptions": {
+      "1": "Folderol",
+      "2": "Visión de Hada",
+      "3": "Absorción de Aura"
+    }
+  },
+  {
+    "name": "nihilistics",
+    "locale": "en",
+    "displayName": "Nihilistics",
+    "description": "A Discipline focused on the powers of the Void and entropy.",
+    "dotDescriptions": {
+      "effect": "Allows the user to manipulate entropic forces and the Underworld."
+    }
+  },
+  {
+    "name": "nihilistics",
+    "locale": "es",
+    "displayName": "Nihilistics",
+    "description": "Una Disciplina centrada en los poderes del Vacío y la entropía.",
+    "dotDescriptions": {
+      "efecto": "Permite al usuario manipular fuerzas entrópicas y el Inframundo."
+    }
+  },
+  {
+    "name": "obeah",
+    "locale": "en",
+    "displayName": "Obeah",
+    "description": "The healing arts of the Salubri healers.",
+    "dotDescriptions": {
+      "1": "Panacea",
+      "2": "Anesthetic Touch",
+      "3": "Neutral Guard"
+    }
+  },
+  {
+    "name": "obeah",
+    "locale": "es",
+    "displayName": "Obeah",
+    "description": "Las artes curativas de los sanadores Salubri.",
+    "dotDescriptions": {
+      "1": "Panacea",
+      "2": "Toque Anestésico",
+      "3": "Guardia Neutral"
+    }
+  },
+  {
+    "name": "obfuscate",
+    "locale": "en",
+    "displayName": "Obfuscate",
+    "description": "The ability to hide from view by clouding the minds of observers.",
+    "dotDescriptions": {
+      "1": "Silence of Death",
+      "2": "Unseen Presence",
+      "3": "Mask of a Thousand Faces"
+    }
+  },
+  {
+    "name": "obfuscate",
+    "locale": "es",
+    "displayName": "Ofuscación",
+    "description": "La capacidad de ocultarse de la vista nublando las mentes de los observadores.",
+    "dotDescriptions": {
+      "1": "Silencio de Muerte",
+      "2": "Presencia Invisible",
+      "3": "Máscara de los Mil Rostros"
+    }
+  },
+  {
+    "name": "obtenebration",
+    "locale": "en",
+    "displayName": "Obtenebration",
+    "description": "Manipulation of the literal shadows of the Abyss.",
+    "dotDescriptions": {
+      "1": "Shadow Play",
+      "2": "Shroud of Night",
+      "3": "Arms of the Abyss"
+    }
+  },
+  {
+    "name": "obtenebration",
+    "locale": "es",
+    "displayName": "Obtenebración",
+    "description": "Manipulación de las sombras literales del Abismo.",
+    "dotDescriptions": {
+      "1": "Juego de Sombras",
+      "2": "Manto de Noche",
+      "3": "Brazos del Abismo"
+    }
+  },
+  {
+    "name": "potence",
+    "locale": "en",
+    "displayName": "Potence",
+    "description": "Supernatural physical strength.",
+    "dotDescriptions": {
+      "passive": "Adds automatic successes to Strength rolls and combat damage."
+    }
+  },
+  {
+    "name": "potence",
+    "locale": "es",
+    "displayName": "Potencia",
+    "description": "Fuerza física sobrenatural.",
+    "dotDescriptions": {
+      "pasiva": "Añade éxitos automáticos a las tiradas de Fuerza y daño de combate."
+    }
+  },
+  {
+    "name": "presence",
+    "locale": "en",
+    "displayName": "Presence",
+    "description": "The ability to manipulate the emotions of crowds and individuals.",
+    "dotDescriptions": {
+      "1": "Awe",
+      "2": "Dread Gaze",
+      "3": "Entrancement",
+      "4": "Summon",
+      "5": "Majesty"
+    }
+  },
+  {
+    "name": "presence",
+    "locale": "es",
+    "displayName": "Presencia",
+    "description": "La capacidad de manipular las emociones de multitudes e individuos.",
+    "dotDescriptions": {
+      "1": "Fascinación",
+      "2": "Mirada Aterradora",
+      "3": "Entrance",
+      "4": "Convocatoria",
+      "5": "Majestuosidad"
+    }
+  },
+  {
+    "name": "protean",
+    "locale": "en",
+    "displayName": "Protean",
+    "description": "Shapeshifting abilities inherent to the Gangrel.",
+    "dotDescriptions": {
+      "1": "Eyes of the Beast",
+      "2": "Feral Claws",
+      "3": "Earth Meld",
+      "4": "Shape of the Beast",
+      "5": "Mist Form"
+    }
+  },
+  {
+    "name": "protean",
+    "locale": "es",
+    "displayName": "Protean",
+    "description": "Habilidades de cambio de forma inherentes a los Gangrel.",
+    "dotDescriptions": {
+      "1": "Ojos de la Bestia",
+      "2": "Garras Salvajes",
+      "3": "Fusión con la Tierra",
+      "4": "Forma de la Bestia",
+      "5": "Forma de Niebla"
+    }
+  },
+  {
+    "name": "quietus",
+    "locale": "en",
+    "displayName": "Quietus",
+    "description": "The silent, blood-based Discipline of the Assamite assassins.",
+    "dotDescriptions": {
+      "1": "Silence of Death",
+      "2": "Scorpion's Touch",
+      "3": "Dagon's Call"
+    }
+  },
+  {
+    "name": "quietus",
+    "locale": "es",
+    "displayName": "Extinción",
+    "description": "La Disciplina silenciosa basada en la sangre de los asesinos Assamitas.",
+    "dotDescriptions": {
+      "1": "Silencio de Muerte",
+      "2": "Toque de Escorpión",
+      "3": "Llamada de Dagón"
+    }
+  },
+  {
+    "name": "serpentis",
+    "locale": "en",
+    "displayName": "Serpentis",
+    "description": "The Discipline of the Followers of Set, invoking the power of the serpent.",
+    "dotDescriptions": {
+      "1": "Eyes of the Serpent",
+      "2": "Tongue of the Asp",
+      "3": "Skin of the Adder"
+    }
+  },
+  {
+    "name": "serpentis",
+    "locale": "es",
+    "displayName": "Serpentis",
+    "description": "La Disciplina de los Seguidores de Set, invocando el poder de la serpiente.",
+    "dotDescriptions": {
+      "1": "Ojos de la Serpiente",
+      "2": "Lengua del Áspid",
+      "3": "Piel de la Víbora"
+    }
+  },
+  {
+    "name": "sihir",
+    "locale": "en",
+    "displayName": "Sihir",
+    "description": "Middle Eastern blood sorcery practiced by Assamite sorcerers.",
+    "dotDescriptions": {
+      "effect": "Allows the manipulation of elements and spiritual energies."
+    }
+  },
+  {
+    "name": "sihir",
+    "locale": "es",
+    "displayName": "Sihir",
+    "description": "Hechicería de sangre del Medio Oriente practicada por hechiceros Assamitas.",
+    "dotDescriptions": {
+      "efecto": "Permite la manipulación de elementos y energías espirituales."
+    }
+  },
+  {
+    "name": "spiritus",
+    "locale": "en",
+    "displayName": "Spiritus",
+    "description": "The shamanic Discipline of the Ahrimanes bloodline.",
+    "dotDescriptions": {
+      "1": "Speak with Spirits",
+      "2": "Summon Spirit Beast",
+      "3": "Aspect of the Beast"
+    }
+  },
+  {
+    "name": "spiritus",
+    "locale": "es",
+    "displayName": "Spiritus",
+    "description": "La Disciplina chamánica de la línea de sangre Ahrimanes.",
+    "dotDescriptions": {
+      "1": "Hablar con los Espíritus",
+      "2": "Invocar Bestia Espiritual",
+      "3": "Aspecto de la Bestia"
+    }
+  },
+  {
+    "name": "temporis",
+    "locale": "en",
+    "displayName": "Temporis",
+    "description": "The rare Discipline of the True Brujah, granting control over time.",
+    "dotDescriptions": {
+      "1": "Hourglass of the Mind",
+      "2": "Internal Clock",
+      "3": "Lapse"
+    }
+  },
+  {
+    "name": "temporis",
+    "locale": "es",
+    "displayName": "Temporis",
+    "description": "La rara Disciplina de los Verdaderos Brujah, que otorga control sobre el tiempo.",
+    "dotDescriptions": {
+      "1": "Reloj de Arena de la Mente",
+      "2": "Reloj Interno",
+      "3": "Lapse"
+    }
+  },
+  {
+    "name": "thanatosis",
+    "locale": "en",
+    "displayName": "Thanatosis",
+    "description": "The power of the Samedi to manipulate decay and putrescence.",
+    "dotDescriptions": {
+      "1": "Hag's Wrinkles",
+      "2": "Putrefaction",
+      "3": "Ashes to Ashes"
+    }
+  },
+  {
+    "name": "thanatosis",
+    "locale": "es",
+    "displayName": "Tanatosis",
+    "description": "El poder de los Samedi para manipular la decadencia y la putrefacción.",
+    "dotDescriptions": {
+      "1": "Arrugas de Bruja",
+      "2": "Putrefacción",
+      "3": "Ceniza a la Ceniza"
+    }
+  },
+  {
+    "name": "thaumaturgy",
+    "locale": "en",
+    "displayName": "Thaumaturgy",
+    "description": "The structured blood magic developed by Clan Tremere.",
+    "dotDescriptions": {
+      "1": "A Taste for Blood",
+      "2": "Blood Rage",
+      "3": "Blood of Potency"
+    }
+  },
+  {
+    "name": "thaumaturgy",
+    "locale": "es",
+    "displayName": "Taumaturgia",
+    "description": "La magia de sangre estructurada desarrollada por el Clan Tremere.",
+    "dotDescriptions": {
+      "1": "Sabor por la Sangre",
+      "2": "Furia de Sangre",
+      "3": "Sangre de Potencia"
+    }
+  },
+  {
+    "name": "valeren",
+    "locale": "en",
+    "displayName": "Valeren",
+    "description": "The martial paths used by Salubri warriors and watchers.",
+    "dotDescriptions": {
+      "1": "Sense Vitality",
+      "2": "Anesthetic Touch",
+      "3": "Burning Touch"
+    }
+  },
+  {
+    "name": "valeren",
+    "locale": "es",
+    "displayName": "Valeren",
+    "description": "Las sendas marciales utilizadas por los guerreros y vigilantes Salubri.",
+    "dotDescriptions": {
+      "1": "Sentir Vitalidad",
+      "2": "Toque Anestésico",
+      "3": "Toque Ardiente"
+    }
+  },
+  {
+    "name": "vicissitude",
+    "locale": "en",
+    "displayName": "Vicissitude",
+    "description": "The art of shaping flesh and bone used by the Tzimisce.",
+    "dotDescriptions": {
+      "1": "Malleable Visage",
+      "2": "Fleshcraft",
+      "3": "Bonecraft",
+      "4": "Horrid Form",
+      "5": "Bloodform"
+    }
+  },
+  {
+    "name": "vicissitude",
+    "locale": "es",
+    "displayName": "Vicisitud",
+    "description": "El arte de moldear la carne y el hueso utilizado por los Tzimisce.",
+    "dotDescriptions": {
+      "1": "Semblante Maleable",
+      "2": "Moldear la Carne",
+      "3": "Moldear el Hueso",
+      "4": "Forma Horrenda",
+      "5": "Forma de Sangre"
+    }
+  },
+  {
+    "name": "visceratika",
+    "locale": "en",
+    "displayName": "Visceratika",
+    "description": "The specialized Discipline of the Gargoyles, allowing them to merge with stone.",
+    "dotDescriptions": {
+      "1": "Skin of the Chameleon",
+      "2": "Scry the Hearthstone",
+      "3": "Bond with the Mountain"
+    }
+  },
+  {
+    "name": "visceratika",
+    "locale": "es",
+    "displayName": "Visceratika",
+    "description": "La Disciplina especializada de las Gárgolas, que les permite fusionarse con la piedra.",
+    "dotDescriptions": {
+      "1": "Piel del Camaleón",
+      "2": "Escrutar la Piedra del Hogar",
+      "3": "Vínculo con la Montaña"
+    }
+  }
+]

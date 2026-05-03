@@ -1,0 +1,224 @@
+[
+  {
+    "name": "strength",
+    "locale": "en",
+    "category": "attribute",
+    "subcategory": "physical",
+    "displayName": "Strength",
+    "description": "Raw physical power and muscle.",
+    "dotDescriptions": {
+      "1": "Poor: You can lift 40 lbs.",
+      "2": "Average: You can lift 100 lbs.",
+      "3": "Good: You can lift 250 lbs.",
+      "4": "Exceptional: You can lift 400 lbs.",
+      "5": "Outstanding: You can lift 650 lbs. and shatter stone."
+    }
+  },
+  {
+    "name": "strength",
+    "locale": "es",
+    "category": "attribute",
+    "subcategory": "physical",
+    "displayName": "Fuerza",
+    "description": "Poder físico bruto y músculo.",
+    "dotDescriptions": {
+      "1": "Pobre: Puedes levantar 20 kg.",
+      "2": "Normal: Puedes levantar 50 kg.",
+      "3": "Bueno: Puedes levantar 110 kg.",
+      "4": "Excepcional: Puedes levantar 180 kg.",
+      "5": "Sobresaliente: Puedes levantar 300 kg. y destrozar piedra."
+    }
+  },
+  {
+    "name": "dexterity",
+    "locale": "en",
+    "category": "attribute",
+    "subcategory": "physical",
+    "displayName": "Dexterity",
+    "description": "Agility, coordination, and speed.",
+    "dotDescriptions": {
+      "1": "Clumsy: You have trouble walking and chewing gum.",
+      "5": "Graceful: You move like a predator; lightning reflexes."
+    }
+  },
+  {
+    "name": "dexterity",
+    "locale": "es",
+    "category": "attribute",
+    "subcategory": "physical",
+    "displayName": "Destreza",
+    "description": "Agilidad, coordinación y velocidad.",
+    "dotDescriptions": {
+      "1": "Torpe: Tienes problemas para caminar y mascar chicle.",
+      "5": "Grácil: Te mueves como un depredador; reflejos de rayo."
+    }
+  },
+  {
+    "name": "stamina",
+    "locale": "en",
+    "category": "attribute",
+    "subcategory": "physical",
+    "displayName": "Stamina",
+    "description": "Toughness, health, and endurance.",
+    "dotDescriptions": {
+      "1": "Fragile: A brisk wind might give you a cold.",
+      "5": "Tough: You can ignore pain that would kill others."
+    }
+  },
+  {
+    "name": "stamina",
+    "locale": "es",
+    "category": "attribute",
+    "subcategory": "physical",
+    "displayName": "Resistencia",
+    "description": "Dureza, salud y aguante.",
+    "dotDescriptions": {
+      "1": "Frágil: Un viento fuerte podría resfriarte.",
+      "5": "Duro: Puedes ignorar dolores que matarían a otros."
+    }
+  },
+  {
+    "name": "charisma",
+    "locale": "en",
+    "category": "attribute",
+    "subcategory": "social",
+    "displayName": "Charisma",
+    "description": "The ability to entice and inspire others.",
+    "dotDescriptions": {
+      "1": "Blunt: You are often ignored.",
+      "5": "Visionary: People would follow you into hell."
+    }
+  },
+  {
+    "name": "charisma",
+    "locale": "es",
+    "category": "attribute",
+    "subcategory": "social",
+    "displayName": "Carisma",
+    "description": "Tu capacidad para atraer e inspirar a los demás.",
+    "dotDescriptions": {
+      "1": "Tosco: A menudo te ignoran.",
+      "5": "Visionario: La gente te seguiría al infierno."
+    }
+  },
+  {
+    "name": "manipulation",
+    "locale": "en",
+    "category": "attribute",
+    "subcategory": "social",
+    "displayName": "Manipulation",
+    "description": "Getting others to do what you want.",
+    "dotDescriptions": {
+      "1": "Transparent: People see right through you.",
+      "5": "Puppet Master: You can talk your way out of anything."
+    }
+  },
+  {
+    "name": "manipulation",
+    "locale": "es",
+    "category": "attribute",
+    "subcategory": "social",
+    "displayName": "Manipulación",
+    "description": "Lograr que otros hagan lo que tú quieres.",
+    "dotDescriptions": {
+      "1": "Transparente: La gente te ve venir.",
+      "5": "Maestro de Marionetas: Puedes convencer a cualquiera de cualquier cosa."
+    }
+  },
+  {
+    "name": "appearance",
+    "locale": "en",
+    "category": "attribute",
+    "subcategory": "social",
+    "displayName": "Appearance",
+    "description": "Physical attractiveness and presence.",
+    "dotDescriptions": {
+      "1": "Ugly: Unpleasant to look at.",
+      "5": "Angelic: People stop in their tracks to stare."
+    }
+  },
+  {
+    "name": "appearance",
+    "locale": "es",
+    "category": "attribute",
+    "subcategory": "social",
+    "displayName": "Apariencia",
+    "description": "Atractivo físico y presencia.",
+    "dotDescriptions": {
+      "1": "Feo: Desagradable de mirar.",
+      "5": "Angélico: La gente se detiene para mirarte."
+    }
+  },
+  {
+    "name": "perception",
+    "locale": "en",
+    "category": "attribute",
+    "subcategory": "mental",
+    "displayName": "Perception",
+    "description": "Sensitivity to your surroundings.",
+    "dotDescriptions": {
+      "1": "Unobservant: You miss the obvious.",
+      "5": "All-Seeing: Nothing escapes your notice."
+    }
+  },
+  {
+    "name": "perception",
+    "locale": "es",
+    "category": "attribute",
+    "subcategory": "mental",
+    "displayName": "Percepción",
+    "description": "Sensibilidad a tu entorno.",
+    "dotDescriptions": {
+      "1": "Distraído: Se te escapa lo obvio.",
+      "5": "Vigía: Nada escapa a tu atención."
+    }
+  },
+  {
+    "name": "intelligence",
+    "locale": "en",
+    "category": "attribute",
+    "subcategory": "mental",
+    "displayName": "Intelligence",
+    "description": "Raw mental power and reasoning.",
+    "dotDescriptions": {
+      "1": "Dull: You have trouble with basic logic.",
+      "5": "Genius: You are one of the brightest minds of the age."
+    }
+  },
+  {
+    "name": "intelligence",
+    "locale": "es",
+    "category": "attribute",
+    "subcategory": "mental",
+    "displayName": "Inteligencia",
+    "description": "Poder mental bruto y razonamiento.",
+    "dotDescriptions": {
+      "1": "Lento: Tienes problemas con la lógica básica.",
+      "5": "Genio: Eres una de las mentes más brillantes de la época."
+    }
+  },
+  {
+    "name": "wits",
+    "locale": "en",
+    "category": "attribute",
+    "subcategory": "mental",
+    "displayName": "Wits",
+    "description": "Quick thinking and reaction to the unexpected.",
+    "dotDescriptions": {
+      "1": "Slow: You take a while to process surprises.",
+      "5": "Razor-Sharp: You are always one step ahead."
+    }
+  },
+  {
+    "name": "wits",
+    "locale": "es",
+    "category": "attribute",
+    "subcategory": "mental",
+    "displayName": "Astucia",
+    "description": "Pensamiento rápido y reacción a lo inesperado.",
+    "dotDescriptions": {
+      "1": "Lento: Tardas en procesar las sorpresas.",
+      "5": "Afilado: Siempre vas un paso por delante."
+    }
+  }
+]

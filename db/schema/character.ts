@@ -14,6 +14,9 @@ export const characters = pgTable("character", {
   // The link to the Clan data (where the weaknessDescription lives)
   clanId: uuid("clanId").references(() => clans.id),
 
+  // Helps render the character sheet in the correct language later
+  locale: text("locale").default("en").notNull(),
+
   // Basic Dark Ages Bio
   concept: text("concept"),
   nature: text("nature"),
