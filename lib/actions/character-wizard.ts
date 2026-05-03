@@ -9,6 +9,8 @@ import {
   type CharacterWizardPatch,
   updateCharacterForUser,
 } from "@/db/queries";
+import { localeParamSchema } from "@/lib/i18n/locale";
+import { withLocale } from "@/lib/i18n/paths";
 
 async function requireUserId(): Promise<string | null> {
   const session = await getServerSession(authOptions);
@@ -19,7 +21,9 @@ async function requireUserId(): Promise<string | null> {
 export async function saveCharacterWizard(
   characterId: string,
   patch: CharacterWizardPatch,
+  localeRaw: string,
 ) {
+  const locale = localeParamSchema.parse(localeRaw);
   const userId = await requireUserId();
   if (!userId) {
     return { ok: false as const, error: "Not signed in" };
@@ -28,20 +32,26 @@ export async function saveCharacterWizard(
   if (!ok) {
     return { ok: false as const, error: "Character not found" };
   }
-  revalidatePath("/characters");
-  revalidatePath(`/characters/character-builder/${characterId}`);
+  revalidatePath(withLocale(locale, "/characters"));
+  revalidatePath(
+    withLocale(locale, `/characters/character-builder/${characterId}`),
+  );
   return { ok: true as const };
 }
 
-export async function completeCharacterWizard(characterId: string) {
+export async function completeCharacterWizard(
+  characterId: string,
+  localeRaw: string,
+) {
+  const locale = localeParamSchema.parse(localeRaw);
   const userId = await requireUserId();
   if (!userId) {
-    redirect("/characters");
+    redirect(withLocale(locale, "/characters"));
   }
   const row = await getCharacterByIdForUser(characterId, userId);
   if (!row) {
-    redirect("/characters");
+    redirect(withLocale(locale, "/characters"));
   }
-  revalidatePath("/characters");
-  redirect("/characters");
+  revalidatePath(withLocale(locale, "/characters"));
+  redirect(withLocale(locale, "/characters"));
 }

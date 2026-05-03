@@ -1,0 +1,74 @@
+{
+  "brand": "Nocturnus",
+  "nav": {
+    "clans": "Clans",
+    "disciplines": "Disciplines",
+    "characters": "Characters"
+  },
+  "home": {
+    "tagline": "Enter the night. Shape your lineage. Build your chronicle.",
+    "signIn": "Sign in",
+    "signInHint": "Continue with Google to begin.",
+    "signInButton": "Continue with Google",
+    "redirecting": "Redirecting…",
+    "footer": "© {year} Nocturnus"
+  },
+  "characters": {
+    "title": "Your characters",
+    "slots": "1/1 Character Slots",
+    "create": "Create Character",
+    "empty": "No characters yet. Create one when that flow is available.",
+    "signInPrompt": "Sign in to see your characters.",
+    "backHome": "Back to home",
+    "browseClans": "Browse clans"
+  },
+  "wizard": {
+    "title": "New character",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "saving": "Saving…",
+    "finish": "Save & return to list",
+    "finishing": "Finishing…",
+    "steps": {
+      "concept": "Concept",
+      "conceptHint": "Name, concept, nature, demeanor, clan",
+      "blood": "Blood",
+      "bloodHint": "Generation"
+    },
+    "conceptSection": "Character concept",
+    "name": "Character name",
+    "concept": "Concept",
+    "nature": "Nature",
+    "demeanor": "Demeanor",
+    "findClan": "Find a clan",
+    "clanSearchPlaceholder": "Search by name, bloodline, or nickname…",
+    "noClanMatch": "No clan matches that search.",
+    "noClans": "No clans in the codex yet.",
+    "generation": "Generation",
+    "browseClansLink": "Browsing clans:",
+    "clansLink": "Clans"
+  },
+  "disciplinesPage": {
+    "title": "Disciplines",
+    "body": "Powers of the blood will be catalogued here. For now, browse clans or return to your chronicle."
+  },
+  "account": {
+    "menu": "Account",
+    "signedInAs": "Signed in as",
+    "characters": "Characters",
+    "browseClans": "Browse clans",
+    "signOut": "Sign out"
+  },
+  "characterCard": {
+    "actions": "Character actions",
+    "options": "Character options",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteTitle": "Delete this character?",
+    "deleteBody": "This permanently removes the character from your chronicle. You can close this if you changed your mind.",
+    "cancel": "Cancel",
+    "deleteForever": "Delete forever",
+    "deleting": "Deleting…"
+  }
+}

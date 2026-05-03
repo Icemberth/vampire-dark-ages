@@ -1,0 +1,74 @@
+{
+  "brand": "Nocturnus",
+  "nav": {
+    "clans": "Clanes",
+    "disciplines": "Disciplinas",
+    "characters": "Personajes"
+  },
+  "home": {
+    "tagline": "Entra en la noche. Forja tu linaje. Construye tu crónica.",
+    "signIn": "Iniciar sesión",
+    "signInHint": "Continúa con Google para empezar.",
+    "signInButton": "Continuar con Google",
+    "redirecting": "Redirigiendo…",
+    "footer": "© {year} Nocturnus"
+  },
+  "characters": {
+    "title": "Tus personajes",
+    "slots": "1/1 espacios de personaje",
+    "create": "Crear personaje",
+    "empty": "Aún no hay personajes. Crea uno cuando el flujo esté disponible.",
+    "signInPrompt": "Inicia sesión para ver tus personajes.",
+    "backHome": "Volver al inicio",
+    "browseClans": "Explorar clanes"
+  },
+  "wizard": {
+    "title": "Personaje nuevo",
+    "cancel": "Cancelar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "saving": "Guardando…",
+    "finish": "Guardar y volver a la lista",
+    "finishing": "Finalizando…",
+    "steps": {
+      "concept": "Concepto",
+      "conceptHint": "Nombre, concepto, naturaleza, conducta, clan",
+      "blood": "Sangre",
+      "bloodHint": "Generación"
+    },
+    "conceptSection": "Concepto del personaje",
+    "name": "Nombre del personaje",
+    "concept": "Concepto",
+    "nature": "Naturaleza",
+    "demeanor": "Conducta",
+    "findClan": "Buscar un clan",
+    "clanSearchPlaceholder": "Buscar por nombre, estirpe o apodo…",
+    "noClanMatch": "Ningún clan coincide con esa búsqueda.",
+    "noClans": "Aún no hay clanes en el códice.",
+    "generation": "Generación",
+    "browseClansLink": "Explorar clanes:",
+    "clansLink": "Clanes"
+  },
+  "disciplinesPage": {
+    "title": "Disciplinas",
+    "body": "Los poderes de la sangre se catalogarán aquí. Por ahora, explora clanes o vuelve a tu crónica."
+  },
+  "account": {
+    "menu": "Cuenta",
+    "signedInAs": "Sesión iniciada como",
+    "characters": "Personajes",
+    "browseClans": "Explorar clanes",
+    "signOut": "Cerrar sesión"
+  },
+  "characterCard": {
+    "actions": "Acciones del personaje",
+    "options": "Opciones del personaje",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "deleteTitle": "¿Eliminar este personaje?",
+    "deleteBody": "Esto elimina permanentemente al personaje de tu crónica. Puedes cerrar si cambiaste de idea.",
+    "cancel": "Cancelar",
+    "deleteForever": "Eliminar para siempre",
+    "deleting": "Eliminando…"
+  }
+}

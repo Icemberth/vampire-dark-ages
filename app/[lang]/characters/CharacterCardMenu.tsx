@@ -10,13 +10,33 @@ import {
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { deleteCharacterAction } from "@/app/characters/actions";
+import { deleteCharacterAction } from "@/lib/actions/delete-character";
+import type { Locale } from "@/lib/i18n/locale";
+import { withLocale } from "@/lib/i18n/paths";
 
-type CharacterCardMenuProps = {
-  characterId: string;
+type CardCopy = {
+  actions: string;
+  options: string;
+  edit: string;
+  delete: string;
+  deleteTitle: string;
+  deleteBody: string;
+  cancel: string;
+  deleteForever: string;
+  deleting: string;
 };
 
-export function CharacterCardMenu({ characterId }: CharacterCardMenuProps) {
+type CharacterCardMenuProps = {
+  locale: Locale;
+  characterId: string;
+  copy: CardCopy;
+};
+
+export function CharacterCardMenu({
+  locale,
+  characterId,
+  copy,
+}: CharacterCardMenuProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -36,7 +56,6 @@ export function CharacterCardMenu({ characterId }: CharacterCardMenuProps) {
     return () => document.removeEventListener("mousedown", onDown);
   }, [open]);
 
-  /* Sibling <li> cards share z-index; a later card paints on top, hiding this menu. Lift the list item while open. */
   useEffect(() => {
     const li = wrapRef.current?.closest("li");
     if (!li) return;
@@ -77,7 +96,7 @@ export function CharacterCardMenu({ characterId }: CharacterCardMenuProps) {
   const runDelete = () => {
     setActionError(null);
     startTransition(async () => {
-      const res = await deleteCharacterAction(characterId);
+      const res = await deleteCharacterAction(characterId, locale);
       if (res.ok) {
         setConfirmOpen(false);
         router.refresh();
@@ -126,15 +145,14 @@ export function CharacterCardMenu({ characterId }: CharacterCardMenuProps) {
                 id={titleId}
                 className="text-lg font-semibold tracking-wide text-zinc-100 [font-family:var(--font-heading),serif]"
               >
-                Delete this character?
+                {copy.deleteTitle}
               </h2>
             </div>
             <p
               id={descId}
               className="px-5 py-4 text-sm leading-relaxed text-zinc-300/80"
             >
-              This permanently removes the character from your chronicle. You
-              can close this if you changed your mind.
+              {copy.deleteBody}
             </p>
             {actionError ? (
               <p className="px-5 pb-2 text-sm text-red-300">{actionError}</p>
@@ -149,7 +167,7 @@ export function CharacterCardMenu({ characterId }: CharacterCardMenuProps) {
                   setActionError(null);
                 }}
               >
-                Cancel
+                {copy.cancel}
               </button>
               <button
                 type="button"
@@ -165,7 +183,7 @@ export function CharacterCardMenu({ characterId }: CharacterCardMenuProps) {
                 disabled={pending}
                 onClick={runDelete}
               >
-                {pending ? "Deleting…" : "Delete forever"}
+                {pending ? copy.deleting : copy.deleteForever}
               </button>
             </div>
           </div>
@@ -189,7 +207,7 @@ export function CharacterCardMenu({ characterId }: CharacterCardMenuProps) {
         aria-haspopup="menu"
         disabled={pending}
         onClick={() => setOpen((o) => !o)}
-        aria-label="Character actions"
+        aria-label={copy.actions}
       >
         <span className="select-none" aria-hidden>
           ...
@@ -213,18 +231,21 @@ export function CharacterCardMenu({ characterId }: CharacterCardMenuProps) {
               }}
             >
               <p className="text-sm text-zinc-100/95 [font-family:var(--font-heading),serif]">
-                Character options
+                {copy.options}
               </p>
             </div>
           </li>
           <li role="none">
             <Link
-              href={`/characters/character-builder/${characterId}`}
+              href={withLocale(
+                locale,
+                `/characters/character-builder/${characterId}`,
+              )}
               role="menuitem"
               className="m-2 block w-[calc(100%-1rem)] cursor-pointer rounded-lg px-3 py-2.5 text-left text-zinc-200 transition hover:bg-zinc-800/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c82434]/40"
               onClick={() => setOpen(false)}
             >
-              Edit
+              {copy.edit}
             </Link>
           </li>
           <li role="none">
@@ -235,7 +256,7 @@ export function CharacterCardMenu({ characterId }: CharacterCardMenuProps) {
               disabled={pending}
               onClick={openDeleteModal}
             >
-              Delete
+              {copy.delete}
             </button>
           </li>
         </ul>

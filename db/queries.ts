@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { DRAFT_CHARACTER_NAME, type CharacterRow } from "@/lib/character";
 import { db } from "./index";
-import { characters, clans, clanDisciplines } from "./schema";
+import { characters, clans, clanDisciplines, codex } from "./schema";
 import { and, eq } from "drizzle-orm";
 
 type ClanSelectRow = {
@@ -19,7 +19,7 @@ type ClanWithDisciplines = Omit<ClanSelectRow, "disciplineName"> & {
   disciplines: string[];
 };
 
-export async function getAllClans() {
+export async function getAllClans(locale: string) {
   const data: ClanSelectRow[] = await db
     .select({
       id: clans.id,
@@ -32,7 +32,8 @@ export async function getAllClans() {
       disciplineName: clanDisciplines.disciplineName,
     })
     .from(clans)
-    .leftJoin(clanDisciplines, eq(clans.id, clanDisciplines.clanId));
+    .leftJoin(clanDisciplines, eq(clans.id, clanDisciplines.clanId))
+    .where(eq(clans.locale, locale));
 
   // Grouping disciplines by clan so we don't have duplicate clan cards
   return data.reduce<ClanWithDisciplines[]>((acc, current) => {
@@ -49,6 +50,43 @@ export async function getAllClans() {
     }
     return acc;
   }, []);
+}
+
+export type ClanDisciplineCodexRow = {
+  /** Normalized key from `clan_disciplines.discipline_name` (e.g. celerity). */
+  name: string;
+  displayName: string;
+  description: string | null;
+};
+
+/**
+ * Junction rows for the clan, joined to codex lore for the requested locale when present.
+ */
+export async function getClanDisciplinesWithCodex(
+  clanId: string,
+  locale: string,
+): Promise<ClanDisciplineCodexRow[]> {
+  const rows = await db
+    .select({
+      disciplineKey: clanDisciplines.disciplineName,
+      displayName: codex.displayName,
+      description: codex.description,
+    })
+    .from(clanDisciplines)
+    .leftJoin(
+      codex,
+      and(
+        eq(codex.name, clanDisciplines.disciplineName),
+        eq(codex.locale, locale),
+      ),
+    )
+    .where(eq(clanDisciplines.clanId, clanId));
+
+  return rows.map((r) => ({
+    name: r.disciplineKey,
+    displayName: r.displayName ?? r.disciplineKey,
+    description: r.description,
+  }));
 }
 
 export async function getCharactersForUser(userId: string) {
@@ -75,7 +113,10 @@ export { DRAFT_CHARACTER_NAME };
  * Inserts a new character row and returns its id. Used when entering the builder so the
  * list and other views can key off a stable id while the user fills the wizard.
  */
-export async function createDraftCharacter(userId: string): Promise<string> {
+export async function createDraftCharacter(
+  userId: string,
+  locale: string,
+): Promise<string> {
   const id = randomUUID();
   const now = new Date();
   await db.insert(characters).values({
@@ -83,7 +124,7 @@ export async function createDraftCharacter(userId: string): Promise<string> {
     userId,
     name: DRAFT_CHARACTER_NAME,
     generation: 12,
-    locale: "en",
+    locale,
     createdAt: now,
     updatedAt: now,
   });

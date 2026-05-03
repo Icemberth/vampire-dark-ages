@@ -2,7 +2,11 @@
 
 import * as React from "react";
 
-export function GoogleSignInButton() {
+export function GoogleSignInButton({
+  callbackUrl,
+}: {
+  callbackUrl: string;
+}) {
   const [isLoading, setIsLoading] = React.useState(false);
 
   return (
@@ -12,7 +16,7 @@ export function GoogleSignInButton() {
         setIsLoading(true);
         try {
           const { signIn } = await import("next-auth/react");
-          await signIn("google", { callbackUrl: "/characters" });
+          await signIn("google", { callbackUrl });
         } finally {
           setIsLoading(false);
         }

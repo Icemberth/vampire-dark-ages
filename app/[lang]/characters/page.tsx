@@ -2,8 +2,11 @@ import Image from "next/image";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { authOptions } from "@/auth";
-import { CharacterCardMenu } from "@/app/characters/CharacterCardMenu";
+import { CharacterCardMenu } from "@/app/[lang]/characters/CharacterCardMenu";
 import { getCharactersForUser } from "@/db/queries";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { localeParamSchema } from "@/lib/i18n/locale";
+import { withLocale } from "@/lib/i18n/paths";
 
 function normalizeClanIconKey(input: string) {
   return input
@@ -13,18 +16,25 @@ function normalizeClanIconKey(input: string) {
     .trim();
 }
 
-export default async function CharactersPage() {
+export default async function CharactersPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const locale = localeParamSchema.parse(lang);
+  const d = await getDictionary(locale);
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
     return (
       <div className="flex w-full flex-1 flex-col items-center justify-center py-16 text-center">
-        <p className="text-zinc-300">Sign in to see your characters.</p>
+        <p className="text-zinc-300">{d.characters.signInPrompt}</p>
         <Link
-          href="/"
+          href={withLocale(locale, "/")}
           className="mt-4 text-sm font-semibold text-[#c82434] hover:underline"
         >
-          Back to home
+          {d.characters.backHome}
         </Link>
       </div>
     );
@@ -37,12 +47,12 @@ export default async function CharactersPage() {
       <header className="mb-8 flex shrink-0 flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
         <div className="min-w-0 text-left">
           <h1 className="text-3xl font-bold tracking-wide text-[#c82434] sm:text-4xl">
-            Your characters
+            {d.characters.title}
           </h1>
-          <p className="mt-2 text-sm text-zinc-400">1/1 Character Slots</p>
+          <p className="mt-2 text-sm text-zinc-400">{d.characters.slots}</p>
         </div>
         <Link
-          href="/characters/character-builder/new"
+          href={withLocale(locale, "/characters/character-builder/new")}
           className="inline-flex w-full shrink-0 items-center justify-center rounded-lg border border-black/25 px-5 py-3.5 text-base font-normal uppercase tracking-wide text-white [font-family:var(--font-heading),serif] shadow-md transition hover:brightness-110 active:brightness-95 sm:w-auto"
           style={{
             backgroundColor: "#c4171d",
@@ -53,7 +63,7 @@ export default async function CharactersPage() {
             backgroundBlendMode: "multiply",
           }}
         >
-          Create Character
+          {d.characters.create}
         </Link>
       </header>
 
@@ -61,7 +71,7 @@ export default async function CharactersPage() {
         <div className="characters-list-frame-body flex min-h-0 flex-1 flex-col">
           {list.length === 0 ? (
             <p className="flex flex-1 items-center justify-center py-6 text-center text-base text-zinc-300 sm:py-8 sm:text-lg">
-              No characters yet. Create one when that flow is available.
+              {d.characters.empty}
             </p>
           ) : (
             <ul className="flex min-h-0 flex-1 flex-wrap content-start justify-start gap-4">
@@ -101,7 +111,8 @@ export default async function CharactersPage() {
                         aria-hidden
                         className="pointer-events-none absolute inset-0 z-2 rounded-xl opacity-0 transition-all duration-300 group-hover:opacity-100"
                         style={{
-                          boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--vda-blood) 22%, transparent)",
+                          boxShadow:
+                            "inset 0 0 0 1px color-mix(in srgb, var(--vda-blood) 22%, transparent)",
                         }}
                       />
                       <div className="relative z-10 p-4">
@@ -161,7 +172,11 @@ export default async function CharactersPage() {
                               </p>
                             ) : null}
                           </div>
-                          <CharacterCardMenu characterId={c.id} />
+                          <CharacterCardMenu
+                            locale={locale}
+                            characterId={c.id}
+                            copy={d.characterCard}
+                          />
                         </div>
                         {(c.nature || c.demeanor) && (
                           <p className="mt-3 text-xs text-zinc-400">
@@ -242,10 +257,10 @@ export default async function CharactersPage() {
 
       <p className="mt-8 text-center">
         <Link
-          href="/clans"
+          href={withLocale(locale, "/clans")}
           className="text-sm font-medium text-zinc-400 hover:text-zinc-200"
         >
-          Browse clans
+          {d.characters.browseClans}
         </Link>
       </p>
     </div>

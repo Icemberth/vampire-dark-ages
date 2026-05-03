@@ -1,4 +1,5 @@
 import type { Viewport } from "next";
+import { headers } from "next/headers";
 import {
   Almendra,
   Crimson_Text,
@@ -41,13 +42,16 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const h = await headers();
+  const lang = h.get("x-next-locale") ?? "en";
+
   return (
-    <html lang="en" className={`${geistMono.variable} h-full antialiased`}>
+    <html lang={lang} className={`${geistMono.variable} h-full antialiased`}>
       <body
         className={`${crimsonText.className} ${medievalSharp.variable} ${crimsonText.variable} ${almendra.variable} min-h-full flex flex-col`}
       >

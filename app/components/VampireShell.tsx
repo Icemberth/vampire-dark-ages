@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import type { Locale } from "@/lib/i18n/locale";
 import { SiteHeader } from "@/app/components/SiteHeader";
 
 const shellVars = {
@@ -11,12 +12,14 @@ const shellVars = {
 
 type VampireShellProps = {
   children: ReactNode;
+  locale: Locale;
   /** Narrow inner column (characters list). Clans uses full width. */
   constrainContentWidth?: boolean;
 };
 
 export function VampireShell({
   children,
+  locale,
   constrainContentWidth = false,
 }: VampireShellProps) {
   return (
@@ -37,7 +40,7 @@ export function VampireShell({
         className="relative z-10 flex min-h-dvh w-full flex-col bg-transparent"
         style={shellVars}
       >
-        <SiteHeader />
+        <SiteHeader locale={locale} />
         <main className="flex min-h-0 w-full flex-1 flex-col overflow-y-auto bg-transparent">
           {constrainContentWidth ? (
             <div

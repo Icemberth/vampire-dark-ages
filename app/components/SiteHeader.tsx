@@ -2,10 +2,14 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import { UserMenu } from "@/app/components/UserMenu";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import type { Locale } from "@/lib/i18n/locale";
+import { withLocale } from "@/lib/i18n/paths";
 
 const RAIL_MAX = "clamp(75rem, min(92vw, calc(100% - 2.5rem)), 159rem)";
 
-export async function SiteHeader() {
+export async function SiteHeader({ locale }: { locale: Locale }) {
+  const d = await getDictionary(locale);
   const session = await getServerSession(authOptions);
   const displayName =
     session?.user?.name?.trim() ||
@@ -24,37 +28,39 @@ export async function SiteHeader() {
       >
         <div className="flex min-w-0 flex-1 items-center gap-4 sm:gap-8">
           <Link
-            href="/"
+            href={withLocale(locale, "/")}
             className="shrink-0 text-lg font-semibold tracking-wide text-zinc-100 hover:text-zinc-200 sm:text-xl"
           >
-            Nocturnus
+            {d.brand}
           </Link>
           <nav
             className="flex min-w-0 items-center gap-3 text-sm font-medium text-zinc-300 sm:gap-6 sm:text-base"
             aria-label="Site sections"
           >
             <Link
-              href="/clans"
+              href={withLocale(locale, "/clans")}
               className="shrink-0 whitespace-nowrap hover:text-zinc-100"
             >
-              Clans
+              {d.nav.clans}
             </Link>
             <Link
-              href="/disciplines"
+              href={withLocale(locale, "/disciplines")}
               className="shrink-0 whitespace-nowrap hover:text-zinc-100"
             >
-              Disciplines
+              {d.nav.disciplines}
             </Link>
             <Link
-              href="/characters"
+              href={withLocale(locale, "/characters")}
               className="shrink-0 whitespace-nowrap hover:text-zinc-100"
             >
-              Characters
+              {d.nav.characters}
             </Link>
           </nav>
         </div>
         {userInitial ? (
           <UserMenu
+            locale={locale}
+            copy={d.account}
             userInitial={userInitial}
             displayName={session?.user?.name ?? session?.user?.email ?? "Account"}
           />

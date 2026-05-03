@@ -3,13 +3,30 @@
 import { useEffect, useId, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import type { Locale } from "@/lib/i18n/locale";
+import { withLocale } from "@/lib/i18n/paths";
+
+type AccountCopy = {
+  menu: string;
+  signedInAs: string;
+  characters: string;
+  browseClans: string;
+  signOut: string;
+};
 
 type UserMenuProps = {
+  locale: Locale;
+  copy: AccountCopy;
   userInitial: string;
   displayName: string;
 };
 
-export function UserMenu({ userInitial, displayName }: UserMenuProps) {
+export function UserMenu({
+  locale,
+  copy,
+  userInitial,
+  displayName,
+}: UserMenuProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -39,7 +56,7 @@ export function UserMenu({ userInitial, displayName }: UserMenuProps) {
     setOpen(false);
     startTransition(async () => {
       const { signOut } = await import("next-auth/react");
-      await signOut({ callbackUrl: "/" });
+      await signOut({ callbackUrl: withLocale(locale, "/") });
       router.refresh();
     });
   };
@@ -94,22 +111,22 @@ export function UserMenu({ userInitial, displayName }: UserMenuProps) {
             }}
           >
             <p className="text-sm text-zinc-100/95 [font-family:var(--font-heading),serif]">
-              Account
+              {copy.menu}
             </p>
             <p className="mt-1 truncate text-xs text-zinc-100/75">
-              Signed in as{" "}
+              {copy.signedInAs}{" "}
               <span className="text-zinc-100/90">{displayName}</span>
             </p>
           </div>
 
           <div className="py-2">
             <Link
-              href="/characters"
+              href={withLocale(locale, "/characters")}
               role="menuitem"
               className="mx-2 block rounded-lg px-3 py-2.5 text-sm text-zinc-200 transition hover:bg-white/5 hover:text-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c82434]/50"
               onClick={() => setOpen(false)}
             >
-              Characters
+              {copy.characters}
             </Link>
             <button
               type="button"
@@ -117,11 +134,11 @@ export function UserMenu({ userInitial, displayName }: UserMenuProps) {
               className="mx-2 block w-[calc(100%-1rem)] rounded-lg px-3 py-2.5 text-left text-sm text-zinc-200 transition hover:bg-white/5 hover:text-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c82434]/50 disabled:opacity-50"
               onClick={() => {
                 setOpen(false);
-                router.push("/clans");
+                router.push(withLocale(locale, "/clans"));
               }}
               disabled={pending}
             >
-              Browse clans
+              {copy.browseClans}
             </button>
 
             <div className="my-2 border-t border-zinc-800/80" />
@@ -133,7 +150,7 @@ export function UserMenu({ userInitial, displayName }: UserMenuProps) {
               onClick={signOutNow}
               disabled={pending}
             >
-              Sign out
+              {copy.signOut}
             </button>
           </div>
         </div>
