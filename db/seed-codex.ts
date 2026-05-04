@@ -1,6 +1,7 @@
 import { db } from "./index";
 import { codex } from "./schema/world";
 import codexAttributes from "./data/json/codexAttributes.json";
+import codexCreationMeta from "./data/json/codexCreationMeta.json";
 
 export async function seedCodexAttributes() {
   console.log("💾 Seeding Attributes into Codex...");
@@ -35,4 +36,23 @@ export async function seedCodexAttributes() {
     console.error("❌ Error seeding Attributes:", error);
     throw error;
   }
+}
+
+export async function seedCodexMeta() {
+  console.log("💾 Seeding Creation Meta into Codex...");
+  for (const entry of codexCreationMeta) {
+    await db
+      .insert(codex)
+      .values(entry)
+      .onConflictDoUpdate({
+        target: [codex.name, codex.locale],
+        set: {
+          displayName: entry.displayName,
+          description: entry.description,
+        },
+      });
+  }
+  console.log(
+    `✅ Successfully seeded ${codexCreationMeta.length} creation meta entries.`,
+  );
 }

@@ -4,7 +4,7 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { getDatabaseUrl } from "./connectionString";
 import { seedClansTable } from "./data/clans";
 import { seedDisciplinesTable } from "./data/disciplines";
-import { seedCodexAttributes } from "./seed-codex";
+import { seedCodexAttributes, seedCodexMeta } from "./seed-codex";
 
 dotenv.config({ path: ".env.local" });
 const sql = neon(getDatabaseUrl());
@@ -16,6 +16,8 @@ async function main() {
   try {
     // 1. Core Attributes (The Rules)
     await seedCodexAttributes();
+    // 2. Creation Meta
+    await seedCodexMeta();
 
     // 2. Discipline Lore
     await seedDisciplinesTable();

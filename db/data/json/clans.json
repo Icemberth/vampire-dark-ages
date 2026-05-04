@@ -726,7 +726,7 @@
     "isBloodline": true,
     "subName": "Watcher",
     "parentClanName": "Salubri",
-    "disciplines": ["Auspex", "Fortitude", "Sielanic"],
+    "disciplines": ["Auspex", "Obfuscate", "Valeren"],
     "weaknessName": "Watchful Eye",
     "weaknessDescription": "Must remain stationary while using their sensory disciplines or lose all bonuses.",
     "description": "The secretive observers of the Salubri, gathering lore from across the world."
@@ -738,7 +738,7 @@
     "isBloodline": true,
     "subName": "Vigilante",
     "parentClanName": "Salubri",
-    "disciplines": ["Auspex", "Fortaleza", "Sielanic"],
+    "disciplines": ["Auspex", "ofuscación", "Valeren"],
     "weaknessName": "Ojo Vigilante",
     "weaknessDescription": "Deben permanecer quietos al usar sus disciplinas sensoriales o pierden sus bonificaciones.",
     "description": "Los observadores secretos de los Salubri, recolectando conocimientos de todo el mundo."

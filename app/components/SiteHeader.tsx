@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
+import { LanguageSwitcher } from "@/app/components/LanguageSwitcher";
 import { UserMenu } from "@/app/components/UserMenu";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import type { Locale } from "@/lib/i18n/locale";
@@ -57,19 +58,28 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
             </Link>
           </nav>
         </div>
-        {userInitial ? (
-          <UserMenu
+        <div className="flex shrink-0 items-center gap-3 sm:gap-4">
+          <LanguageSwitcher
             locale={locale}
-            copy={d.account}
-            userInitial={userInitial}
-            displayName={session?.user?.name ?? session?.user?.email ?? "Account"}
+            copy={d.localeSwitcher}
+            variant="header"
           />
-        ) : (
-          <span
-            className="inline-block h-14 w-14 shrink-0 sm:h-18 sm:w-18"
-            aria-hidden
-          />
-        )}
+          {userInitial ? (
+            <UserMenu
+              locale={locale}
+              copy={d.account}
+              userInitial={userInitial}
+              displayName={
+                session?.user?.name ?? session?.user?.email ?? "Account"
+              }
+            />
+          ) : (
+            <span
+              className="inline-block h-14 w-14 shrink-0 sm:h-18 sm:w-18"
+              aria-hidden
+            />
+          )}
+        </div>
       </div>
     </header>
   );

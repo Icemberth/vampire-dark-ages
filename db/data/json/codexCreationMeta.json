@@ -1,0 +1,88 @@
+[
+  {
+    "name": "character_name",
+    "locale": "en",
+    "category": "creation_meta",
+    "displayName": "Character Name",
+    "description": "The name by which your character is known. In the Dark Ages, this often includes a given name and a sobriquet, title, or place of origin (e.g., 'Lucita of Aragon')."
+  },
+  {
+    "name": "character_name",
+    "locale": "es",
+    "category": "creation_meta",
+    "displayName": "Nombre del Personaje",
+    "description": "El nombre por el cual se conoce a tu personaje. En la Edad Oscura, esto a menudo incluye un nombre de pila y un apodo, título o lugar de origen (ej., 'Lucita de Aragón')."
+  },
+  {
+    "name": "character_concept",
+    "locale": "en",
+    "category": "creation_meta",
+    "displayName": "Concept",
+    "description": "A brief, two- or three-word description of the character’s identity before and after the Embrace. It serves as the foundation for the character's personality and history."
+  },
+  {
+    "name": "character_concept",
+    "locale": "es",
+    "category": "creation_meta",
+    "displayName": "Concepto",
+    "description": "Una breve descripción de dos o tres palabras de la identidad del personaje antes y después del Abrazo. Sirve como base para la personalidad e historia del personaje."
+  },
+  {
+    "name": "nature",
+    "locale": "en",
+    "category": "creation_meta",
+    "displayName": "Nature",
+    "description": "The character’s true inner self—the person they are when no one is watching. Nature is the primary way for a character to regain Willpower."
+  },
+  {
+    "name": "nature",
+    "locale": "es",
+    "category": "creation_meta",
+    "displayName": "Naturaleza",
+    "description": "El verdadero yo interno del personaje: la persona que es cuando nadie está mirando. La Naturaleza es la forma principal en que un personaje recupera Fuerza de Voluntad.",
+    "longDescription": "Después de elegir concepto y clan, un jugador elige la Naturaleza y la Conducta del personaje. Estos rasgos conductuales se conocen como Arquetipos y describen la personalidad del personaje. La Conducta es el comportamiento que el personaje presenta al mundo y no tiene ningún efecto en las reglas. La Naturaleza es el verdadero yo del personaje y refleja una perspectiva profunda del mundo. La Naturaleza también determina cómo un personaje recupera Fuerza de Voluntad"
+  },
+  {
+    "name": "demeanor",
+    "locale": "en",
+    "category": "creation_meta",
+    "displayName": "Demeanor",
+    "description": "The 'mask' the character presents to the world. It is the false front used to protect the character's true self or to manipulate others' perceptions.",
+    "longDescription": "After choosing concept and clan, a player chooses her character’s Nature and Demeanor. These behavioral Traits are known as Archetypes and describe a character’s personality. Demeanor is the attitude the character presents to the world and does not have any effect on the rules. Nature is the character’s true self and reflects a deep-rooted perspective of the world. Nature also determines how a character regains Willpower"
+  },
+  {
+    "name": "demeanor",
+    "locale": "es",
+    "category": "creation_meta",
+    "displayName": "Conducta",
+    "description": "La 'máscara' que el personaje presenta al mundo. Es la fachada falsa utilizada para proteger el verdadero yo del personaje o para manipular la percepción de los demás."
+  },
+  {
+    "name": "clan",
+    "locale": "en",
+    "category": "creation_meta",
+    "displayName": "Clan",
+    "description": "The vampire 'family' into which the character was Embraced. Your Clan determines your starting Disciplines, your inherent weakness, and often your place in Cainite society."
+  },
+  {
+    "name": "clan",
+    "locale": "es",
+    "category": "creation_meta",
+    "displayName": "Clan",
+    "description": "La 'familia' de vampiros en la cual el personaje fue Abrazado. Tu Clan determina tus Disciplinas iniciales, tu debilidad inherente y, a menudo, tu lugar en la sociedad Cainita."
+  },
+  {
+    "name": "bloodline",
+    "locale": "en",
+    "category": "creation_meta",
+    "displayName": "Bloodline",
+    "description": "A specialized offshoot of a Clan. Bloodlines often possess unique Disciplines or distinct weaknesses that separate them from their parent lineage."
+  },
+  {
+    "name": "bloodline",
+    "locale": "es",
+    "category": "creation_meta",
+    "displayName": "Línea de Sangre",
+    "description": "Una rama especializada de un Clan. Las líneas de sangre a menudo poseen Disciplinas únicas o debilidades distintas que las separan de su linaje original."
+  }
+]

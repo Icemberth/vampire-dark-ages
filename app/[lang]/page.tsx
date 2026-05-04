@@ -1,4 +1,5 @@
 import { GoogleSignInButton } from "@/app/GoogleSignInButton";
+import { LanguageSwitcher } from "@/app/components/LanguageSwitcher";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/auth";
@@ -45,6 +46,12 @@ export default async function Home({
         <div className="absolute right-4 bottom-4 h-8 w-8 border-r border-b border-[#c82434]/35" />
       </div>
 
+      <LanguageSwitcher
+        locale={locale}
+        copy={d.localeSwitcher}
+        variant="landing"
+      />
+
       <main className="relative z-10 flex h-full flex-col px-5 py-8 sm:px-8 sm:py-10">
         <div className="flex-1" />
 
@@ -61,7 +68,9 @@ export default async function Home({
               <h2 className="text-sm font-semibold tracking-wide text-[#c82434]">
                 {d.home.signIn}
               </h2>
-              <p className="mt-1 text-xs text-zinc-400/90">{d.home.signInHint}</p>
+              <p className="mt-1 text-xs text-zinc-400/90">
+                {d.home.signInHint}
+              </p>
             </div>
             <GoogleSignInButton
               callbackUrl={withLocale(locale, "/characters")}

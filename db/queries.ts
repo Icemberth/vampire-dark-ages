@@ -122,7 +122,7 @@ export async function createDraftCharacter(
   await db.insert(characters).values({
     id,
     userId,
-    name: DRAFT_CHARACTER_NAME,
+    name: DRAFT_CHARACTER_NAME(locale),
     generation: 12,
     locale,
     createdAt: now,

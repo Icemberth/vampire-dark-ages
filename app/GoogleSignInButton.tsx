@@ -2,11 +2,7 @@
 
 import * as React from "react";
 
-export function GoogleSignInButton({
-  callbackUrl,
-}: {
-  callbackUrl: string;
-}) {
+export function GoogleSignInButton({ callbackUrl }: { callbackUrl: string }) {
   const [isLoading, setIsLoading] = React.useState(false);
 
   return (

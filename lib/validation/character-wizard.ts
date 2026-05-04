@@ -25,9 +25,11 @@ export type CharacterWizardBloodFormValues = z.infer<
 
 export function conceptFormToPatch(
   data: CharacterWizardConceptFormValues,
+  locale: string,
 ): CharacterWizardPatch {
   const trim = (s: string) => s.trim();
-  const name = trim(data.name) === "" ? DRAFT_CHARACTER_NAME : trim(data.name);
+  const name =
+    trim(data.name) === "" ? DRAFT_CHARACTER_NAME(locale) : trim(data.name);
   return {
     name,
     concept: trim(data.concept) === "" ? null : trim(data.concept),

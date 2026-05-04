@@ -1,7 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useState, useTransition, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+  type ReactNode,
+} from "react";
 import { useForm, useWatch } from "react-hook-form";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,21 +33,54 @@ import "./character-wizard.css";
 
 type WizardCopy = Dictionary["wizard"];
 
-function InfoFieldButton({ label }: { label: string }) {
+type ConceptCodexKey = keyof WizardCopy["codexEntries"];
+
+const CODEX_MOBILE_MQ = "(max-width: 1023px)";
+
+function InfoFieldButton({
+  label,
+  codexKey,
+  activeCodexKey,
+  onCodexSelect,
+}: {
+  label: string;
+  codexKey?: ConceptCodexKey;
+  activeCodexKey?: ConceptCodexKey | null;
+  onCodexSelect?: (key: ConceptCodexKey) => void;
+}) {
+  const interactive = codexKey != null && onCodexSelect != null;
+  const isActive = interactive && activeCodexKey === codexKey;
+  const img = (
+    <Image
+      src="/icons/info.png"
+      alt=""
+      width={24}
+      height={24}
+      unoptimized
+      className="h-6 w-6 object-contain"
+    />
+  );
+  if (!interactive) {
+    return (
+      <span className="vda-wizard-label-info" aria-hidden>
+        {img}
+      </span>
+    );
+  }
   return (
     <button
       type="button"
-      className="vda-wizard-label-info"
+      className={[
+        "vda-wizard-label-info",
+        isActive ? "vda-wizard-label-info--active" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
       aria-label={label}
+      aria-pressed={isActive}
+      onClick={() => onCodexSelect(codexKey)}
     >
-      <Image
-        src="/icons/info.png"
-        alt=""
-        width={24}
-        height={24}
-        unoptimized
-        className="h-6 w-6 object-contain"
-      />
+      {img}
     </button>
   );
 }
@@ -49,17 +89,28 @@ function FormLabelWithInfo({
   htmlFor,
   children,
   infoLabel,
+  codexKey,
+  activeCodexKey,
+  onCodexSelect,
 }: {
   htmlFor: string;
   children: ReactNode;
   infoLabel: string;
+  codexKey?: ConceptCodexKey;
+  activeCodexKey?: ConceptCodexKey | null;
+  onCodexSelect?: (key: ConceptCodexKey) => void;
 }) {
   return (
     <div className="vda-wizard-label-row">
       <label className="vda-wizard-label" htmlFor={htmlFor}>
         {children}
       </label>
-      <InfoFieldButton label={infoLabel} />
+      <InfoFieldButton
+        label={infoLabel}
+        codexKey={codexKey}
+        activeCodexKey={activeCodexKey}
+        onCodexSelect={onCodexSelect}
+      />
     </div>
   );
 }
@@ -67,14 +118,59 @@ function FormLabelWithInfo({
 function FormSectionTitleWithInfo({
   children,
   infoLabel,
+  codexKey,
+  activeCodexKey,
+  onCodexSelect,
 }: {
   children: ReactNode;
   infoLabel: string;
+  codexKey?: ConceptCodexKey;
+  activeCodexKey?: ConceptCodexKey | null;
+  onCodexSelect?: (key: ConceptCodexKey) => void;
 }) {
   return (
     <div className="vda-wizard-section-title-row">
       <h2 className="vda-wizard-section-title">{children}</h2>
-      <InfoFieldButton label={infoLabel} />
+      <InfoFieldButton
+        label={infoLabel}
+        codexKey={codexKey}
+        activeCodexKey={activeCodexKey}
+        onCodexSelect={onCodexSelect}
+      />
+    </div>
+  );
+}
+
+function ConceptCodexAside({
+  wizardCopy,
+  activeKey,
+}: {
+  wizardCopy: WizardCopy;
+  activeKey: ConceptCodexKey | null;
+}) {
+  const { codexAside, codexEntries } = wizardCopy;
+  if (activeKey == null) {
+    return (
+      <div className="vda-wizard-codex-aside-inner">
+        <h3 className="vda-wizard-codex-aside-title">{codexAside.emptyTitle}</h3>
+        <p className="vda-wizard-codex-aside-body">{codexAside.emptyBody}</p>
+      </div>
+    );
+  }
+  const entry = codexEntries[activeKey];
+  if (!entry) {
+    return (
+      <div className="vda-wizard-codex-aside-inner">
+        <p className="vda-wizard-codex-aside-body text-zinc-500">
+          {codexAside.emptyBody}
+        </p>
+      </div>
+    );
+  }
+  return (
+    <div className="vda-wizard-codex-aside-inner">
+      <h3 className="vda-wizard-codex-aside-title">{entry.title}</h3>
+      <p className="vda-wizard-codex-aside-body">{entry.body}</p>
     </div>
   );
 }
@@ -97,6 +193,30 @@ export function CharacterWizard({
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [clanSearch, setClanSearch] = useState("");
+  const [conceptCodexKey, setConceptCodexKey] = useState<ConceptCodexKey | null>(
+    null,
+  );
+  const [codexOverlayOpen, setCodexOverlayOpen] = useState(false);
+
+  const closeCodexOverlay = useCallback(() => {
+    setCodexOverlayOpen(false);
+    setConceptCodexKey(null);
+  }, []);
+
+  const handleConceptCodexSelect = useCallback(
+    (key: ConceptCodexKey) => {
+      const narrow =
+        typeof window !== "undefined" &&
+        window.matchMedia(CODEX_MOBILE_MQ).matches;
+      if (narrow && codexOverlayOpen && conceptCodexKey === key) {
+        closeCodexOverlay();
+        return;
+      }
+      setConceptCodexKey(key);
+      if (narrow) setCodexOverlayOpen(true);
+    },
+    [codexOverlayOpen, conceptCodexKey, closeCodexOverlay],
+  );
 
   const conceptForm = useForm<CharacterWizardConceptFormValues>({
     resolver: zodResolver(characterWizardConceptFormSchema),
@@ -128,6 +248,41 @@ export function CharacterWizard({
       generation: character.generation ?? 12,
     });
   }, [character, conceptForm, bloodForm]);
+
+  useEffect(() => {
+    if (step !== 0) {
+      setCodexOverlayOpen(false);
+      setConceptCodexKey(null);
+    }
+  }, [step]);
+
+  useEffect(() => {
+    if (!codexOverlayOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeCodexOverlay();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [codexOverlayOpen, closeCodexOverlay]);
+
+  useEffect(() => {
+    if (!codexOverlayOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [codexOverlayOpen]);
+
+  useEffect(() => {
+    const mq = window.matchMedia(CODEX_MOBILE_MQ);
+    const onChange = () => {
+      setCodexOverlayOpen(false);
+      if (mq.matches) setConceptCodexKey(null);
+    };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   const clanId = useWatch({
     control: conceptForm.control,
@@ -176,7 +331,7 @@ export function CharacterWizard({
     void conceptForm.handleSubmit((data) => {
       startTransition(async () => {
         setError(null);
-        const patch = conceptFormToPatch(data);
+        const patch = conceptFormToPatch(data, locale);
         const res = await saveCharacterWizard(character.id, patch, locale);
         if (!res.ok) {
           setError(res.error);
@@ -216,7 +371,7 @@ export function CharacterWizard({
   const be = bloodForm.formState.errors;
 
   return (
-    <div className="vda-wizard mx-auto w-full min-w-0 max-w-4xl">
+    <div className="vda-wizard mx-auto w-full min-w-0 max-w-full">
       <h1 className="mt-1 text-2xl font-bold tracking-wide text-[#c82434] [font-family:var(--font-heading),serif] sm:text-3xl">
         {wizardCopy.title}
       </h1>
@@ -295,9 +450,16 @@ export function CharacterWizard({
       ) : null}
 
       {step === 0 ? (
-        <div className="vda-wizard-concept-panel box-border mt-6 flex min-w-0 flex-col">
-          <div className="vda-wizard-concept-panel-body flex min-w-0 flex-1 flex-col gap-6">
-            <FormSectionTitleWithInfo infoLabel={wizardCopy.conceptSection}>
+        <div className="vda-wizard-concept-panel mt-6 flex min-w-0 max-w-full flex-col">
+          <div className="vda-wizard-concept-panel-layout">
+            <div className="vda-wizard-concept-panel-main">
+              <div className="vda-wizard-concept-panel-body flex min-w-0 flex-1 flex-col gap-6">
+            <FormSectionTitleWithInfo
+              infoLabel={wizardCopy.conceptSection}
+              codexKey="conceptSection"
+              activeCodexKey={conceptCodexKey}
+              onCodexSelect={handleConceptCodexSelect}
+            >
               {wizardCopy.conceptSection}
             </FormSectionTitleWithInfo>
             <div className="flex flex-col gap-3">
@@ -305,13 +467,16 @@ export function CharacterWizard({
                 <FormLabelWithInfo
                   htmlFor="char-wizard-name"
                   infoLabel={wizardCopy.name}
+                  codexKey="name"
+                  activeCodexKey={conceptCodexKey}
+                  onCodexSelect={handleConceptCodexSelect}
                 >
                   {wizardCopy.name}
                 </FormLabelWithInfo>
                 <input
                   id="char-wizard-name"
                   className="vda-wizard-input"
-                  placeholder={DRAFT_CHARACTER_NAME}
+                  placeholder={DRAFT_CHARACTER_NAME(locale)}
                   autoComplete="off"
                   {...conceptForm.register("name")}
                 />
@@ -323,6 +488,9 @@ export function CharacterWizard({
                 <FormLabelWithInfo
                   htmlFor="char-wizard-concept"
                   infoLabel={wizardCopy.concept}
+                  codexKey="concept"
+                  activeCodexKey={conceptCodexKey}
+                  onCodexSelect={handleConceptCodexSelect}
                 >
                   {wizardCopy.concept}
                 </FormLabelWithInfo>
@@ -343,6 +511,9 @@ export function CharacterWizard({
                 <FormLabelWithInfo
                   htmlFor="char-wizard-nature"
                   infoLabel={wizardCopy.nature}
+                  codexKey="nature"
+                  activeCodexKey={conceptCodexKey}
+                  onCodexSelect={handleConceptCodexSelect}
                 >
                   {wizardCopy.nature}
                 </FormLabelWithInfo>
@@ -362,6 +533,9 @@ export function CharacterWizard({
                 <FormLabelWithInfo
                   htmlFor="char-wizard-demeanor"
                   infoLabel={wizardCopy.demeanor}
+                  codexKey="demeanor"
+                  activeCodexKey={conceptCodexKey}
+                  onCodexSelect={handleConceptCodexSelect}
                 >
                   {wizardCopy.demeanor}
                 </FormLabelWithInfo>
@@ -379,13 +553,16 @@ export function CharacterWizard({
               </div>
             </div>
 
-            <div className="flex min-h-[min(72svh,40rem)] w-full min-w-0 flex-col border-t border-white/15 pt-5 sm:min-h-[min(75svh,44rem)]">
+            <div className="flex min-h-[min(40svh,17rem)] w-full min-w-0 flex-col border-t border-white/15 pt-5 sm:min-h-[min(52svh,26rem)] lg:min-h-[min(72svh,40rem)]">
               {clans.length > 0 ? (
                 <>
                   <div className="relative z-20 mb-3 w-full max-w-md">
                     <FormLabelWithInfo
                       htmlFor="char-wizard-clan-search"
                       infoLabel={wizardCopy.findClan}
+                      codexKey="findClan"
+                      activeCodexKey={conceptCodexKey}
+                      onCodexSelect={handleConceptCodexSelect}
                     >
                       {wizardCopy.findClan}
                     </FormLabelWithInfo>
@@ -459,6 +636,18 @@ export function CharacterWizard({
                 <p className="text-sm text-zinc-400">{wizardCopy.noClans}</p>
               )}
             </div>
+              </div>
+            </div>
+            <aside
+              className="vda-wizard-concept-panel-side"
+              aria-label={wizardCopy.codexAside.emptyTitle}
+              aria-live="polite"
+            >
+              <ConceptCodexAside
+                wizardCopy={wizardCopy}
+                activeKey={conceptCodexKey}
+              />
+            </aside>
           </div>
           <div
             aria-hidden
@@ -560,6 +749,42 @@ export function CharacterWizard({
               {wizardCopy.clansLink}
             </Link>
           </p>
+        </div>
+      ) : null}
+
+      {step === 0 && codexOverlayOpen && conceptCodexKey != null ? (
+        <div
+          className="vda-wizard-codex-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label={
+            wizardCopy.codexEntries[conceptCodexKey]?.title ??
+            wizardCopy.codexAside.emptyTitle
+          }
+        >
+          <button
+            type="button"
+            className="vda-wizard-codex-overlay-backdrop"
+            onClick={closeCodexOverlay}
+            aria-label={wizardCopy.codexAside.overlayClose}
+          />
+          <div className="vda-wizard-codex-overlay-sheet">
+            <div className="vda-wizard-codex-overlay-header">
+              <button
+                type="button"
+                className="vda-wizard-codex-overlay-close"
+                onClick={closeCodexOverlay}
+              >
+                {wizardCopy.codexAside.overlayClose}
+              </button>
+            </div>
+            <div className="vda-wizard-codex-overlay-sheet-scroll">
+              <ConceptCodexAside
+                wizardCopy={wizardCopy}
+                activeKey={conceptCodexKey}
+              />
+            </div>
+          </div>
         </div>
       ) : null}
     </div>

@@ -78,6 +78,8 @@ export const codex = pgTable(
 
     description: text("description").notNull(), // The general PDF intro text
 
+    longDescription: text("long_description"),
+
     // Specific text for each dot (1-5)
     // Example: { "1": "Poor...", "2": "Average..." }
     dotDescriptions: jsonb("dot_descriptions"),

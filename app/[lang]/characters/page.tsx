@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { authOptions } from "@/auth";
 import { CharacterCardMenu } from "@/app/[lang]/characters/CharacterCardMenu";
+import { MAX_CHARACTERS_PER_USER } from "@/lib/character";
 import { getCharactersForUser } from "@/db/queries";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { localeParamSchema } from "@/lib/i18n/locale";
@@ -41,6 +42,7 @@ export default async function CharactersPage({
   }
 
   const list = await getCharactersForUser(session.user.id);
+  const canCreateCharacter = list.length < MAX_CHARACTERS_PER_USER;
 
   return (
     <div className="flex min-h-0 w-full flex-1 flex-col py-8 sm:py-10">
@@ -49,22 +51,44 @@ export default async function CharactersPage({
           <h1 className="text-3xl font-bold tracking-wide text-[#c82434] sm:text-4xl">
             {d.characters.title}
           </h1>
-          <p className="mt-2 text-sm text-zinc-400">{d.characters.slots}</p>
+          <p className="mt-2 text-sm text-zinc-400">
+            {d.characters.slots
+              .replace("{used}", String(list.length))
+              .replace("{max}", String(MAX_CHARACTERS_PER_USER))}
+          </p>
         </div>
-        <Link
-          href={withLocale(locale, "/characters/character-builder/new")}
-          className="inline-flex w-full shrink-0 items-center justify-center rounded-lg border border-black/25 px-5 py-3.5 text-base font-normal uppercase tracking-wide text-white [font-family:var(--font-heading),serif] shadow-md transition hover:brightness-110 active:brightness-95 sm:w-auto"
-          style={{
-            backgroundColor: "#c4171d",
-            backgroundImage: "url(/icons/vtm-button-distress.png)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundBlendMode: "multiply",
-          }}
-        >
-          {d.characters.create}
-        </Link>
+        {canCreateCharacter ? (
+          <Link
+            href={withLocale(locale, "/characters/character-builder/new")}
+            className="inline-flex w-full shrink-0 items-center justify-center rounded-lg border border-black/25 px-5 py-3.5 text-base font-normal uppercase tracking-wide text-white [font-family:var(--font-heading),serif] shadow-md transition hover:brightness-110 active:brightness-95 sm:w-auto"
+            style={{
+              backgroundColor: "#c4171d",
+              backgroundImage: "url(/icons/vtm-button-distress.png)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundBlendMode: "multiply",
+            }}
+          >
+            {d.characters.create}
+          </Link>
+        ) : (
+          <span
+            className="inline-flex w-full shrink-0 cursor-not-allowed items-center justify-center rounded-lg border border-black/25 px-5 py-3.5 text-base font-normal uppercase tracking-wide text-white [font-family:var(--font-heading),serif] shadow-md [text-shadow:0_1px_2px_rgba(0,0,0,0.45)] blur-[3px] backdrop-blur-sm motion-reduce:blur-none motion-reduce:backdrop-blur-none sm:w-auto"
+            style={{
+              /* Matches `.vda-wizard-cta--cancel` (#c4171d59) + same distress as primary CTA */
+              backgroundColor: "#c4171d59",
+              backgroundImage: "url(/icons/vtm-button-distress.png)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundBlendMode: "multiply",
+            }}
+            title={d.characters.createDisabledHint}
+          >
+            {d.characters.create}
+          </span>
+        )}
       </header>
 
       <div className="characters-list-frame box-border flex min-h-0 flex-1 flex-col overflow-visible rounded-xl bg-black/30 px-4 pb-6 pt-5 sm:px-6 sm:pb-8 sm:pt-6">

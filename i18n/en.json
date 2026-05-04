@@ -1,5 +1,10 @@
 {
   "brand": "Nocturnus",
+  "localeSwitcher": {
+    "ariaLabel": "Choose language",
+    "en": "English",
+    "es": "Español"
+  },
   "nav": {
     "clans": "Clans",
     "disciplines": "Disciplines",
@@ -15,8 +20,9 @@
   },
   "characters": {
     "title": "Your characters",
-    "slots": "1/1 Character Slots",
+    "slots": "{used}/{max} Character Slots",
     "create": "Create Character",
+    "createDisabledHint": "You already have the maximum number of characters.",
     "empty": "No characters yet. Create one when that flow is available.",
     "signInPrompt": "Sign in to see your characters.",
     "backHome": "Back to home",
@@ -47,7 +53,38 @@
     "noClans": "No clans in the codex yet.",
     "generation": "Generation",
     "browseClansLink": "Browsing clans:",
-    "clansLink": "Clans"
+    "clansLink": "Clans",
+    "codexAside": {
+      "emptyTitle": "Chronicle codex",
+      "emptyBody": "Select the seal beside any label to open storyteller notes for that part of the sheet.",
+      "overlayClose": "Close codex"
+    },
+    "codexEntries": {
+      "conceptSection": {
+        "title": "Character concept",
+        "body": "This step anchors who the vampire was in life and how they read at the table. Name, concept, nature, demeanor, and clan together give Storytellers hooks for chronicle scenes and social conflict. Nothing here needs to be final prose—clear keywords beat a novel."
+      },
+      "name": {
+        "title": "Character name",
+        "body": "The name the chronicle uses for your Kindred. It can be mortal, courtly, a war-name, or a Requiem alias. Keep it pronounceable for other players; you can add epithets in the concept line."
+      },
+      "concept": {
+        "title": "Concept",
+        "body": "A one-line hook: role plus tension. Examples: “penniless scholar who hears the dead” or “knight who broke every vow but one.” It tells the table what scenes you want and what bargains your character is built to break."
+      },
+      "nature": {
+        "title": "Nature",
+        "body": "Archetype for the character’s true self—the drive they cannot sustain a lie against for long. When the mask slips, Nature is what remains. Pick something you will enjoy playing in moments of crisis."
+      },
+      "demeanor": {
+        "title": "Demeanor",
+        "body": "The outward habit or mask: how they want to be read in polite company. Demeanor can contradict Nature; that gap is where intrigue and horror live."
+      },
+      "findClan": {
+        "title": "Clan and bloodline",
+        "body": "Clan is lineage, curse, and culture bundled together. It sets baseline Disciplines, stereotypes mortals whisper, and often the tone of your Hunger. Use search to jump to a bloodline, then the carousel to compare neighbors before you commit."
+      }
+    }
   },
   "disciplinesPage": {
     "title": "Disciplines",

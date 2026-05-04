@@ -1,5 +1,10 @@
 {
   "brand": "Nocturnus",
+  "localeSwitcher": {
+    "ariaLabel": "Elegir idioma",
+    "en": "English",
+    "es": "Español"
+  },
   "nav": {
     "clans": "Clanes",
     "disciplines": "Disciplinas",
@@ -15,8 +20,9 @@
   },
   "characters": {
     "title": "Tus personajes",
-    "slots": "1/1 espacios de personaje",
+    "slots": "{used}/{max} espacios de personaje",
     "create": "Crear personaje",
+    "createDisabledHint": "Ya tienes el número máximo de personajes.",
     "empty": "Aún no hay personajes. Crea uno cuando el flujo esté disponible.",
     "signInPrompt": "Inicia sesión para ver tus personajes.",
     "backHome": "Volver al inicio",
@@ -47,7 +53,38 @@
     "noClans": "Aún no hay clanes en el códice.",
     "generation": "Generación",
     "browseClansLink": "Explorar clanes:",
-    "clansLink": "Clanes"
+    "clansLink": "Clanes",
+    "codexAside": {
+      "emptyTitle": "Códice de la crónica",
+      "emptyBody": "Pulsa el sello junto a cualquier etiqueta para abrir notas del narrador sobre esa parte de la hoja.",
+      "overlayClose": "Cerrar códice"
+    },
+    "codexEntries": {
+      "conceptSection": {
+        "title": "Concepto del personaje",
+        "body": "Este paso fija quién era el vampiro en vida y cómo se ve en mesa. Nombre, concepto, naturaleza, conducta y clan dan al narrador ganchos para escenas y conflicto social. No hace falta prosa final: palabras claras valen más que un tratado."
+      },
+      "name": {
+        "title": "Nombre del personaje",
+        "body": "El nombre que usará la crónica para tu Kindred. Puede ser mortal, cortesano, de guerra o un alias del Réquiem. Que sea pronunciable para los demás jugadores; los epítetos pueden ir en la línea de concepto."
+      },
+      "concept": {
+        "title": "Concepto",
+        "body": "Una línea de gancho: rol más tensión. Ejemplos: “erudito sin un duro que oye a los muertos” o “caballero que rompió todos los juramentos menos uno”. Indica qué escenas quieres y qué pactos está hecho tu personaje para romper."
+      },
+      "nature": {
+        "title": "Naturaleza",
+        "body": "Arquetipo del yo verdadero: el impulso contra el que no puedes mentir mucho tiempo. Cuando se cae la máscara, queda la Naturaleza. Elige algo que disfrutes interpretar en la crisis."
+      },
+      "demeanor": {
+        "title": "Conducta",
+        "body": "El hábito o máscara exterior: cómo quieren que los lean en compañía cortés. La Conducta puede contradecir la Naturaleza; en esa grieta viven el intriga y el horror."
+      },
+      "findClan": {
+        "title": "Clan y estirpe",
+        "body": "El clan es linaje, maldición y cultura a la vez. Marca Disciplinas base, rumores que susurran los mortales y a menudo el tono de tu Hambre. Usa la búsqueda para saltar a una estirpe y el carrusel para comparar vecinos antes de decidir."
+      }
+    }
   },
   "disciplinesPage": {
     "title": "Disciplinas",

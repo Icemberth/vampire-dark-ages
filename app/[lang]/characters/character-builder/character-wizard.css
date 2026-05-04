@@ -1,6 +1,11 @@
 /* VtM-style form fields: one marble “Character concept” panel; black inputs (same border as `characters-list-frame` / character sheet) */
 
+/* Fluid width on phones/tablets; a fixed min-width here broke the concept panel inside the constrained shell. */
 .vda-wizard {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   /* Match `--vda-blood` in `app/globals.css` (same as #c82434) */
   --vda-field-accent: #c82434;
   --vda-field-input-border: #c82434;
@@ -173,6 +178,10 @@
 /* Single container for step “Character concept” — marble + same border + vtm corners as `characters-list-frame` */
 .vda-wizard-concept-panel {
   position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   /* visible so vtm corner images (offset -11px) are not clipped */
   overflow: visible;
   border: 1px solid var(--vda-character-frame-border);
@@ -183,6 +192,172 @@
   background-position: center;
   box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.5);
   padding: 1rem 1.25rem 1.25rem;
+}
+
+.vda-wizard-concept-panel-layout {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.vda-wizard-concept-panel-main {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+}
+
+/* Inline codex: desktop only (mobile uses overlay in React). */
+.vda-wizard-concept-panel-side {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .vda-wizard-concept-panel-layout {
+    flex-direction: row;
+    gap: 1.25rem;
+    align-items: flex-start;
+  }
+
+  .vda-wizard-concept-panel-main {
+    flex: 7 1 0%;
+    max-width: 70%;
+  }
+
+  .vda-wizard-concept-panel-side {
+    display: block;
+    position: relative;
+    z-index: 1;
+    flex: 3 1 0%;
+    max-width: 30%;
+    min-width: 0;
+    width: 100%;
+    align-self: stretch;
+    min-height: min(70vh, 36rem);
+    max-height: none;
+    overflow: auto;
+    border-radius: 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--vda-blood) 35%, transparent);
+    background-color: rgba(0, 0, 0, 0.55);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.45);
+    padding: 0.85rem 1rem;
+  }
+}
+
+/* Mobile codex (CharacterWizard): dimmer + drawer from the right, ~full viewport height */
+.vda-wizard-codex-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  padding: 0;
+}
+
+@media (min-width: 1024px) {
+  .vda-wizard-codex-overlay {
+    display: none !important;
+  }
+}
+
+.vda-wizard-codex-overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.72);
+}
+
+@keyframes vda-codex-drawer-in {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.vda-wizard-codex-overlay-sheet {
+  position: absolute;
+  z-index: 1;
+  top: env(safe-area-inset-top, 0px);
+  right: 0;
+  bottom: env(safe-area-inset-bottom, 0px);
+  width: min(92vw, 26rem);
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 0.75rem 0 0 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--vda-blood) 40%, transparent);
+  border-right: none;
+  background-color: #0a0506;
+  background-image: url("/icons/vtm-marble-red.jpg");
+  background-size: cover;
+  background-position: center;
+  box-shadow:
+    inset 0 0 0 9999px rgba(0, 0, 0, 0.52),
+    -10px 0 36px rgba(0, 0, 0, 0.55);
+  padding: 0.75rem max(0.75rem, env(safe-area-inset-right, 0px)) 0.65rem 1rem;
+  animation: vda-codex-drawer-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vda-wizard-codex-overlay-sheet {
+    animation: none;
+  }
+}
+
+.vda-wizard-codex-overlay-sheet-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.15rem;
+}
+
+.vda-wizard-codex-overlay-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 0.35rem;
+}
+
+.vda-wizard-codex-overlay-close {
+  flex-shrink: 0;
+  border-radius: 0.375rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.45);
+  padding: 0.35rem 0.65rem;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(250, 250, 250, 0.92);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.vda-wizard-codex-overlay-close:hover {
+  background: rgba(80, 10, 18, 0.55);
+  color: #fff;
+}
+
+.vda-wizard-codex-overlay-close:focus-visible {
+  outline: 2px solid var(--vda-field-accent);
+  outline-offset: 2px;
 }
 
 .vda-wizard-concept-panel-body {
@@ -207,6 +382,29 @@
 
 .vda-wizard-concept-panel h2 {
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+}
+
+.vda-wizard-codex-aside-inner {
+  min-height: 100%;
+}
+
+.vda-wizard-codex-aside-title {
+  font-family: var(--font-heading), ui-serif, Georgia, serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--vda-field-accent);
+  margin: 0 0 0.6rem;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
+}
+
+.vda-wizard-codex-aside-body {
+  margin: 0;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: rgba(228, 228, 231, 0.92);
 }
 
 /* Group label + control only (no per-field marble) */
@@ -295,6 +493,10 @@
 .vda-wizard-label-info:focus-visible {
   outline: 2px solid var(--vda-field-accent);
   outline-offset: 2px;
+}
+
+.vda-wizard-label-info--active {
+  filter: brightness(1.15) drop-shadow(0 0 6px color-mix(in srgb, var(--vda-blood) 55%, transparent));
 }
 
 /* Step section titles: same language as field labels, slightly larger */

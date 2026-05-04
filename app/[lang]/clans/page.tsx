@@ -10,6 +10,7 @@ export default async function ClansPage({
   const { lang } = await params;
   const locale = localeParamSchema.parse(lang);
   const allClans = await getAllClans(locale);
+  console.log(allClans);
 
   return <ClanCarousel clans={allClans} />;
 }
