@@ -57,7 +57,8 @@
     "codexAside": {
       "emptyTitle": "Chronicle codex",
       "emptyBody": "Select the seal beside any label to open storyteller notes for that part of the sheet.",
-      "overlayClose": "Close codex"
+      "overlayClose": "Close codex",
+      "fullArtToggle": "Full art"
     },
     "codexEntries": {
       "conceptSection": {
@@ -89,6 +90,29 @@
   "disciplinesPage": {
     "title": "Disciplines",
     "body": "Powers of the blood will be catalogued here. For now, browse clans or return to your chronicle."
+  },
+  "clansPage": {
+    "title": "Clan codex",
+    "subtitle": "Scroll the bloodlines recorded for this chronicle—parchment, weakness, disciplines, and a glimpse of clan art.",
+    "empty": "No clans are available in this chronicle yet.",
+    "previous": "Previous",
+    "next": "Next",
+    "previousAria": "Previous clan",
+    "nextAria": "Next clan",
+    "selectAria": "Jump to clan",
+    "bloodline": "Bloodline",
+    "defaultTagline": "Lineage • curse • covenant",
+    "record": "Chronicle record",
+    "recordFallback": "No chronicle synopsis is stored for this lineage yet.",
+    "weakness": "Weakness",
+    "motto": "Renown",
+    "disciplines": "Disciplines",
+    "disciplineNoLore": "Codex lore for this discipline is not loaded yet.",
+    "noDisciplines": "No baseline disciplines are assigned to this lineage in the chronicle tables.",
+    "coverAria": "Clan codex cover — Codex Caini",
+    "lineageBadge": "Lineage {n} · {total}",
+    "flipHint": "Drag a corner or tap the arrows to turn the pages.",
+    "bookBack": "Codex Caini"
   },
   "account": {
     "menu": "Account",

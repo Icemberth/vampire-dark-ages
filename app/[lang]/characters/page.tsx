@@ -9,14 +9,6 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { localeParamSchema } from "@/lib/i18n/locale";
 import { withLocale } from "@/lib/i18n/paths";
 
-function normalizeClanIconKey(input: string) {
-  return input
-    .toLowerCase()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9]+/g, "")
-    .trim();
-}
-
 export default async function CharactersPage({
   params,
 }: {
@@ -99,36 +91,16 @@ export default async function CharactersPage({
             </p>
           ) : (
             <ul className="flex min-h-0 flex-1 flex-wrap content-start justify-start gap-4">
-              {list.map((c) =>
-                (() => {
-                  const clanKey = c.clanName
-                    ? normalizeClanIconKey(c.clanName)
-                    : null;
-                  const clanIconBg = clanKey
-                    ? `url(/icons/clans/${clanKey}.svg), url(/icons/clans/darkAges.svg)`
-                    : "url(/icons/clans/darkAges.svg)";
-
-                  return (
-                    <li
-                      key={c.id}
-                      className="group relative z-2 w-full max-w-md shrink-0 cursor-pointer overflow-visible rounded-xl border border-zinc-800/70 shadow-lg transition-transform duration-200 hover:-translate-y-px hover:border-zinc-700/80"
-                    >
+              {list.map((c) => (
+                <li
+                  key={c.id}
+                  className="group relative z-2 w-full max-w-md shrink-0 cursor-pointer overflow-visible rounded-xl border border-zinc-800/70 shadow-lg transition-transform duration-200 hover:-translate-y-px hover:border-zinc-700/80"
+                >
                       <div
                         aria-hidden
                         className="absolute inset-0 origin-center overflow-hidden rounded-xl bg-cover bg-center will-change-transform group-hover:animate-[vda-heartbeat_1.9s_ease-in-out_infinite] motion-reduce:group-hover:animate-none"
                         style={{
                           backgroundImage: "url(/icons/vtm-marble-red.jpg)",
-                        }}
-                      />
-                      <div
-                        aria-hidden
-                        className="pointer-events-none absolute inset-0 z-1 rounded-xl opacity-0 transition-all duration-300 group-hover:opacity-25"
-                        style={{
-                          backgroundImage: clanIconBg,
-                          backgroundRepeat: "no-repeat",
-                          backgroundPosition: "right 1rem center",
-                          backgroundSize: "30%",
-                          transform: "translateX(10px) scale(0.98)",
                         }}
                       />
                       <div
@@ -210,10 +182,8 @@ export default async function CharactersPage({
                           </p>
                         )}
                       </div>
-                    </li>
-                  );
-                })(),
-              )}
+                </li>
+              ))}
             </ul>
           )}
         </div>

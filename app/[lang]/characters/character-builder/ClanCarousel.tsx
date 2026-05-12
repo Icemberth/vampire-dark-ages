@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import { clanEmblemSrc } from "@/app/[lang]/clans/clanEmblemSrc";
+import { normalizeClanAssetKey } from "@/lib/clanAssetKey";
 
 export type Clan = {
   id: string;
@@ -25,21 +27,7 @@ export type ClanCarouselProps = {
   onClanIdChange?: (id: string) => void;
 };
 
-function normalizeIconKey(input: string) {
-  return (
-    input
-      .toLowerCase()
-      .replace(/&/g, "and")
-      .replace(/[^a-z0-9]+/g, "")
-      .trim()
-  );
-}
-
 const DEFAULT_CLAN_ICON_SRC = "/icons/clans/darkAges.svg";
-
-const ICON_KEY_ALIAS: Record<string, string> = {
-  childrenofset: "settites",
-};
 
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
@@ -159,7 +147,9 @@ function ClanCardContent({
             {clan.description}
           </p>
         ) : (
-          <p className="mb-5 text-sm italic text-zinc-500">No description available.</p>
+          <p className="mb-5 text-sm italic text-zinc-500">
+            No description available.
+          </p>
         )}
         <div className="grid min-w-0 gap-4">
           <div className="min-w-0">
@@ -203,6 +193,13 @@ export function ClanCarousel({
   const scrollerRef = React.useRef<HTMLDivElement | null>(null);
   const programmaticScrollRef = React.useRef(false);
   const indexRef = React.useRef(0);
+  const clearProgrammaticScrollAfterPaint = React.useCallback(() => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        programmaticScrollRef.current = false;
+      });
+    });
+  }, []);
   const scrollRafRef = React.useRef<number | null>(null);
   const iconTestStartedRef = React.useRef<Set<string>>(new Set());
   const lastIconClansKeyRef = React.useRef<string>("");
@@ -242,14 +239,14 @@ export function ClanCarousel({
     const apply = (el: HTMLDivElement) => {
       const w = el.clientWidth;
       if (w <= 0) return false;
+      // Selection came from parent (form / search): do not treat scroll settle as user input.
+      userPickedClanRef.current = false;
       programmaticScrollRef.current = true;
       setIndex((prev) => (prev === i ? prev : i));
       if (Math.abs(el.scrollLeft - i * w) > 0.5) {
         el.scrollTo({ left: i * w, behavior: "auto" });
       }
-      queueMicrotask(() => {
-        programmaticScrollRef.current = false;
-      });
+      clearProgrammaticScrollAfterPaint();
       return true;
     };
 
@@ -333,14 +330,11 @@ export function ClanCarousel({
     }
     const list = clansRef.current;
     if (!list.length) return;
-    const keys = Array.from(
-      new Set(list.map((c) => normalizeIconKey(c.name)).filter(Boolean)),
-    );
-    for (const key of keys) {
-      if (iconTestStartedRef.current.has(key)) continue;
+    for (const c of list) {
+      const key = normalizeClanAssetKey(c.name);
+      if (!key || iconTestStartedRef.current.has(key)) continue;
       iconTestStartedRef.current.add(key);
-      const candidateName = ICON_KEY_ALIAS[key] ?? key;
-      const candidateSrc = `/icons/clans/${candidateName}.svg`;
+      const candidateSrc = clanEmblemSrc(c.name);
       const img = new Image();
       img.onload = () => {
         setIconSrcByKey((prev) =>
@@ -358,7 +352,7 @@ export function ClanCarousel({
 
   const getResolvedClanIconSrc = React.useCallback(
     (clanName: string) => {
-      const key = normalizeIconKey(clanName);
+      const key = normalizeClanAssetKey(clanName);
       return iconSrcByKey[key] ?? DEFAULT_CLAN_ICON_SRC;
     },
     [iconSrcByKey],
@@ -383,9 +377,7 @@ export function ClanCarousel({
       programmaticScrollRef.current = true;
       el.scrollTo({ left: target * w, behavior: "auto" });
       setIndex(target);
-      queueMicrotask(() => {
-        programmaticScrollRef.current = false;
-      });
+      clearProgrammaticScrollAfterPaint();
     },
     [clampIndex, markClanUser],
   );
@@ -425,22 +417,19 @@ export function ClanCarousel({
             : "flex h-full flex-col px-4 py-4 sm:px-6 sm:py-6 md:px-10"
         }
       >
-        <header
-          className={isEmbed ? "mb-2 sm:mb-3" : "mb-3 text-center sm:mb-5"}
-        >
+        <header className={isEmbed ? "mb-2 sm:mb-3" : "mb-3 text-center sm:mb-5"}>
           {isEmbed ? (
             <div>
               <h2 className="text-sm font-semibold tracking-wide text-[#c82434] [font-family:var(--font-heading),serif]">
                 Clan
               </h2>
               <p className="mt-0.5 text-xs text-zinc-500">
-                Swipe or use the icons below. Your selection applies to this
-                character.
+                Swipe or use the icons below. Your selection applies to this character.
               </p>
             </div>
           ) : (
             <div>
-              <h1 className="text-3xl font-bold mb-2 text-[#c82434] uppercase tracking-widest sm:text-4xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
+              <h1 className="mb-2 text-3xl font-bold text-[#c82434] uppercase tracking-widest drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)] sm:text-4xl">
                 V20 Dark Ages Compendium
               </h1>
               <p className="text-zinc-300 italic drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
@@ -568,3 +557,4 @@ export function ClanCarousel({
     </div>
   );
 }
+

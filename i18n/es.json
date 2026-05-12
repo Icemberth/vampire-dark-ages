@@ -57,7 +57,8 @@
     "codexAside": {
       "emptyTitle": "Códice de la crónica",
       "emptyBody": "Pulsa el sello junto a cualquier etiqueta para abrir notas del narrador sobre esa parte de la hoja.",
-      "overlayClose": "Cerrar códice"
+      "overlayClose": "Cerrar códice",
+      "fullArtToggle": "Arte completo"
     },
     "codexEntries": {
       "conceptSection": {
@@ -89,6 +90,29 @@
   "disciplinesPage": {
     "title": "Disciplinas",
     "body": "Los poderes de la sangre se catalogarán aquí. Por ahora, explora clanes o vuelve a tu crónica."
+  },
+  "clansPage": {
+    "title": "Códice de clanes",
+    "subtitle": "Recorre los linajes de esta crónica: pergamino, debilidad, disciplinas y un vistazo al arte del clan.",
+    "empty": "Aún no hay clanes disponibles en esta crónica.",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "previousAria": "Clan anterior",
+    "nextAria": "Clan siguiente",
+    "selectAria": "Saltar a un clan",
+    "bloodline": "Estirpe",
+    "defaultTagline": "Linaje • maldición • pacto",
+    "record": "Registro de la crónica",
+    "recordFallback": "Aún no hay una sinopsis de crónica para este linaje.",
+    "weakness": "Debilidad",
+    "motto": "Renombre",
+    "disciplines": "Disciplinas",
+    "disciplineNoLore": "La información de códice para esta disciplina aún no está cargada.",
+    "noDisciplines": "No hay disciplinas base asignadas a este linaje en las tablas de la crónica.",
+    "coverAria": "Portada del códice de clanes — Codex Caini",
+    "lineageBadge": "Linaje {n} · {total}",
+    "flipHint": "Arrastra una esquina o usa los botones para pasar página.",
+    "bookBack": "Codex Caini"
   },
   "account": {
     "menu": "Cuenta",

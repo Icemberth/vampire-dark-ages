@@ -2,6 +2,7 @@ import { db } from "./index";
 import { codex } from "./schema/world";
 import codexAttributes from "./data/json/codexAttributes.json";
 import codexCreationMeta from "./data/json/codexCreationMeta.json";
+import archetypes from "./data/json/codexArchetypes.json";
 
 export async function seedCodexAttributes() {
   console.log("💾 Seeding Attributes into Codex...");
@@ -55,4 +56,21 @@ export async function seedCodexMeta() {
   console.log(
     `✅ Successfully seeded ${codexCreationMeta.length} creation meta entries.`,
   );
+}
+
+export async function seedCodexArchetypes() {
+  console.log("💾 Seeding Archetypes into Codex...");
+  for (const entry of archetypes) {
+    await db
+      .insert(codex)
+      .values(entry)
+      .onConflictDoUpdate({
+        target: [codex.name, codex.locale],
+        set: {
+          displayName: entry.displayName,
+          description: entry.description,
+          dotDescriptions: entry.dotDescriptions,
+        },
+      });
+  }
 }

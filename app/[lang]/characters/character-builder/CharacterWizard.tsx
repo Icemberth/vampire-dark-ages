@@ -7,17 +7,23 @@ import {
   useMemo,
   useState,
   useTransition,
+  type CSSProperties,
   type ReactNode,
 } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ClanCarousel, type Clan } from "@/app/components/ClanCarousel";
+import { ClanCarousel, type Clan } from "./ClanCarousel";
 import {
   completeCharacterWizard,
   saveCharacterWizard,
 } from "@/lib/actions/character-wizard";
+import {
+  DEFAULT_CLAN_PANEL_ART_PATH,
+  normalizeClanAssetKey,
+  resolveClanPanelArtUrl,
+} from "@/lib/clanAssetKey";
 import { DRAFT_CHARACTER_NAME, type CharacterRow } from "@/lib/character";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { Locale } from "@/lib/i18n/locale";
@@ -141,19 +147,38 @@ function FormSectionTitleWithInfo({
   );
 }
 
+function CodexAsideTitleRow({
+  title,
+}: {
+  title: string;
+}) {
+  return (
+    <div className="vda-wizard-codex-aside-title-row">
+      <h1 className="vda-wizard-codex-aside-title">{title}</h1>
+    </div>
+  );
+}
+
 function ConceptCodexAside({
   wizardCopy,
   activeKey,
+  archetypes,
 }: {
   wizardCopy: WizardCopy;
   activeKey: ConceptCodexKey | null;
+  archetypes?: { name: string; displayName: string; description: string | null; willpowerGain: string | null }[];
 }) {
   const { codexAside, codexEntries } = wizardCopy;
   if (activeKey == null) {
     return (
       <div className="vda-wizard-codex-aside-inner">
-        <h3 className="vda-wizard-codex-aside-title">{codexAside.emptyTitle}</h3>
-        <p className="vda-wizard-codex-aside-body">{codexAside.emptyBody}</p>
+        <CodexAsideTitleRow
+          title={codexAside.emptyTitle}
+        />
+        <div className="vda-wizard-codex-aside-title-rule" aria-hidden />
+        <div className="vda-wizard-codex-aside-copy">
+          <p className="vda-wizard-codex-aside-body">{codexAside.emptyBody}</p>
+        </div>
       </div>
     );
   }
@@ -161,16 +186,45 @@ function ConceptCodexAside({
   if (!entry) {
     return (
       <div className="vda-wizard-codex-aside-inner">
-        <p className="vda-wizard-codex-aside-body text-zinc-500">
-          {codexAside.emptyBody}
-        </p>
+        <div className="vda-wizard-codex-aside-copy">
+          <p className="vda-wizard-codex-aside-body text-zinc-500">
+            {codexAside.emptyBody}
+          </p>
+        </div>
       </div>
     );
   }
   return (
     <div className="vda-wizard-codex-aside-inner">
-      <h3 className="vda-wizard-codex-aside-title">{entry.title}</h3>
-      <p className="vda-wizard-codex-aside-body">{entry.body}</p>
+      <CodexAsideTitleRow
+        title={entry.title}
+      />
+      <div className="vda-wizard-codex-aside-title-rule" aria-hidden />
+      {activeKey === "nature" || activeKey === "demeanor" ? (
+        <div className="vda-wizard-codex-aside-copy vda-wizard-archetypes-aside">
+          <p className="vda-wizard-codex-aside-body vda-wizard-archetype-intro">{entry.body}</p>
+          <ul className="vda-wizard-archetype-list">
+            {(archetypes ?? []).map((a) => (
+              <li key={a.name} className="vda-wizard-archetype-item">
+                <p className="vda-wizard-archetype-name">{a.displayName}</p>
+                {a.description ? (
+                  <p className="vda-wizard-codex-aside-body vda-wizard-archetype-desc">{a.description}</p>
+                ) : null}
+                {a.willpowerGain ? (
+                  <p className="vda-wizard-archetype-wp">
+                    <span className="vda-wizard-archetype-wp-label">Willpower gain</span>
+                    <span className="vda-wizard-archetype-wp-body">{a.willpowerGain}</span>
+                  </p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <div className="vda-wizard-codex-aside-copy">
+          <p className="vda-wizard-codex-aside-body">{entry.body}</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -178,6 +232,7 @@ function ConceptCodexAside({
 type CharacterWizardProps = {
   character: CharacterRow;
   clans: Clan[];
+  archetypes: { name: string; displayName: string; description: string | null; willpowerGain: string | null }[];
   locale: Locale;
   wizardCopy: WizardCopy;
 };
@@ -185,6 +240,7 @@ type CharacterWizardProps = {
 export function CharacterWizard({
   character,
   clans,
+  archetypes,
   locale,
   wizardCopy,
 }: CharacterWizardProps) {
@@ -251,8 +307,10 @@ export function CharacterWizard({
 
   useEffect(() => {
     if (step !== 0) {
-      setCodexOverlayOpen(false);
-      setConceptCodexKey(null);
+      queueMicrotask(() => {
+        setCodexOverlayOpen(false);
+        setConceptCodexKey(null);
+      });
     }
   }, [step]);
 
@@ -287,8 +345,27 @@ export function CharacterWizard({
   const clanId = useWatch({
     control: conceptForm.control,
     name: "clanId",
-    defaultValue: conceptForm.getValues("clanId"),
   });
+
+  const clanPanelArtPath = useMemo(() => {
+    const cid =
+      clanId == null || clanId === ""
+        ? null
+        : String(clanId).trim();
+    if (!cid) return DEFAULT_CLAN_PANEL_ART_PATH;
+    const clan = clans.find((c) => c.id === cid);
+    if (!clan) return DEFAULT_CLAN_PANEL_ART_PATH;
+    return resolveClanPanelArtUrl(normalizeClanAssetKey(clan.name));
+  }, [clanId, clans]);
+
+  const archetypeOptions = useMemo(
+    () =>
+      archetypes
+        .map((a) => a.displayName)
+        .map((x) => x.trim())
+        .filter(Boolean),
+    [archetypes],
+  );
 
   const steps = useMemo(
     () =>
@@ -450,9 +527,19 @@ export function CharacterWizard({
       ) : null}
 
       {step === 0 ? (
-        <div className="vda-wizard-concept-panel mt-6 flex min-w-0 max-w-full flex-col">
-          <div className="vda-wizard-concept-panel-layout">
-            <div className="vda-wizard-concept-panel-main">
+        <div className="vda-wizard-concept-stage mt-6 flex min-w-0 max-w-full flex-col lg:flex-row">
+          <div
+            className="vda-wizard-concept-panel flex min-w-0 flex-col"
+            style={
+              {
+                "--vda-clan-panel-art": `url(${JSON.stringify(clanPanelArtPath)})`,
+              } as CSSProperties
+            }
+          >
+            <div className="vda-wizard-concept-panel-layout">
+            <div
+              className="vda-wizard-concept-panel-main"
+            >
               <div className="vda-wizard-concept-panel-body flex min-w-0 flex-1 flex-col gap-6">
             <FormSectionTitleWithInfo
               infoLabel={wizardCopy.conceptSection}
@@ -519,8 +606,9 @@ export function CharacterWizard({
                 </FormLabelWithInfo>
                 <input
                   id="char-wizard-nature"
-                  className="vda-wizard-input"
+                  className="vda-wizard-input vda-wizard-input--archetype"
                   autoComplete="off"
+                  list="vda-archetypes"
                   {...conceptForm.register("nature")}
                 />
                 {ce.nature ? (
@@ -541,8 +629,9 @@ export function CharacterWizard({
                 </FormLabelWithInfo>
                 <input
                   id="char-wizard-demeanor"
-                  className="vda-wizard-input"
+                  className="vda-wizard-input vda-wizard-input--archetype"
                   autoComplete="off"
+                  list="vda-archetypes"
                   {...conceptForm.register("demeanor")}
                 />
                 {ce.demeanor ? (
@@ -552,6 +641,13 @@ export function CharacterWizard({
                 ) : null}
               </div>
             </div>
+            {archetypeOptions.length ? (
+              <datalist id="vda-archetypes">
+                {archetypeOptions.map((name) => (
+                  <option key={name} value={name} />
+                ))}
+              </datalist>
+            ) : null}
 
             <div className="flex min-h-[min(40svh,17rem)] w-full min-w-0 flex-col border-t border-white/15 pt-5 sm:min-h-[min(52svh,26rem)] lg:min-h-[min(72svh,40rem)]">
               {clans.length > 0 ? (
@@ -638,17 +734,7 @@ export function CharacterWizard({
             </div>
               </div>
             </div>
-            <aside
-              className="vda-wizard-concept-panel-side"
-              aria-label={wizardCopy.codexAside.emptyTitle}
-              aria-live="polite"
-            >
-              <ConceptCodexAside
-                wizardCopy={wizardCopy}
-                activeKey={conceptCodexKey}
-              />
-            </aside>
-          </div>
+            </div>
           <div
             aria-hidden
             className="vda-wizard-concept-panel-corner left-[-11px] top-[-11px]"
@@ -660,21 +746,6 @@ export function CharacterWizard({
                 fill
                 unoptimized
                 className="object-contain object-top-left"
-                sizes="96px"
-              />
-            </div>
-          </div>
-          <div
-            aria-hidden
-            className="vda-wizard-concept-panel-corner right-[-11px] top-[-11px]"
-          >
-            <div className="relative h-full w-full">
-              <Image
-                src="/icons/vtm-corner-tr.png"
-                alt=""
-                fill
-                unoptimized
-                className="object-contain object-top-right"
                 sizes="96px"
               />
             </div>
@@ -694,21 +765,80 @@ export function CharacterWizard({
               />
             </div>
           </div>
-          <div
-            aria-hidden
-            className="vda-wizard-concept-panel-corner bottom-[-11px] right-[-11px]"
+          </div>
+          <aside
+            className="vda-wizard-concept-panel-side"
+            aria-label={wizardCopy.codexAside.emptyTitle}
+            aria-live="polite"
           >
-            <div className="relative h-full w-full">
-              <Image
-                src="/icons/vtm-corner-br.png"
-                alt=""
-                fill
-                unoptimized
-                className="object-contain object-bottom-right"
-                sizes="96px"
+            <div
+              aria-hidden
+              className="vda-wizard-concept-panel-corner vda-wizard-concept-panel-corner--flourish left-[-80px] top-[-18px]"
+            >
+              <div className="relative h-full w-full">
+                <Image
+                  src="/icons/vtm-flourish-bl.png"
+                  alt=""
+                  fill
+                  unoptimized
+                  className="object-contain object-top-left"
+                  sizes="96px"
+                />
+              </div>
+            </div>
+            <div
+              aria-hidden
+              className="vda-wizard-concept-panel-corner right-[-11px] top-[-11px]"
+            >
+              <div className="relative h-full w-full">
+                <Image
+                  src="/icons/vtm-corner-tr.png"
+                  alt=""
+                  fill
+                  unoptimized
+                  className="object-contain object-top-right"
+                  sizes="96px"
+                />
+              </div>
+            </div>
+            <div
+              aria-hidden
+              className="vda-wizard-concept-panel-corner vda-wizard-concept-panel-corner--flourish bottom-[-18px] left-[-80px]"
+            >
+              <div className="relative h-full w-full">
+                <Image
+                  src="/icons/vtm-flourish-br.png"
+                  alt=""
+                  fill
+                  unoptimized
+                  className="object-contain object-bottom-left"
+                  sizes="96px"
+                />
+              </div>
+            </div>
+            <div
+              aria-hidden
+              className="vda-wizard-concept-panel-corner bottom-[-11px] right-[-11px]"
+            >
+              <div className="relative h-full w-full">
+                <Image
+                  src="/icons/vtm-corner-br.png"
+                  alt=""
+                  fill
+                  unoptimized
+                  className="object-contain object-bottom-right"
+                  sizes="96px"
+                />
+              </div>
+            </div>
+            <div className="vda-wizard-concept-panel-side-body">
+              <ConceptCodexAside
+                wizardCopy={wizardCopy}
+                activeKey={conceptCodexKey}
+                archetypes={archetypes}
               />
             </div>
-          </div>
+          </aside>
         </div>
       ) : null}
 
@@ -768,7 +898,14 @@ export function CharacterWizard({
             onClick={closeCodexOverlay}
             aria-label={wizardCopy.codexAside.overlayClose}
           />
-          <div className="vda-wizard-codex-overlay-sheet">
+          <div
+            className="vda-wizard-codex-overlay-sheet"
+            style={
+              {
+                "--vda-clan-panel-art": `url(${JSON.stringify(clanPanelArtPath)})`,
+              } as CSSProperties
+            }
+          >
             <div className="vda-wizard-codex-overlay-header">
               <button
                 type="button"
@@ -782,6 +919,7 @@ export function CharacterWizard({
               <ConceptCodexAside
                 wizardCopy={wizardCopy}
                 activeKey={conceptCodexKey}
+                archetypes={archetypes}
               />
             </div>
           </div>

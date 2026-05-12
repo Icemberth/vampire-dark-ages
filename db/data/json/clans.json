@@ -462,7 +462,7 @@
     "isBloodline": true,
     "subName": null,
     "parentClanName": "Tremere",
-    "disciplines": ["Fortitude", "Potence", "Visceratika"],
+    "disciplines": ["Fortitude", "Potence", "Flight"],
     "weaknessName": "Hideous / Bound",
     "weaknessDescription": "Appearance is always 0. Two steps closer to a Blood Bond with creators.",
     "description": "Flesh-crafted guardians created by Tremere magi to protect their chantries."
@@ -474,7 +474,7 @@
     "isBloodline": true,
     "subName": null,
     "parentClanName": "Tremere",
-    "disciplines": ["Fortaleza", "Potencia", "Visceratika"],
+    "disciplines": ["Fortaleza", "Potencia", "Volar"],
     "weaknessName": "Horripilante / Vinculada",
     "weaknessDescription": "La apariencia siempre es 0. Dos pasos más cerca de un Vínculo de Sangre con sus creadores.",
     "description": "Guardianes moldeados por los magos Tremere para proteger sus capillas."

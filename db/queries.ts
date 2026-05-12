@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { DRAFT_CHARACTER_NAME, type CharacterRow } from "@/lib/character";
 import { db } from "./index";
 import { characters, clans, clanDisciplines, codex } from "./schema";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 
 type ClanSelectRow = {
   id: string;
@@ -50,6 +50,73 @@ export async function getAllClans(locale: string) {
     }
     return acc;
   }, []);
+}
+
+export type CodexDisciplineRow = {
+  name: string;
+  displayName: string;
+  description: string | null;
+};
+
+export type CodexArchetypeRow = {
+  name: string;
+  displayName: string;
+  description: string | null;
+  willpowerGain: string | null;
+};
+
+/** Archetypes (Nature/Demeanor suggestions) in `codex` (`category = archetype`) for a locale. */
+export async function getCodexArchetypes(locale: string): Promise<CodexArchetypeRow[]> {
+  const rows = await db
+    .select({
+      name: codex.name,
+      displayName: codex.displayName,
+      description: codex.description,
+      dotDescriptions: codex.dotDescriptions,
+    })
+    .from(codex)
+    .where(and(eq(codex.locale, locale), eq(codex.category, "archetype")))
+    .orderBy(codex.displayName);
+
+  return rows.map((r) => {
+    const dots = r.dotDescriptions as null | Record<string, unknown>;
+    const willpowerGain =
+      dots && typeof dots.willpower_gain === "string" ? dots.willpower_gain : null;
+    return {
+      name: r.name,
+      displayName: r.displayName,
+      description: r.description,
+      willpowerGain,
+    };
+  });
+}
+
+/** Lore rows for discipline keys in `codex` (`category = discipline`) for a locale. */
+export async function getCodexDisciplineMap(
+  locale: string,
+  disciplineKeys: string[],
+): Promise<Map<string, CodexDisciplineRow>> {
+  const unique = [...new Set(disciplineKeys.map((k) => k.trim()).filter(Boolean))];
+  if (!unique.length) return new Map();
+  const rows = await db
+    .select({
+      name: codex.name,
+      displayName: codex.displayName,
+      description: codex.description,
+    })
+    .from(codex)
+    .where(
+      and(
+        eq(codex.locale, locale),
+        eq(codex.category, "discipline"),
+        inArray(codex.name, unique),
+      ),
+    );
+  const m = new Map<string, CodexDisciplineRow>();
+  for (const r of rows) {
+    m.set(r.name, r);
+  }
+  return m;
 }
 
 export type ClanDisciplineCodexRow = {
@@ -108,6 +175,34 @@ export async function getCharactersForUser(userId: string) {
 
 export type { CharacterRow };
 export { DRAFT_CHARACTER_NAME };
+
+export type CodexCreationMetaRow = {
+  name: string;
+  displayName: string;
+  description: string;
+  longDescription: string | null;
+};
+
+/** `codex` rows in the `creation_meta` category for a locale. */
+export async function getCodexCreationMeta(
+  locale: string,
+): Promise<Record<string, CodexCreationMetaRow>> {
+  const rows = await db
+    .select({
+      name: codex.name,
+      displayName: codex.displayName,
+      description: codex.description,
+      longDescription: codex.longDescription,
+    })
+    .from(codex)
+    .where(and(eq(codex.locale, locale), eq(codex.category, "creation_meta")));
+
+  const out: Record<string, CodexCreationMetaRow> = {};
+  for (const r of rows) {
+    out[r.name] = r;
+  }
+  return out;
+}
 
 /**
  * Inserts a new character row and returns its id. Used when entering the builder so the

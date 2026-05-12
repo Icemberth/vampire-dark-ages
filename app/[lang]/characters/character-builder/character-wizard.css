@@ -175,6 +175,15 @@
   opacity: 1;
 }
 
+/* Wraps the framed concept form (left) + codex aside (right); two separate panels on desktop */
+.vda-wizard-concept-stage {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  gap: 1rem;
+}
+
 /* Single container for step “Character concept” — marble + same border + vtm corners as `characters-list-frame` */
 .vda-wizard-concept-panel {
   position: relative;
@@ -185,13 +194,38 @@
   /* visible so vtm corner images (offset -11px) are not clipped */
   overflow: visible;
   border: 1px solid var(--vda-character-frame-border);
-  border-radius: 0.75rem; /* match rounded-xl */
+  border-radius: 0;
   background-color: #0a0506;
-  background-image: url("/icons/vtm-marble-red.jpg");
-  background-size: cover;
-  background-position: center;
-  box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.5);
+  isolation: isolate;
+  /* Fallback before client resolves clan art */
+  --vda-clan-panel-art: url("/img/darkAges.png");
+  /* Marble + clan art live on `.vda-wizard-concept-panel-main` */
   padding: 1rem 1.25rem 1.25rem;
+}
+
+.vda-wizard-concept-panel::before,
+.vda-wizard-concept-panel::after {
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.vda-wizard-concept-panel::before {
+  inset: 0;
+  background-image: url("/icons/vtm-marble-red.jpg");
+  background-position: center center;
+}
+
+.vda-wizard-concept-panel::after {
+  inset: 0;
+  background-image: var(--vda-clan-panel-art);
+  /* Keep contained within the panel; avoid bleed into the page background. */
+  background-position: 62% center;
+  mix-blend-mode: multiply;
 }
 
 .vda-wizard-concept-panel-layout {
@@ -211,7 +245,9 @@
   flex: 1 1 auto;
   min-width: 0;
   width: 100%;
+  background: transparent;
 }
+
 
 /* Inline codex: desktop only (mobile uses overlay in React). */
 .vda-wizard-concept-panel-side {
@@ -219,34 +255,96 @@
 }
 
 @media (min-width: 1024px) {
-  .vda-wizard-concept-panel-layout {
+  .vda-wizard-concept-stage {
     flex-direction: row;
+    align-items: stretch;
     gap: 1.25rem;
-    align-items: flex-start;
+    /* Tall codex + form stage (~1080p-friendly); not pixel-perfect */
+    min-height: 1080px;
+  }
+
+  .vda-wizard-concept-panel {
+    flex: 1 1 0%;
+    max-width: 50%;
+    min-width: 0;
+    /* Match codex aside height cap */
+    max-height: 1080px;
+  }
+
+  .vda-wizard-concept-panel .vda-wizard-concept-panel-layout {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
   }
 
   .vda-wizard-concept-panel-main {
-    flex: 7 1 0%;
-    max-width: 70%;
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+    min-height: 0;
   }
 
   .vda-wizard-concept-panel-side {
-    display: block;
+    --Paper-shadow:
+      0px 3px 3px -2px rgba(0, 0, 0, 0.2),
+      0px 3px 4px 0px rgba(0, 0, 0, 0.14),
+      0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+    --vda-codex-aside-crimson: #5e0000;
+    --Paper-overlay: linear-gradient(
+      rgba(255, 255, 255, 0.028),
+      rgba(255, 255, 255, 0.028)
+    );
+
+    display: flex;
+    flex-direction: column;
     position: relative;
     z-index: 1;
-    flex: 3 1 0%;
-    max-width: 30%;
+    flex: 1 1 0%;
+    max-width: 50%;
     min-width: 0;
     width: 100%;
     align-self: stretch;
-    min-height: min(70vh, 36rem);
-    max-height: none;
-    overflow: auto;
-    border-radius: 0.5rem;
-    border: 1px solid color-mix(in srgb, var(--vda-blood) 35%, transparent);
-    background-color: rgba(0, 0, 0, 0.55);
-    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.45);
+    /* Cap codex panel height (not pixel-perfect) */
+    max-height: 1080px;
+    min-height: 0;
+    /* Match left panel: ornaments can sit at -11px without clipping */
+    overflow: visible;
+    border-radius: 0;
+    border: 2px solid var(--vda-codex-aside-crimson, #5e0000);
+    background-color: #0f0f0f;
+    box-shadow: var(--Paper-shadow);
+    isolation: isolate;
+    padding: 0;
+  }
+
+  /* Scroll lives here so the aside can stay overflow:visible for corner art */
+  .vda-wizard-concept-panel-side-body {
+    position: relative;
+    z-index: 1;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: hidden;
     padding: 0.85rem 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .vda-wizard-concept-panel-side-body::-webkit-scrollbar,
+  .vda-wizard-concept-panel-side-body::-webkit-scrollbar-track,
+  .vda-wizard-concept-panel-side-body::-webkit-scrollbar-thumb {
+    display: none;
+  }
+
+  /* Light wash over flat panel (replaces any marble-like layered look) */
+  .vda-wizard-concept-panel-side::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    z-index: 0;
+    pointer-events: none;
+    background: var(--Paper-overlay);
   }
 }
 
@@ -299,15 +397,50 @@
   border-radius: 0.75rem 0 0 0.75rem;
   border: 1px solid color-mix(in srgb, var(--vda-blood) 40%, transparent);
   border-right: none;
+  isolation: isolate;
+  /* Fallback before clan art resolves; marble + clan match desktop codex panel */
+  --vda-clan-panel-art: url("/img/darkAges.png");
   background-color: #0a0506;
-  background-image: url("/icons/vtm-marble-red.jpg");
-  background-size: cover;
-  background-position: center;
   box-shadow:
     inset 0 0 0 9999px rgba(0, 0, 0, 0.52),
     -10px 0 36px rgba(0, 0, 0, 0.55);
   padding: 0.75rem max(0.75rem, env(safe-area-inset-right, 0px)) 0.65rem 1rem;
   animation: vda-codex-drawer-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Same layered marble + clan as `.vda-wizard-concept-panel-main` (mobile codex drawer) */
+.vda-wizard-codex-overlay-sheet::before,
+.vda-wizard-codex-overlay-sheet::after {
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.vda-wizard-codex-overlay-sheet::before {
+  inset: 0;
+  background-image: url("/icons/vtm-marble-red.jpg");
+  background-position: center center;
+}
+
+.vda-wizard-codex-overlay-sheet::after {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: -100px;
+  background-image: var(--vda-clan-panel-art);
+  background-position: 62% center;
+  mix-blend-mode: multiply;
+}
+
+
+.vda-wizard-codex-overlay-header,
+.vda-wizard-codex-overlay-sheet-scroll {
+  position: relative;
+  z-index: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -374,6 +507,12 @@
   width: clamp(3.25rem, 10vmin, 5.75rem);
 }
 
+/* Codex aside: horizontal flourish art reads wider than the standard corner gem */
+.vda-wizard-concept-panel-corner--flourish {
+  width: clamp(4.75rem, 15vmin, 8.5rem);
+  height: clamp(2.85rem, 8.5vmin, 4.75rem);
+}
+
 @media (min-width: 640px) {
   .vda-wizard-concept-panel {
     padding: 1.25rem 1.5rem 1.5rem;
@@ -385,26 +524,159 @@
 }
 
 .vda-wizard-codex-aside-inner {
+  position: relative;
+  z-index: 1;
   min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Thin horizontal rule under the codex aside title (V:tM–style divider) */
+.vda-wizard-codex-aside-title-rule {
+  width: 100%;
+  height: 1px;
+  margin: 0 0 0.9rem;
+  flex-shrink: 0;
+  background-color: var(--vda-codex-aside-crimson, #5e0000);
+}
+
+.vda-wizard-codex-aside-copy {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: visible;
+}
+
+.vda-wizard-codex-aside-copy.vda-wizard-archetypes-aside {
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-color: var(--vda-codex-aside-crimson, #5e0000) rgba(0, 0, 0, 0.35);
+  scrollbar-width: thin;
+}
+
+.vda-wizard-codex-aside-copy.vda-wizard-archetypes-aside::-webkit-scrollbar {
+  width: 10px;
+}
+
+.vda-wizard-codex-aside-copy.vda-wizard-archetypes-aside::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.vda-wizard-codex-aside-copy.vda-wizard-archetypes-aside::-webkit-scrollbar-thumb {
+  background: var(--vda-codex-aside-crimson, #5e0000);
+  border: 2px solid rgba(0, 0, 0, 0.35);
+}
+
+.vda-wizard-codex-aside-copy.vda-wizard-archetypes-aside::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--vda-codex-aside-crimson, #5e0000) 85%, white);
+}
+
+.vda-wizard-codex-aside-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem 0.75rem;
+  margin: 0 0 0.55rem;
+}
+
+.vda-wizard-codex-aside-title-row .vda-wizard-codex-aside-title {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.3;
 }
 
 .vda-wizard-codex-aside-title {
   font-family: var(--font-heading), ui-serif, Georgia, serif;
-  font-size: 1rem;
+  font-size: clamp(1.35rem, 1.1rem + 0.6vw, 1.7rem);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--vda-field-accent);
-  margin: 0 0 0.6rem;
+  color: var(--vda-field-accent, #c82434);
+  margin: 0;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
 }
 
 .vda-wizard-codex-aside-body {
   margin: 0;
   font-family: var(--font-sans, system-ui, sans-serif);
-  font-size: 0.875rem;
-  line-height: 1.55;
-  color: rgba(228, 228, 231, 0.92);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: rgba(250, 250, 249, 0.96);
+}
+
+/* Nature/Demeanor archetype list (renders in the codex aside when those info icons are active) */
+.vda-wizard-archetype-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.05rem;
+}
+
+.vda-wizard-archetype-intro {
+  margin: 0 0 1.05rem;
+}
+
+.vda-wizard-archetype-item {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgb(94 0 0 / 22%);
+}
+
+.vda-wizard-archetype-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.vda-wizard-archetype-name {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-heading), ui-serif, Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(250, 250, 249, 0.96);
+}
+
+.vda-wizard-archetype-desc {
+  margin-top: 0;
+}
+
+.vda-wizard-archetype-wp {
+  margin: 0.65rem 0 0;
+  display: grid;
+  gap: 0.15rem;
+}
+
+.vda-wizard-archetype-wp-label {
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vda-codex-aside-crimson, #5e0000);
+}
+
+.vda-wizard-archetype-wp-body {
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: rgba(250, 250, 249, 0.92);
+}
+
+/* Red dropdown arrow for archetype suggestions (Nature / Demeanor) */
+.vda-wizard-input--archetype {
+  padding-right: 2.25rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23c82434' d='M4.2 6.2a1 1 0 0 1 1.4 0L8 8.6l2.4-2.4a1 1 0 1 1 1.4 1.4l-3.1 3.1a1 1 0 0 1-1.4 0L4.2 7.6a1 1 0 0 1 0-1.4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 1rem 1rem;
+  background-position: right 0.75rem center;
+}
+
+/* Crimson accent vars for mobile drawer scroll area (inherits title rule + aside copy chrome) */
+.vda-wizard-codex-overlay-sheet-scroll {
+  --vda-codex-aside-crimson: #5e0000;
 }
 
 /* Group label + control only (no per-field marble) */
@@ -496,7 +768,8 @@
 }
 
 .vda-wizard-label-info--active {
-  filter: brightness(1.15) drop-shadow(0 0 6px color-mix(in srgb, var(--vda-blood) 55%, transparent));
+  filter: brightness(1.15)
+    drop-shadow(0 0 6px color-mix(in srgb, var(--vda-blood) 55%, transparent));
 }
 
 /* Step section titles: same language as field labels, slightly larger */

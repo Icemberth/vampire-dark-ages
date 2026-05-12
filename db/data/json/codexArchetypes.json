@@ -1,0 +1,322 @@
+[
+  {
+    "name": "autocrat",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Autocrat",
+    "description": "You want to be in charge. You seek control for its own sake or because you believe no one else can do the job properly.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower when you achieve control over a group or a situation involving others."
+    }
+  },
+  {
+    "name": "autocrat",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Autócrata",
+    "description": "Quieres estar al mando. Buscas el control por sí mismo o porque crees que nadie más puede hacer el trabajo correctamente.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cuando logras el control sobre un grupo o una situación que involucre a otros."
+    }
+  },
+  {
+    "name": "bon_vivant",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Bon Vivant",
+    "description": "Life is shallow and meaningless, so you might as well enjoy it while it lasts.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower whenever you truly enjoy yourself and can fully express your exuberance."
+    }
+  },
+  {
+    "name": "bon_vivant",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Bon Vivant",
+    "description": "La vida es superficial y no tiene sentido, así que es mejor disfrutarla mientras dure.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cada vez que disfrutas verdaderamente y puedes expresar plenamente tu exuberancia."
+    }
+  },
+  {
+    "name": "caregiver",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Caregiver",
+    "description": "Others need your protection and help. You find your purpose in comforting and aiding those in need.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower whenever you successfully protect or nurture someone else."
+    }
+  },
+  {
+    "name": "caregiver",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Cuidador",
+    "description": "Otros necesitan tu protección y ayuda. Encuentras tu propósito al consolar y ayudar a los necesitados.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cada vez que proteges o cuidas con éxito a otra persona."
+    }
+  },
+  {
+    "name": "celebrant",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Celebrant",
+    "description": "You find joy in your cause, whether it is religious, political, or personal.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower whenever you pursue your cause or inspire others to join it."
+    }
+  },
+  {
+    "name": "celebrant",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Celebrante",
+    "description": "Encuentras alegría en tu causa, ya sea religiosa, política o personal.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cada vez que persigues tu causa o inspiras a otros a unirse a ella."
+    }
+  },
+  {
+    "name": "competitor",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Competitor",
+    "description": "You must be the best at everything. Every interaction is a contest to be won.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower whenever you win a contest, physical or otherwise."
+    }
+  },
+  {
+    "name": "competitor",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Competidor",
+    "description": "Debes ser el mejor en todo. Cada interacción es un concurso que debe ganarse.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cada vez que ganas un concurso, físico o de otro tipo."
+    }
+  },
+  {
+    "name": "curmudgeon",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Curmudgeon",
+    "description": "You are cynical and bitter. You expect the worst from everyone and everything.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower when someone does something as stupid as you predicted they would."
+    }
+  },
+  {
+    "name": "curmudgeon",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Cascarrabias",
+    "description": "Eres cínico y amargado. Esperas lo peor de todos y de todo.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cuando alguien hace algo tan estúpido como predijiste que haría."
+    }
+  },
+  {
+    "name": "deviant",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Deviant",
+    "description": "You don't fit into society's norms and you have no desire to do so.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower whenever you flout social norms without getting caught or punished."
+    }
+  },
+  {
+    "name": "deviant",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Desviado",
+    "description": "No encajas en las normas de la sociedad y no tienes deseos de hacerlo.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cada vez que desafías las normas sociales sin ser atrapado o castigado."
+    }
+  },
+  {
+    "name": "director",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Director",
+    "description": "You love to organize and lead, bringing order out of chaos.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower when you successfully organize a group to complete a complex task."
+    }
+  },
+  {
+    "name": "director",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Director",
+    "description": "Te encanta organizar y liderar, trayendo orden del caos.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cuando organizas con éxito un grupo para completar una tarea compleja."
+    }
+  },
+  {
+    "name": "fanatic",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Fanatic",
+    "description": "You are consumed by a single purpose, and everything else is secondary.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower whenever you accomplish a goal that furthers your cause."
+    }
+  },
+  {
+    "name": "fanatic",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Fanático",
+    "description": "Estás consumido por un solo propósito, y todo lo demás es secundario.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cada vez que logras una meta que promueve tu causa."
+    }
+  },
+  {
+    "name": "judge",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Judge",
+    "description": "You seek to maintain justice and resolve conflicts fairly.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower when you resolve a conflict or correctly judge a situation fairly."
+    }
+  },
+  {
+    "name": "judge",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Juez",
+    "description": "Buscas mantener la justicia y resolver conflictos de manera justa.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cuando resuelves un conflicto o juzgas correctamente una situación de manera justa."
+    }
+  },
+  {
+    "name": "loner",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Loner",
+    "description": "You prefer your own company and often feel out of place in groups.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower when you accomplish something significant on your own."
+    }
+  },
+  {
+    "name": "loner",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Solitario",
+    "description": "Prefieres tu propia compañía y a menudo te sientes fuera de lugar en los grupos.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cuando logras algo significativo por tu cuenta."
+    }
+  },
+  {
+    "name": "martyr",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Martyr",
+    "description": "You are willing to suffer for the sake of your beliefs or for others.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower when you suffer or make a significant sacrifice for your ideals or others."
+    }
+  },
+  {
+    "name": "martyr",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Mártir",
+    "description": "Estás dispuesto a sufrir por el bien de tus creencias o por los demás.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cuando sufres o haces un sacrificio significativo por tus ideales o por otros."
+    }
+  },
+  {
+    "name": "penitent",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Penitent",
+    "description": "You seek to atone for your perceived sins or failures.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower when you feel you have achieved absolution for a specific sin."
+    }
+  },
+  {
+    "name": "penitent",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Penitente",
+    "description": "Buscas expiar tus pecados o fracasos percibidos.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cuando sientes que has logrado la absolución de un pecado específico."
+    }
+  },
+  {
+    "name": "rebel",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Rebel",
+    "description": "You are a nonconformist who hates authority and structure.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower whenever your actions successfully subvert an oppressive authority."
+    }
+  },
+  {
+    "name": "rebel",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Rebelde",
+    "description": "Eres un inconformista que odia la autoridad y la estructura.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cada vez que tus acciones subvierten con éxito una autoridad opresiva."
+    }
+  },
+  {
+    "name": "survivor",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Survivor",
+    "description": "No matter the odds, you will endure and pull through.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower when you survive a dangerous situation through your own wits or tenacity."
+    }
+  },
+  {
+    "name": "survivor",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Superviviente",
+    "description": "Sin importar las probabilidades, aguantarás y saldrás adelante.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cuando sobrevives a una situación peligrosa gracias a tu propio ingenio o tenacidad."
+    }
+  },
+  {
+    "name": "visionary",
+    "locale": "en",
+    "category": "archetype",
+    "displayName": "Visionary",
+    "description": "You look beyond the present to see what could be.",
+    "dotDescriptions": {
+      "willpower_gain": "Gain Willpower when you influence others to believe in your vision of the future."
+    }
+  },
+  {
+    "name": "visionary",
+    "locale": "es",
+    "category": "archetype",
+    "displayName": "Visionario",
+    "description": "Miras más allá del presente para ver lo que podría ser.",
+    "dotDescriptions": {
+      "willpower_gain": "Recuperas Fuerza de Voluntad cuando influyes en otros para que crean en tu visión del futuro."
+    }
+  }
+]

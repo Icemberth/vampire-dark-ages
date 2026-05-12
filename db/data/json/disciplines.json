@@ -568,10 +568,10 @@
     }
   },
   {
-    "name": "visceratika",
+    "name": "Flight",
     "locale": "en",
-    "displayName": "Visceratika",
-    "description": "The specialized Discipline of the Gargoyles, allowing them to merge with stone.",
+    "displayName": "Flight",
+    "description": "The specialized Discipline of the Gargoyles, allowing them to flight.",
     "dotDescriptions": {
       "1": "Skin of the Chameleon",
       "2": "Scry the Hearthstone",
@@ -579,10 +579,10 @@
     }
   },
   {
-    "name": "visceratika",
+    "name": "Volar",
     "locale": "es",
-    "displayName": "Visceratika",
-    "description": "La Disciplina especializada de las Gárgolas, que les permite fusionarse con la piedra.",
+    "displayName": "Vuelo",
+    "description": "La Disciplina especializada de las Gárgolas, que les permite volar.",
     "dotDescriptions": {
       "1": "Piel del Camaleón",
       "2": "Escrutar la Piedra del Hogar",
